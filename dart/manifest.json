@@ -1,0 +1,72 @@
+{
+  "manifest_version": "0.2",
+  "name": "dart-readonly",
+  "display_name": "DART 전자공시 (조회 전용)",
+  "version": "0.2.1",
+  "description": "금융감독원 DART 오픈 API 조회 전용 MCP. 공시 목록·기업 개황·재무제표(단일·다중)·주요 재무지표·배당·정기보고서 주요정보·지분공시·주요사항보고서·공시 원문 텍스트. 공식 API 85개 중 58개 사용.",
+  "author": { "name": "hyunghopark" },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "DART_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "DART API 키 (선택)",
+      "description": "비워 두면 맥 키체인(서비스 dart-api, 계정 opendart)에서 읽습니다.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "dart_find_corp",
+      "description": "회사명·종목코드로 DART 고유번호 찾기"
+    },
+    {
+      "name": "dart_company",
+      "description": "기업 개황"
+    },
+    {
+      "name": "dart_disclosures",
+      "description": "공시 목록 검색"
+    },
+    {
+      "name": "dart_financials",
+      "description": "정기보고서 재무제표(주요계정/전체, 여러 회사 주요계정)"
+    },
+    {
+      "name": "dart_indicators",
+      "description": "주요 재무지표(수익성·안정성·성장성·활동성, 단일/다중회사)"
+    },
+    {
+      "name": "dart_dividends",
+      "description": "배당에 관한 사항"
+    },
+    {
+      "name": "dart_report",
+      "description": "정기보고서 주요정보·지분공시·주요사항보고서(허용 목록)"
+    },
+    {
+      "name": "dart_document",
+      "description": "공시 원문 텍스트"
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

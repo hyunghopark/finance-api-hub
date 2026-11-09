@@ -1,0 +1,36 @@
+{
+  "manifest_version": "0.2",
+  "name": "ecos-readonly",
+  "display_name": "한국은행 ECOS (조회 전용)",
+  "version": "0.1.1",
+  "description": "한국은행 경제통계시스템(ECOS) Open API 조회 전용 MCP. 시장금리(국고채·회사채·신용 스프레드), 통계 조회, 통계표·항목 찾기, 100대 지표, 통계용어사전, 통계 메타.",
+  "author": { "name": "hyunghopark" },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": { "ECOS_API_KEY": "${user_config.api_key}" }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "ECOS API 키 (선택)",
+      "description": "비워 두면 맥 키체인(서비스 ecos-api, 계정 ecos)에서 읽습니다.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    { "name": "ecos_market_rates", "description": "시장금리(일별) 날짜별 표와 신용 스프레드·장단기 금리차" },
+    { "name": "ecos_search", "description": "통계 시계열 조회" },
+    { "name": "ecos_items", "description": "통계표 세부 항목 목록" },
+    { "name": "ecos_find_table", "description": "통계표 이름으로 코드 찾기" },
+    { "name": "ecos_key_stats", "description": "100대 통계지표 최신값" },
+    { "name": "ecos_word", "description": "통계용어사전" },
+    { "name": "ecos_meta", "description": "통계 메타(작성 방법·공표 시기)" }
+  ],
+  "compatibility": { "platforms": ["darwin"], "runtimes": { "node": ">=18.0.0" } }
+}
