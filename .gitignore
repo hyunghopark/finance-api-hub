@@ -1,0 +1,15 @@
+# 만들어지는 파일
+*.mcpb
+node_modules/
+
+# 키·토큰·캐시
+.env
+.env.*
+!.env.example
+.toss-mcp/
+.dart-mcp/
+.ecos-mcp/
+corpcode.json
+*.token
+
+.DS_Store
