@@ -1,34 +1,67 @@
 # finance-api-hub
 
-공식 금융 API를 조회 전용 MCP 서버로 모아 둔 저장소입니다. Claude뿐 아니라 MCP를 지원하는 에이전트(Cursor, Codex, Gemini CLI 등)에서 같은 방식으로 씁니다.
+공식 금융 데이터 API를 **조회 전용 MCP(Model Context Protocol) 서버**로 제공하는 모음입니다. Claude Desktop, Claude Code, Cursor, Codex, Gemini CLI 등 MCP를 지원하는 에이전트에서 같은 방식으로 사용할 수 있습니다.
 
-## 목록
+## 특징
 
-| 폴더 | 제공처 | 주요 데이터 | 형태 | 키 (환경변수) |
+- **조회 전용**: 모든 서버가 GET 요청만 보냅니다. 주문·계좌·제출 API는 코드에 포함하지 않았습니다.
+- **의존성 없음**: Node.js 18 이상의 내장 모듈만 사용합니다. `npm install`이 필요 없습니다.
+- **공식 API만 사용**: 각 제공처가 문서로 공개한 API만 호출하고, 호출 대상 호스트를 코드에 고정했습니다.
+- **인증 정보 분리**: 키는 환경변수나 macOS 키체인에서 읽으며 저장소에는 저장하지 않습니다. 오류 메시지에서도 키를 가립니다.
+- **오프라인 테스트**: 서버마다 네트워크 없이 실행되는 테스트가 있습니다.
+
+## 제공 서버
+
+| 서버 | 제공처 | 주요 데이터 | 도구 | 버전 |
 |---|---|---|---|---|
-| [toss](toss/) | 토스증권 Open API | 시장 전체 투자자별 매매대금, 종목 수급, 공매도, 섹터 랭킹, 국고채 지표, 환율, 장 운영 | 직접 만든 MCP 서버 (v0.2.1, 도구 13개) | `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET` |
-| [dart](dart/) | 금융감독원 DART | 기업 개황, 공시 목록·원문, 재무제표, 재무지표, 배당, 주요사항보고서 | 직접 만든 MCP 서버 (v0.2.1, 도구 8개) | `DART_API_KEY` |
-| [ecos](ecos/) | 한국은행 ECOS | 국고채·회사채 금리, 신용 스프레드, 기준금리, 물가 등 전체 통계, 100대 지표, 용어사전 | 직접 만든 MCP 서버 (v0.1.1, 도구 7개) | `ECOS_API_KEY` |
-| [edgar](edgar/) | 미국 SEC EDGAR | 미국 상장사 공시 목록·원문, XBRL 재무(연간·분기), 기간별 전 종목 비교, 공시 전문 검색 | 직접 만든 MCP 서버 (v0.1.0, 도구 7개) | `SEC_USER_AGENT` (키 아님, 이름+이메일) |
-| [krx](krx/) | 한국거래소 KRX Open API | 공식 31개 서비스 전부: 업종지수, 전 종목 일별매매·종목기본정보, ETF NAV, 채권, 선물·옵션, 금·석유·배출권, ESG (일별, 전일까지) | 직접 만든 MCP 서버 (v0.1.0, 도구 7개) | `KRX_API_KEY` |
-| [fred](fred/) | 미국 세인트루이스 연준 FRED | 미국 금리 곡선·기대인플레·실질금리, 신용 스프레드·금융스트레스, 연준 유동성(순유동성 계산), 물가·고용 등 80만 개 시계열, 경제지표 발표 일정 | 직접 만든 MCP 서버 (v0.1.1, 도구 6개) | `FRED_API_KEY` |
-| [meritz](meritz/) | 메리츠증권 Trading MCP | 국내·해외 지수, 선물, 환율, EWY, 종목 일봉 | 증권사 공식 배포 (안내 문서만) | 설치 화면에서 입력 |
+| [krx](krx/) | 한국거래소 KRX Open API | 지수(업종지수 포함), 전 종목 일별 매매정보·종목 기본정보, ETF·ETN·ELW, 채권, 선물·옵션, 금·석유·배출권, ESG | 7 | 0.1.0 |
+| [dart](dart/) | 금융감독원 DART | 기업 개황, 공시 목록·원문, 재무제표, 재무지표, 배당, 주요사항보고서 | 8 | 0.2.1 |
+| [ecos](ecos/) | 한국은행 ECOS | 시장금리, 신용 스프레드, 기준금리·물가 등 전체 통계, 100대 지표, 통계용어사전 | 7 | 0.1.1 |
+| [toss](toss/) | 토스증권 Open API | 시장·종목별 투자자 매매동향, 공매도, 프로그램매매, 섹터·주식 랭킹, 시세, 환율 | 13 | 0.2.1 |
+| [fred](fred/) | 미국 세인트루이스 연준 FRED | 금리 곡선, 신용 스프레드, 연준 유동성, 물가·고용 등 시계열, 경제지표 발표 일정 | 6 | 0.1.1 |
+| [edgar](edgar/) | 미국 SEC EDGAR | 공시 목록·원문, XBRL 재무(연간·분기), 전 종목 비교, 공시 전문 검색 | 7 | 0.1.0 |
+| [meritz](meritz/) | 메리츠증권 Trading MCP | 국내·해외 지수, 선물, 환율, 종목 일봉 | — | 증권사 공식 배포 (설치 안내만 제공) |
 
-제공처마다 값이 들어오고 확정되는 시각이 다릅니다. 확인된 반영 시각은 [DATA_TIMING.md](DATA_TIMING.md)에 모아 두었습니다.
+서버별 도구 목록, 지원하는 API 범위, 제약 사항은 각 폴더의 README를 참고하세요.
 
-## 공통 원칙
+## 빠른 시작
 
-- **조회 전용**: GET 호출만 있고 주문·계좌 API는 코드에 없습니다.
-- **외부 패키지 없음**: Node 18 이상 내장 모듈만 씁니다. `npm install`이 필요 없습니다.
-- **키 위치**: 모두 환경변수로 받습니다. DART·ECOS·KRX·FRED는 환경변수가 없으면 macOS 키체인도 봅니다. EDGAR는 키 대신 연락처가 든 User-Agent(`SEC_USER_AGENT`)를 받고, 같은 방식으로 키체인(서비스 `edgar-mcp`)도 봅니다. 토스는 환경변수만 씁니다(Claude Desktop에서는 설치 화면 입력값을 Desktop이 넘겨 줌). 키는 이 저장소에 절대 커밋하지 않습니다(`.env.example` 참고).
+### 요구 사항
 
-## 범용 MCP 설정 예시
+- Node.js 18 이상
+- 사용할 서버의 API 인증 정보 (아래 표)
 
-대부분의 에이전트는 아래 형식(`command`·`args`·`env`)을 씁니다. 경로는 이 저장소를 받은 위치로 바꾸세요.
+### 1. 저장소 받기
+
+```bash
+git clone https://github.com/hyunghopark/finance-api-hub.git
+```
+
+### 2. 인증 정보 준비
+
+| 서버 | 환경변수 | 발급처 | 비고 |
+|---|---|---|---|
+| krx | `KRX_API_KEY` | [openapi.krx.co.kr](https://openapi.krx.co.kr) | 인증키 발급 후 API별 이용신청이 따로 필요 |
+| dart | `DART_API_KEY` | [opendart.fss.or.kr](https://opendart.fss.or.kr) | |
+| ecos | `ECOS_API_KEY` | [ecos.bok.or.kr/api](https://ecos.bok.or.kr/api) | |
+| toss | `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET` | [developers.tossinvest.com](https://developers.tossinvest.com/docs) | 등록한 허용 IP에서만 호출 가능 |
+| fred | `FRED_API_KEY` | [fredaccount.stlouisfed.org/apikeys](https://fredaccount.stlouisfed.org/apikeys) | |
+| edgar | `SEC_USER_AGENT` | 발급 없음 | API 키 대신 이름과 이메일을 담은 User-Agent 문자열 |
+
+환경변수 이름은 [`.env.example`](.env.example)에도 정리되어 있습니다.
+
+### 3. MCP 클라이언트에 등록
+
+대부분의 MCP 클라이언트는 아래 형식을 사용합니다. 필요한 서버만 골라 등록하고, 경로는 저장소를 받은 위치로 바꾸세요.
 
 ```json
 {
   "mcpServers": {
+    "krx": {
+      "command": "node",
+      "args": ["/path/to/finance-api-hub/krx/server/index.js"],
+      "env": { "KRX_API_KEY": "..." }
+    },
     "dart": {
       "command": "node",
       "args": ["/path/to/finance-api-hub/dart/server/index.js"],
@@ -39,53 +72,79 @@
       "args": ["/path/to/finance-api-hub/ecos/server/index.js"],
       "env": { "ECOS_API_KEY": "..." }
     },
-    "edgar": {
+    "toss": {
       "command": "node",
-      "args": ["/path/to/finance-api-hub/edgar/server/index.js"],
-      "env": { "SEC_USER_AGENT": "이름 you@example.com" }
+      "args": ["/path/to/finance-api-hub/toss/server/index.js"],
+      "env": { "TOSS_CLIENT_ID": "...", "TOSS_CLIENT_SECRET": "..." }
     },
     "fred": {
       "command": "node",
       "args": ["/path/to/finance-api-hub/fred/server/index.js"],
       "env": { "FRED_API_KEY": "..." }
     },
-    "krx": {
+    "edgar": {
       "command": "node",
-      "args": ["/path/to/finance-api-hub/krx/server/index.js"],
-      "env": { "KRX_API_KEY": "..." }
-    },
-    "toss": {
-      "command": "node",
-      "args": ["/path/to/finance-api-hub/toss/server/index.js"],
-      "env": { "TOSS_CLIENT_ID": "...", "TOSS_CLIENT_SECRET": "..." }
+      "args": ["/path/to/finance-api-hub/edgar/server/index.js"],
+      "env": { "SEC_USER_AGENT": "Your Name you@example.com" }
     }
   }
 }
 ```
 
-맥에서 DART·ECOS·KRX·FRED 키를 키체인에 넣었다면 그 넷의 `env`는 비워도 됩니다.
+### Claude Desktop 확장으로 설치 (선택)
 
-토스는 토스증권에 등록한 허용 IP에서만 호출됩니다. 다른 PC·서버에서 쓰려면 그 공인 IP를 토스 개발자 센터에 등록해야 합니다(아니면 403).
+각 서버 폴더에서 `./pack.sh`를 실행하면 `*-readonly.mcpb` 파일이 만들어집니다. 이 파일을 Claude Desktop의 설정 > 확장 프로그램에 끌어다 놓으면 설치됩니다.
 
-## 시험
+- 인증 정보는 설치 화면에서 입력하거나 macOS 키체인에 넣어 둡니다.
+- 확장 설정에서 키를 바꾼 뒤에는 확장을 껐다 켜야 적용됩니다.
+- 확장을 설치하거나 다시 설치하면 Claude Desktop이 로컬 확장을 모두 재시작합니다.
+- `.mcpb`는 빌드 산출물이므로 저장소에 커밋하지 않습니다.
 
-네트워크 없이 가짜 응답으로 점검합니다.
+## 인증 정보 관리
 
+모든 서버는 환경변수에서 인증 정보를 읽습니다. macOS에서는 환경변수가 없을 때 키체인에서도 읽을 수 있습니다(toss 제외).
+
+| 서버 | 키체인 서비스 | 계정 |
+|---|---|---|
+| krx | `krx-api` | `krx` |
+| dart | `dart-api` | `opendart` |
+| ecos | `ecos-api` | `ecos` |
+| fred | `fred-api` | `fred` |
+| edgar | `edgar-mcp` | `sec` |
+
+```bash
+# 마지막 -w 뒤를 비워 두면 입력 창이 떠서 값이 셸 기록에 남지 않습니다.
+security add-generic-password -s krx-api -a krx -w
 ```
-node toss/test/test.js
+
+키체인에 넣은 서버는 MCP 설정의 `env`를 비워도 됩니다. 인증 정보를 저장소에 커밋하지 마세요.
+
+## 데이터 반영 시각
+
+같은 날짜의 값이라도 제공처마다 반영·확정되는 시각이 다릅니다. 조회 시각에 따라 잠정치나 전일 값을 받을 수 있으므로, 확인된 반영 시각을 [DATA_TIMING.md](DATA_TIMING.md)에 정리했습니다.
+
+## 테스트
+
+로컬 모의 서버를 사용하므로 네트워크와 인증 정보 없이 실행됩니다.
+
+```bash
+node krx/test/offline.test.js
 node dart/test/offline.test.js
 node ecos/test/offline.test.js
-node edgar/test/offline.test.js
+node toss/test/test.js
 node fred/test/offline.test.js
-node krx/test/offline.test.js
+node edgar/test/offline.test.js
 ```
 
-## Claude Desktop (선택)
+## 포함하지 않는 것
 
-각 폴더에서 `./pack.sh`를 실행하면 `*-readonly.mcpb`가 만들어집니다. Claude Desktop 설정 > 확장 프로그램에 끌어다 놓으면 설치됩니다. `.mcpb`는 만들어지는 파일이라 커밋하지 않습니다.
+| 대상 | 이유 |
+|---|---|
+| Yahoo Finance, 네이버 증권 | 공식 공개 API가 아님 |
+| 주문·계좌·공시 제출 API | 조회 전용 원칙 |
+| [FRED 공식 MCP 커넥터](https://mcp.stlouisfed.org) | 세인트루이스 연준이 직접 운영하는 원격 커넥터. 차이는 [fred](fred/) 참고 |
 
-## 의도적으로 넣지 않은 것
+## 유의 사항
 
-- Yahoo Finance: 비공식 서버이고, 범용 도구가 이미 많음
-- 네이버 증권: 공식 API가 아님
-- FRED 공식 MCP 커넥터(`https://mcp.stlouisfed.org`): 세인트루이스 연준이 운영하는 원격 커넥터라 이 저장소에 코드가 없음. 검색·관측값은 그쪽으로도 되고, 발표 일정·묶음 조회·v1 전체 경로가 필요하면 [fred](fred/)를 씀
+- 이 저장소는 각 데이터 제공처와 제휴하거나 제공처의 승인을 받은 프로젝트가 아닙니다. API 이용 조건과 호출 한도는 각 제공처의 약관을 따릅니다.
+- 제공되는 데이터와 계산값은 참고용이며 투자 권유가 아닙니다. 데이터의 정확성과 적시성은 원 제공처에 달려 있습니다.

@@ -1,24 +1,43 @@
-# 한국은행 ECOS 조회 전용 MCP (Claude Desktop 확장)
+# 한국은행 ECOS MCP 서버 (`ecos-readonly`)
 
-한국은행 경제통계시스템 Open API(https://ecos.bok.or.kr/api)를 조회만 하는 확장입니다. DART 확장([../dart](../dart))과 같은 방식입니다.
+한국은행 경제통계시스템(ECOS) Open API를 조회 전용으로 제공하는 MCP 서버입니다.
 
-- 현재 버전: **v0.1.1**
-- 외부 패키지 없음 (Node 18+ 내장 모듈만), 호출 주소 `ecos.bok.or.kr` 고정, GET만
-- 키: 확장 설정 → 없으면 맥 키체인(서비스 `ecos-api`, 계정 `ecos`). ECOS는 키가 **주소 경로**에 들어가므로 오류 메시지에서 키 문자열을 가림
-- 통계표 목록 캐시: `~/.ecos-mcp/tables.json` (7일, 권한 600)
-- 명세 확인: 2026-11-09 공식 개발명세서 6개 서비스(요청 인자·출력 항목) + 공개 샘플 키(`sample`, 최대 10건)로 실제 호출
+| 항목 | 내용 |
+|---|---|
+| 버전 | 0.1.1 |
+| 대상 API | [ECOS Open API](https://ecos.bok.or.kr/api) 6개 서비스 전부 |
+| 호출 대상 | `ecos.bok.or.kr` 고정, GET만 사용 |
+| 인증 | `ECOS_API_KEY` 환경변수, 없으면 macOS 키체인(서비스 `ecos-api`, 계정 `ecos`) |
+| 캐시 | 통계표 목록 `~/.ecos-mcp/tables.json` (7일, 권한 600) |
+| 런타임 | Node.js 18 이상, 외부 패키지 없음 |
+
+ECOS는 인증키가 요청 주소의 경로에 들어가므로, 이 서버는 오류 메시지에서 키 문자열을 가립니다.
+
+## 도구
+
+| 도구 | ECOS 서비스 | 설명 |
+|---|---|---|
+| `ecos_market_rates` | StatisticSearch (817Y002) | 시장금리 27개 항목을 날짜별 표로 조회. 신용 스프레드(회사채 AA- − 국고채 3년)와 국고채 10년−3년 금리차(bp)를 함께 계산 |
+| `ecos_search` | StatisticSearch | 임의 통계의 시계열 조회 |
+| `ecos_items` | StatisticItemList | 통계표의 항목 코드, 가중치, 상위 항목 조회 |
+| `ecos_find_table` | StatisticTableList | 통계표 코드 검색. `parent_code`로 분류 트리 탐색 |
+| `ecos_key_stats` | KeyStatisticList | 100대 통계지표 최신값 |
+| `ecos_word` | StatisticWord | 통계용어사전 |
+| `ecos_meta` | StatisticMeta | 통계 작성 방법과 공표 시기 |
+
+일반 통계는 `ecos_find_table` → `ecos_items` → `ecos_search` 순서로 조회합니다.
 
 ## 설치
 
-1. `security add-generic-password -s ecos-api -a ecos -w` (마지막 -w 뒤를 비우면 입력 창이 뜸)
-   또는 Claude Desktop 확장 설정에 키 입력 → **확장을 껐다 켜야 반영됨**(2026-11-09 실제로 겪음)
-2. `./pack.sh` → `ecos-readonly.mcpb`를 Claude Desktop 설정 > 확장 프로그램에 끌어다 놓기
-3. 설치·재설치 때 Desktop이 모든 로컬 확장을 다시 켬 → 07:25·20:20 예약 작업 시각 근처는 피하기
+### 인증키
 
+[ecos.bok.or.kr/api](https://ecos.bok.or.kr/api)에서 인증키를 발급받아 환경변수 `ECOS_API_KEY`로 전달합니다. macOS에서는 키체인에 넣어 둘 수도 있습니다.
 
-## 다른 에이전트에서 쓰기 (범용 MCP)
+```bash
+security add-generic-password -s ecos-api -a ecos -w
+```
 
-Claude Desktop이 아니어도 MCP를 지원하는 에이전트라면 아래처럼 등록합니다. 경로는 이 저장소를 받은 위치로 바꾸세요.
+### MCP 클라이언트에 등록
 
 ```json
 {
@@ -32,42 +51,65 @@ Claude Desktop이 아니어도 MCP를 지원하는 에이전트라면 아래처�
 }
 ```
 
-맥에서 키를 키체인에 넣었다면 `env`는 비워도 됩니다. 맥이 아니면 환경변수가 필요합니다.
+키체인을 쓰는 경우 `env`는 비워도 됩니다.
 
-## 도구 (7개)
+### Claude Desktop 확장
 
-| 도구 | ECOS 서비스 | 용도 |
-|---|---|---|
-| ecos_market_rates | StatisticSearch (817Y002) | 시장금리 27개 항목 중 골라 날짜별 표. 신용 스프레드(회사채 AA- − 국고 3년)·국고 10년−3년(bp) 계산 |
-| ecos_search | StatisticSearch | 아무 통계나 시계열 조회 (617개 통계표 전부) |
-| ecos_items | StatisticItemList | 항목코드·가중치·상위 항목 찾기 |
-| ecos_find_table | StatisticTableList | 통계표코드 찾기, `parent_code`로 분류 트리 따라가기 |
-| ecos_key_stats | KeyStatisticList | 100대 통계지표 최신값 |
-| ecos_word | StatisticWord | 통계용어사전 |
-| ecos_meta | StatisticMeta | 통계 작성 방법·공표 시기 |
+`./pack.sh`로 `ecos-readonly.mcpb`를 만든 뒤 Claude Desktop의 설정 > 확장 프로그램에 끌어다 놓습니다. 확장 설정에서 키를 입력하거나 바꾼 경우 확장을 껐다 켜야 적용됩니다.
 
-## ECOS Open API 전체 목록 (공식 6개 서비스, 6개 모두 사용)
+## API 지원 범위
 
-요청 주소 형식: `https://ecos.bok.or.kr/api/{서비스명}/{인증키}/{json|xml}/{kr|en}/{요청시작건수}/{요청종료건수}/{추가 인자...}`
-(앞의 6개 인자는 모든 서비스 공통·필수. 이 확장은 json·kr만 씀)
+요청 주소 형식은 다음과 같습니다. 앞의 6개 인자는 모든 서비스에 공통이며 필수입니다. 이 서버는 `json`과 `kr`만 사용합니다.
 
-| 서비스 (명세서 이름) | 추가 요청 인자 | 출력 항목 | 이 확장 |
+```
+https://ecos.bok.or.kr/api/{서비스명}/{인증키}/{json|xml}/{kr|en}/{요청시작건수}/{요청종료건수}/{추가 인자...}
+```
+
+| 서비스 | 추가 요청 인자 | 출력 항목 | 도구 |
 |---|---|---|---|
-| StatisticTableList (서비스 통계 목록) | 통계표코드 (선택) | P_STAT_CODE, STAT_CODE, STAT_NAME, CYCLE, SRCH_YN, ORG_NAME | ecos_find_table (전체 목록을 받아 캐시 후 거름. 출력 6개 모두 보존) |
-| StatisticWord (통계용어사전) | 용어 (필수) | WORD, CONTENT | ecos_word |
-| StatisticItemList (통계 세부항목 목록) | 통계표코드 (필수) | STAT_CODE, STAT_NAME, GRP_CODE, GRP_NAME, ITEM_CODE, ITEM_NAME, P_ITEM_CODE, P_ITEM_NAME, CYCLE, START_TIME, END_TIME, DATA_CNT, UNIT_NAME, WEIGHT | ecos_items (출력 전부 보존) |
-| StatisticSearch (통계 조회 조건 설정) | 통계표코드·주기·검색시작일자·검색종료일자 (필수), 통계항목코드 1~4 (선택) | STAT_CODE, STAT_NAME, ITEM_CODE1~4, ITEM_NAME1~4, UNIT_NAME, WGT, TIME, DATA_VALUE | ecos_search, ecos_market_rates (출력 전부 보존) |
-| KeyStatisticList (100대 통계지표) | 없음 | CLASS_NAME, KEYSTAT_NAME, DATA_VALUE, CYCLE, UNIT_NAME | ecos_key_stats |
-| StatisticMeta (통계메타DB) | 데이터명 (필수) | LVL, P_CONT_CODE, CONT_CODE, CONT_NAME, META_DATA | ecos_meta (내용이 빈 제목 줄과 코드 2개는 뺌) |
+| StatisticTableList (서비스 통계 목록) | 통계표코드 (선택) | P_STAT_CODE, STAT_CODE, STAT_NAME, CYCLE, SRCH_YN, ORG_NAME | `ecos_find_table` |
+| StatisticWord (통계용어사전) | 용어 (필수) | WORD, CONTENT | `ecos_word` |
+| StatisticItemList (통계 세부항목 목록) | 통계표코드 (필수) | STAT_CODE, STAT_NAME, GRP_CODE, GRP_NAME, ITEM_CODE, ITEM_NAME, P_ITEM_CODE, P_ITEM_NAME, CYCLE, START_TIME, END_TIME, DATA_CNT, UNIT_NAME, WEIGHT | `ecos_items` |
+| StatisticSearch (통계 조회 조건 설정) | 통계표코드·주기·검색시작일자·검색종료일자 (필수), 통계항목코드 1~4 (선택) | STAT_CODE, STAT_NAME, ITEM_CODE1~4, ITEM_NAME1~4, UNIT_NAME, WGT, TIME, DATA_VALUE | `ecos_search`, `ecos_market_rates` |
+| KeyStatisticList (100대 통계지표) | 없음 | CLASS_NAME, KEYSTAT_NAME, DATA_VALUE, CYCLE, UNIT_NAME | `ecos_key_stats` |
+| StatisticMeta (통계메타DB) | 데이터명 (필수) | LVL, P_CONT_CODE, CONT_CODE, CONT_NAME, META_DATA | `ecos_meta` |
 
-- 주기: `A` 연(2026), `S` 반년(2026S1), `Q` 분기(2026Q3), `M` 월(202610), `SM` 반월(202610S1), `D` 일(20261109)
-- 항목코드를 중간에 비울 때는 `?`를 `%3F`로 보내면 "전체"로 동작(실제 호출로 확인). 끝쪽 빈 항목은 생략
-- 오류 코드: 정보-100 인증키 오류, 정보-200 데이터 없음(이 확장은 빈 결과로 돌려줌), 에러-100 필수 값 누락, 에러-101 주기와 날짜 형식 불일치, 에러-300·301 조회건수 오류, 에러-400 60초 시간 초과, 에러-500 서버 오류, 에러-600·601 DB 오류, 에러-602 과도한 호출로 이용 제한
+출력 항목은 모두 보존합니다. 다만 `ecos_meta`는 내용이 빈 제목 행과 코드 2개(P_CONT_CODE, CONT_CODE)를 제외합니다.
+
+### 주기와 날짜 형식
+
+| 주기 | 코드 | 날짜 형식 예 |
+|---|---|---|
+| 연 | `A` | 2026 |
+| 반년 | `S` | 2026S1 |
+| 분기 | `Q` | 2026Q3 |
+| 월 | `M` | 202610 |
+| 반월 | `SM` | 202610S1 |
+| 일 | `D` | 20261109 |
+
+항목 코드를 중간에서 비울 때는 `?`를 `%3F`로 인코딩해 보내면 "전체"로 동작합니다. 끝쪽의 빈 항목은 생략합니다.
+
+### 오류 코드
+
+| 코드 | 의미 |
+|---|---|
+| 정보-100 | 인증키 오류 |
+| 정보-200 | 데이터 없음 (이 서버는 빈 결과로 반환) |
+| 에러-100 | 필수 값 누락 |
+| 에러-101 | 주기와 날짜 형식 불일치 |
+| 에러-300, 301 | 조회 건수 오류 |
+| 에러-400 | 60초 시간 초과 |
+| 에러-500 | 서버 오류 |
+| 에러-600, 601 | DB 오류 |
+| 에러-602 | 과도한 호출로 이용 제한 |
 
 ## 데이터 범위
 
-- 통계표 844개 = 조회 가능 617개 + 분류 제목 227개 (2026-11-09)
-- 시장금리(일별) 817Y002 — 27개 항목 전부 `ecos_market_rates`에서 선택 가능 (공식 목록과 코드 대조를 `test/offline.test.js`에 고정)
+통계표는 844개이며, 그중 조회 가능한 통계표가 617개이고 나머지 227개는 분류 제목입니다(2026-11-09 기준).
+
+### 시장금리 일별 (817Y002)
+
+27개 항목 모두 `ecos_market_rates`에서 선택할 수 있습니다. 공식 항목 목록과의 일치 여부는 테스트로 고정되어 있습니다.
 
 | 키 | 항목 | 코드 | 기본 표시 |
 |---|---|---|---|
@@ -99,34 +141,42 @@ Claude Desktop이 아니어도 MCP를 지원하는 에이전트라면 아래처�
 | mmf7d | MMF(7일) | 010501000 | |
 | cma | CMA(수시형) | 010504000 | |
 
-### 확인한 통계표 코드
+### 자주 쓰는 통계표 코드
 
 | 코드 | 통계표 | 주기 | 비고 |
 |---|---|---|---|
 | 722Y001 | 한국은행 기준금리 및 여수신금리 | 일 | 기준금리 항목 0101000 |
 | 817Y002 | 시장금리(일별) | 일 | 위 27개 항목 |
 | 721Y001 | 시장금리(월·분기·년) | 월 | |
-| 901Y009 | 소비자물가지수 | 월·분기·연 | 품목 1,743개, 품목별 가중치 있음 |
+| 901Y009 | 소비자물가지수 | 월·분기·연 | 품목 1,743개, 품목별 가중치 제공 |
 | 513Y001 | 경제심리지수 | 월 | |
-| 901Y056 | 증시주변자금동향 | 월·연 | 투자자 예탁금 S23A, 장내파생 예수금 S23B, RP S23C, 위탁매매 미수금 S23D, 신용융자 잔고 S23E, 신용대주 잔고 S23F (단위 원). 주간 단위는 없음 |
+| 901Y056 | 증시주변자금동향 | 월·연 | 투자자 예탁금 S23A, 장내파생 예수금 S23B, RP S23C, 위탁매매 미수금 S23D, 신용융자 잔고 S23E, 신용대주 잔고 S23F (단위 원) |
 | 802Y001 | 주식시장(일) | 일 | 출처 한국거래소 |
-| 200Y101 / 200Y102 | 국민계정 주요지표(연간 / 분기) | 연 / 분기 | |
+| 200Y101, 200Y102 | 국민계정 주요지표 (연간, 분기) | 연, 분기 | |
 
-분류 트리 예: `ecos_find_table(parent_code="0000000398")` → 증권시장 분류의 통계표 6개(주식시장 일·월, 투자자별 주식거래, 증시주변자금동향, 주가지수선물·옵션)
+분류 트리 탐색 예: `ecos_find_table(parent_code="0000000398")`은 증권시장 분류의 통계표 6개를 반환합니다.
 
-## 실제 호출로 확인한 것 (2026-11-09)
+## 검증 내역
 
-- 마감 브리핑 시트(기사·금융투자협회 자료 기준)와 11/4·11/5·11/6·11/9 4거래일 대조: 국고채 3년·10년, 회사채 AA- 3년, 신용 스프레드 **전부 일치**(소수점 셋째 자리까지). 11/2·11/3 시트 값(토스 일봉 소급)과는 10년물이 0.1~0.4bp 차이
-- 당일 값 반영 시각: 11/9는 23시 조회로, 11/10은 **20:13 조회로 이미 있음**을 확인. 20:35 재조회 때도 값이 같았고 마감 시트(기사 기준)와 일치 → 20:20 마감 브리핑 시각에 쓸 수 있음
-- 민평 회사채(corpAAmp)는 하루 늦게 들어옴(11/9·11/10 밤 모두 null, 11/9 값은 11/10에 채워짐)
-- 국고채 3·10년, 회사채 AA-, 신용 스프레드가 같은 날 기사(금투협 자료) 값과 11/4·5·6·9·10 5거래일 연속 일치
-- 반영 시각은 저장소 루트 [DATA_TIMING.md](../DATA_TIMING.md)에 다른 API와 함께 정리
+실제 호출로 확인한 내용입니다.
 
-## 시험
+- **값의 일치**: 국고채 3년·10년, 회사채 AA- 3년, 신용 스프레드가 금융투자협회 자료를 인용한 당일 기사 값과 2026-11-04, 05, 06, 09, 10의 5거래일 모두 일치했습니다.
+- **반영 시각**: 시장금리 당일 값은 20:13 조회 시 이미 제공되었고 20:35 재조회 때도 같았습니다(2026-11-10).
+- **민평 회사채**: `corpAAmp`는 당일에는 빈 값이고 다음 날 채워집니다.
 
-`node test/offline.test.js` — 로컬 가짜 서버로 주소 형식(%3F·생략)·오류 처리·스프레드 계산·빈 값, 시장금리 27개 공식 목록 대조, 가중치·상위 코드 보존, 분류 트리, 래퍼로 불러온 MCP 통신(7개 도구), 키 없음 안내. 시험 캐시는 임시 폴더에만 씀(실제 `~/.ecos-mcp`를 건드리지 않음)
+다른 제공처와의 비교는 [DATA_TIMING.md](../DATA_TIMING.md)를 참고하세요.
+
+## 테스트
+
+```bash
+node test/offline.test.js
+```
+
+로컬 모의 서버로 주소 형식(`%3F` 처리, 빈 항목 생략), 오류 처리, 스프레드 계산, 빈 값 처리, 시장금리 27개 항목의 공식 목록 대조, 가중치와 상위 코드 보존, 분류 트리 탐색, MCP 통신(도구 7개), 인증키 없음 안내를 검증합니다. 테스트 캐시는 임시 폴더에만 기록합니다.
 
 ## 변경 이력
 
-- v0.1.1 (2026-11-09): 공식 명세서 출력 항목 대조 후 보완 — 가중치(WEIGHT·WGT), 상위 통계표코드·상위 항목코드·그룹코드를 출력에 보존, 분류 트리 찾기(parent_code), 시장금리 27개 항목 전부, 시험 캐시를 임시 폴더로 분리
-- v0.1.0 (2026-11-09): 첫 판
+| 버전 | 날짜 | 내용 |
+|---|---|---|
+| 0.1.1 | 2026-11-09 | 가중치(WEIGHT, WGT), 상위 통계표·항목 코드, 그룹 코드를 출력에 보존. 분류 트리 탐색(`parent_code`) 추가. 시장금리 27개 항목 전체 지원 |
+| 0.1.0 | 2026-11-09 | 최초 릴리스 |
