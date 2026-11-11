@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 토스증권 Open API 조회 전용 MCP 서버 (외부 패키지 없음)
 // - 아래 READ_ENDPOINTS 에 적힌 GET 주소만 호출합니다. 주문·정정·취소·계좌 API 는 코드에 없습니다.
-// - client_id / client_secret 은 Claude Desktop 확장 설정(키체인)에서 환경변수로만 받습니다.
+// - client_id / client_secret 은 환경변수 TOSS_CLIENT_ID / TOSS_CLIENT_SECRET 로만 받습니다 (Claude Desktop 확장은 설정 화면 입력값을 환경변수로 전달).
 'use strict';
 
 const fs = require('fs');
@@ -78,7 +78,7 @@ function credentials() {
   const clientId = (process.env.TOSS_CLIENT_ID || '').trim();
   const clientSecret = (process.env.TOSS_CLIENT_SECRET || '').trim();
   if (!clientId || !clientSecret) {
-    throw new UserError('client_id / client_secret 이 설정되지 않았습니다. Claude Desktop > 설정 > 확장 프로그램 > 토스증권(조회 전용) > 구성에서 입력하세요.');
+    throw new UserError('client_id / client_secret 이 설정되지 않았습니다. 환경변수 TOSS_CLIENT_ID, TOSS_CLIENT_SECRET을 MCP 설정의 env에 넣으세요. Claude Desktop 확장으로 설치했다면 확장 설정 화면에서 입력합니다.');
   }
   return { clientId, clientSecret };
 }
