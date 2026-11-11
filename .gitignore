@@ -9,6 +9,7 @@ node_modules/
 .toss-mcp/
 .dart-mcp/
 .ecos-mcp/
+.edgar-mcp/
 corpcode.json
 *.token
 

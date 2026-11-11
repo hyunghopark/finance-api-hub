@@ -1,0 +1,70 @@
+{
+  "manifest_version": "0.2",
+  "name": "edgar-readonly",
+  "display_name": "SEC EDGAR (조회 전용)",
+  "version": "0.1.0",
+  "description": "미국 SEC EDGAR 조회 전용 MCP. 상장사 찾기, 공시 목록(10-K·10-Q·8-K 등), XBRL 재무(연간·분기·4분기 계산), 임의 XBRL 항목 시계열, 기간별 전 종목 비교(frames), 공시 전문 검색, 공시 원문 텍스트.",
+  "author": { "name": "hyunghopark" },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "SEC_USER_AGENT": "${user_config.user_agent}"
+      }
+    }
+  },
+  "user_config": {
+    "user_agent": {
+      "type": "string",
+      "title": "SEC User-Agent (이름 이메일)",
+      "description": "SEC는 연락처가 든 User-Agent를 요구합니다. 예: 홍길동 me@example.com. 비워 두면 맥 키체인(서비스 edgar-mcp, 계정 sec)에서 읽습니다.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "sec_find_company",
+      "description": "티커·회사명·CIK로 회사 찾기"
+    },
+    {
+      "name": "sec_filings",
+      "description": "공시 목록(양식·기간 필터, 원문 주소)"
+    },
+    {
+      "name": "sec_financials",
+      "description": "핵심 재무 항목(연간·분기, 4분기 계산)"
+    },
+    {
+      "name": "sec_concept",
+      "description": "임의 XBRL 항목 시계열"
+    },
+    {
+      "name": "sec_frames",
+      "description": "한 기간·한 항목의 전 종목 비교(상위 N)"
+    },
+    {
+      "name": "sec_search",
+      "description": "공시 전문 검색(비공식 efts 엔드포인트)"
+    },
+    {
+      "name": "sec_document",
+      "description": "공시 원문 텍스트"
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
