@@ -1,0 +1,36 @@
+{
+  "manifest_version": "0.2",
+  "name": "krx-readonly",
+  "display_name": "한국거래소 KRX (조회 전용)",
+  "version": "0.1.0",
+  "description": "한국거래소(KRX) Open API 조회 전용 MCP. 공식 31개 서비스 전부: 지수(업종지수 포함), 주식 전 종목 일별매매·종목기본정보, ETF·ETN·ELW, 채권, 선물·옵션, 석유·금·배출권, ESG. 일별 자료(전일까지).",
+  "author": { "name": "hyunghopark" },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": { "KRX_API_KEY": "${user_config.api_key}" }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "KRX API 인증키 (선택)",
+      "description": "비워 두면 맥 키체인(서비스 krx-api, 계정 krx)에서 읽습니다.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    { "name": "krx_index", "description": "지수 일별시세: KRX·KOSPI·KOSDAQ 시리즈, 채권지수, 파생상품지수" },
+    { "name": "krx_stock", "description": "주식 전 종목 일별매매(시장 요약 포함), 신주인수권, 종목기본정보" },
+    { "name": "krx_etp", "description": "ETF(NAV·순자산총액)·ETN·ELW 일별매매" },
+    { "name": "krx_bond", "description": "국채전문유통·일반·소액 채권시장 일별매매" },
+    { "name": "krx_derivative", "description": "선물·옵션 일별매매(미결제약정·내재변동성)" },
+    { "name": "krx_commodity", "description": "석유·금·배출권 시장 일별매매" },
+    { "name": "krx_esg", "description": "ESG 증권상품·사회책임투자채권·ESG 지수" }
+  ],
+  "compatibility": { "platforms": ["darwin"], "runtimes": { "node": ">=18.0.0" } }
+}

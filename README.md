@@ -10,14 +10,17 @@
 | [dart](dart/) | 금융감독원 DART | 기업 개황, 공시 목록·원문, 재무제표, 재무지표, 배당, 주요사항보고서 | 직접 만든 MCP 서버 (v0.2.1, 도구 8개) | `DART_API_KEY` |
 | [ecos](ecos/) | 한국은행 ECOS | 국고채·회사채 금리, 신용 스프레드, 기준금리, 물가 등 전체 통계, 100대 지표, 용어사전 | 직접 만든 MCP 서버 (v0.1.1, 도구 7개) | `ECOS_API_KEY` |
 | [edgar](edgar/) | 미국 SEC EDGAR | 미국 상장사 공시 목록·원문, XBRL 재무(연간·분기), 기간별 전 종목 비교, 공시 전문 검색 | 직접 만든 MCP 서버 (v0.1.0, 도구 7개) | `SEC_USER_AGENT` (키 아님, 이름+이메일) |
+| [krx](krx/) | 한국거래소 KRX Open API | 공식 31개 서비스 전부: 업종지수, 전 종목 일별매매·종목기본정보, ETF NAV, 채권, 선물·옵션, 금·석유·배출권, ESG (일별, 전일까지) | 직접 만든 MCP 서버 (v0.1.0, 도구 7개) | `KRX_API_KEY` |
 | [fred](fred/) | 미국 세인트루이스 연준 FRED | 미국 금리 곡선·기대인플레·실질금리, 신용 스프레드·금융스트레스, 연준 유동성(순유동성 계산), 물가·고용 등 80만 개 시계열, 경제지표 발표 일정 | 직접 만든 MCP 서버 (v0.1.1, 도구 6개) | `FRED_API_KEY` |
 | [meritz](meritz/) | 메리츠증권 Trading MCP | 국내·해외 지수, 선물, 환율, EWY, 종목 일봉 | 증권사 공식 배포 (안내 문서만) | 설치 화면에서 입력 |
+
+제공처마다 값이 들어오고 확정되는 시각이 다릅니다. 확인된 반영 시각은 [DATA_TIMING.md](DATA_TIMING.md)에 모아 두었습니다.
 
 ## 공통 원칙
 
 - **조회 전용**: GET 호출만 있고 주문·계좌 API는 코드에 없습니다.
 - **외부 패키지 없음**: Node 18 이상 내장 모듈만 씁니다. `npm install`이 필요 없습니다.
-- **키 위치**: 모두 환경변수로 받습니다. DART·ECOS·FRED는 환경변수가 없으면 macOS 키체인도 봅니다. EDGAR는 키 대신 연락처가 든 User-Agent(`SEC_USER_AGENT`)를 받고, 같은 방식으로 키체인(서비스 `edgar-mcp`)도 봅니다. 토스는 환경변수만 씁니다(Claude Desktop에서는 설치 화면 입력값을 Desktop이 넘겨 줌). 키는 이 저장소에 절대 커밋하지 않습니다(`.env.example` 참고).
+- **키 위치**: 모두 환경변수로 받습니다. DART·ECOS·KRX·FRED는 환경변수가 없으면 macOS 키체인도 봅니다. EDGAR는 키 대신 연락처가 든 User-Agent(`SEC_USER_AGENT`)를 받고, 같은 방식으로 키체인(서비스 `edgar-mcp`)도 봅니다. 토스는 환경변수만 씁니다(Claude Desktop에서는 설치 화면 입력값을 Desktop이 넘겨 줌). 키는 이 저장소에 절대 커밋하지 않습니다(`.env.example` 참고).
 
 ## 범용 MCP 설정 예시
 
@@ -46,6 +49,11 @@
       "args": ["/path/to/finance-api-hub/fred/server/index.js"],
       "env": { "FRED_API_KEY": "..." }
     },
+    "krx": {
+      "command": "node",
+      "args": ["/path/to/finance-api-hub/krx/server/index.js"],
+      "env": { "KRX_API_KEY": "..." }
+    },
     "toss": {
       "command": "node",
       "args": ["/path/to/finance-api-hub/toss/server/index.js"],
@@ -55,7 +63,7 @@
 }
 ```
 
-맥에서 DART·ECOS·FRED 키를 키체인에 넣었다면 그 셋의 `env`는 비워도 됩니다.
+맥에서 DART·ECOS·KRX·FRED 키를 키체인에 넣었다면 그 넷의 `env`는 비워도 됩니다.
 
 토스는 토스증권에 등록한 허용 IP에서만 호출됩니다. 다른 PC·서버에서 쓰려면 그 공인 IP를 토스 개발자 센터에 등록해야 합니다(아니면 403).
 
@@ -69,6 +77,7 @@ node dart/test/offline.test.js
 node ecos/test/offline.test.js
 node edgar/test/offline.test.js
 node fred/test/offline.test.js
+node krx/test/offline.test.js
 ```
 
 ## Claude Desktop (선택)
