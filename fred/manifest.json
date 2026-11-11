@@ -1,0 +1,66 @@
+{
+  "manifest_version": "0.2",
+  "name": "fred-readonly",
+  "display_name": "FRED 미국 경제 데이터 (조회 전용)",
+  "version": "0.1.1",
+  "description": "세인트루이스 연준 FRED API 조회 전용 MCP. 브리핑 묶음(미국 금리 곡선·기대인플레·실질금리, 신용 스프레드·금융스트레스, 연준 유동성, 경기·물가), 시리즈 검색·관측값, 발표 일정, v1 경로 31개.",
+  "author": {
+    "name": "hyunghopark"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "FRED_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "FRED API 키 (선택)",
+      "description": "32자리 영문 소문자·숫자. 비워 두면 맥 키체인(서비스 fred-api, 계정 fred)에서 읽습니다. 입력 후 확장을 껐다 켜야 반영됩니다.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "fred_bundle",
+      "description": "브리핑 묶음: rates·credit·liquidity·macro"
+    },
+    {
+      "name": "fred_observations",
+      "description": "여러 시리즈 관측값 표(변환·주기 집계)"
+    },
+    {
+      "name": "fred_search",
+      "description": "시리즈 검색"
+    },
+    {
+      "name": "fred_series_info",
+      "description": "시리즈 정보·소속 릴리스·다음 발표일"
+    },
+    {
+      "name": "fred_release_calendar",
+      "description": "경제지표 발표 일정(미래 포함)"
+    },
+    {
+      "name": "fred_get",
+      "description": "v1 경로 31개 일반 조회"
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
