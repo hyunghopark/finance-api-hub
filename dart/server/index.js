@@ -12,7 +12,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.2.2';
+const VERSION = '0.2.3';
 const HOST = 'opendart.fss.or.kr';
 const CACHE_DIR = path.join(os.homedir(), '.dart-mcp');
 const CORP_CACHE = path.join(CACHE_DIR, 'corpcode.json');
@@ -327,6 +327,12 @@ function fitOutput(out, tool = {}) {
   return preview(lo);
 }
 
+// 기업 개황 응답 정리. 013(자료 없음)은 그 고유번호의 회사가 없다는 뜻이므로 빈 결과 대신 오류로 알림
+function companyResult(j, corp_code) {
+  if (j.status === '013') throw new Error(`고유번호 ${corp_code}를 DART에서 찾지 못함 (dart_find_corp로 확인)`);
+  delete j.status; delete j.message;
+  return j;
+}
 const IDX_CODES = { profitability: 'M210000', stability: 'M220000', growth: 'M230000', activity: 'M240000' };
 
 // ───────────────────────── 도구 ─────────────────────────
@@ -356,13 +362,12 @@ const TOOLS = [
   {
     name: 'dart_company',
     narrow: 'corp를 다시 확인하세요.',
-    description: '기업 개황: 정식 명칭, 대표자, 법인 구분, 업종코드, 설립일, 결산월, 홈페이지, IR 주소 등.',
+    description: '기업 개황: 정식 명칭, 대표자, 법인 구분, 업종코드, 설립일, 결산월, 홈페이지, IR 주소 등. 해당하는 회사가 없으면 오류로 알려 줍니다(dart_find_corp로 고유번호 확인).',
     inputSchema: { type: 'object', properties: { corp: CORP_ARG }, required: ['corp'] },
     run: async ({ corp }) => {
       const c = await resolveCorp(corp);
       const j = await dartJson('company.json', { corp_code: c.corp_code });
-      delete j.status; delete j.message;
-      return j;
+      return companyResult(j, c.corp_code);
     },
   },
   {
@@ -632,4 +637,4 @@ if (process.env.DART_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { fitOutput, pageReport, MAX_OUTPUT_CHARS, unzip, parseCorpXml, htmlToText, decodeText, resolveCorp, resolveCorps, nameOf, reportCode, KIND, REPORT_ENDPOINTS, TOOLS, _setCorpList: (l) => { corpList = l; } };
+module.exports = { companyResult, fitOutput, pageReport, MAX_OUTPUT_CHARS, unzip, parseCorpXml, htmlToText, decodeText, resolveCorp, resolveCorps, nameOf, reportCode, KIND, REPORT_ENDPOINTS, TOOLS, _setCorpList: (l) => { corpList = l; } };

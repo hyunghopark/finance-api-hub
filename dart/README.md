@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 버전 | 0.2.2 |
+| 버전 | 0.2.3 |
 | 대상 API | [DART 오픈 API](https://opendart.fss.or.kr) 공식 85개 중 58개 |
 | 호출 대상 | `opendart.fss.or.kr` 고정, GET만 사용 |
 | 인증 | `DART_API_KEY` 환경변수, 없으면 macOS 키체인(서비스 `dart-api`, 계정 `opendart`) |
@@ -50,7 +50,7 @@ security add-generic-password -s dart-api -a opendart -w
 | 도구 | 쓰는 DART API | 용도 |
 |---|---|---|
 | dart_find_corp | corpCode.xml | 회사명·종목코드 → 고유번호(corp_code) |
-| dart_company | company.json | 기업 개황 |
+| dart_company | company.json | 기업 개황 (없는 고유번호는 오류로 안내) |
 | dart_disclosures | list.json | 공시 목록 (기간·유형·상세유형·제목 글자 필터), DART 원문 주소 |
 | dart_financials | fnlttSinglAcnt / fnlttSinglAcntAll / fnlttMultiAcnt | 재무제표 주요계정 / 전체 / 여러 회사 주요계정 |
 | dart_indicators | fnlttSinglIndx / fnlttCmpnyIndx | 주요 재무지표 (수익성·안정성·성장성·활동성) |
@@ -221,10 +221,11 @@ security add-generic-password -s dart-api -a opendart -w
 ```
 node test/offline.test.js
 ```
-네트워크 없이 다음을 검증합니다: zip 해석, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개 + 재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 나눠 받기·지분공시 최신순
+네트워크 없이 다음을 검증합니다: zip 해석, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개 + 재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 나눠 받기·지분공시 최신순, 기업 개황의 없는 고유번호 안내
 
 ## 변경 이력
 
+- v0.2.3 (2026-11-25): `dart_company`에 없는 고유번호를 주면 빈 결과 대신 오류로 안내
 - v0.2.2 (2026-11-25): `dart_report`에 `limit`·`offset` 나눠 받기 추가, 지분공시는 접수일 최신순으로 주고 `bgn_de`·`end_de`로 거름. 응답이 6만 자를 넘으면 글자 대신 행 수를 줄여 유효한 JSON 유지(`truncated`, `shown`, `note`). 여러 회사를 고유번호로 지정해도 회사명 표시
 - v0.2.1 (2026-11-09): Desktop이 래퍼로 실행할 때 서버가 요청을 듣지 않던 문제 수정(`require.main` 조건 제거, 테스트에서만 `DART_MCP_NO_STDIO=1`)
 - v0.2.0 (2026-11-09): 공식 가이드 대조 후 23개 추가 — 재무지표(단일·다중), 다중회사 주요계정, 주요사항보고서·정기보고서 주요정보 20개
