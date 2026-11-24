@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:59690043e244c955867e77233b7c936c8605a19f23a4a9ae0186686d6b07d726",
+  "claims": [
+    {
+      "id": "claim_f3bb9e9019af4f70945a93c18e5db3c5",
+      "statement": "저장소는 공식 금융 데이터 API를 조회 전용 MCP 서버로 제공하며, 주문·계좌·제출 API를 포함하지 않고 Node.js 18 이상의 내장 모듈만 사용한다는 원칙을 둔다.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L3-L11",
+          "version": "repo-lines-v1:sha256:1eb068db9727c020e4aba7de96155cf5c2cb1e4b40b4db8442d907913a824440:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzNiMWM2NzZlMzQ1ZjIwMzA1NjAwZTI4NDQzNTViNmY5ZTIyOTBhMzY0OTRmMDJlNzc2N2Q0ZGM1MTVkNTY2NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGY3ODI3NmVkNDk1ZDFmNDdmZTYxZWIwOWM1MmJhZDE5ZWRhZWNjOTEwZmEwN2EzYTZlMTZlNjJmN2JkMDUxMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmM0MjcyZTAwODE3M2QwN2VmMGQxMDNiMzYxNzVlZjI0NzEzNzI0ZGQwODM3OGNiMDhkNGVjOTQxMzhkODgzOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWYyMzFiZGI2MGNlNWE1YmY2MzFiYjhjMjk3ZmMyOThlZjVkZDM4ZDYyOTE1MmRlMDc5NmZlNzFlYTBkMGI0ZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1921cdcb7da14b21a96634fcf5bb2119",
+      "statement": "제공 서버는 krx(도구 7), dart(8), ecos(7), toss(13), kis(10), fred(6), edgar(7)이고, meritz는 증권사 공식 배포 MCP의 설치 안내만 제공한다.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L13-L24",
+          "version": "repo-lines-v1:sha256:0cb1e4e3cced0614dc024e87931d75e5b27008dd753a60c4a7a1fe09c2fcaab6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkMWJhNjA1ODAzOWQ3MmZhYjA0NDdjMTgzNTNjZGFkMzc2N2M1Zjk1ZWYzNjdjODEwZWJhNTI3YjgxOGI5N2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5NTdmMGY0MDliOTE2NmQ4YWIzODBkMWQxOWEwMzc2ZjIwNzM0ZjE1ZDZiODEyOGM3N2NjNjAzYWRjYjQ0YzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1YmMyMmU4OGM4MzY0YzgwNmI0ZWFjOTY3Y2RkNmJmMjk4OTBjNzNlOWY2YzliMmMwMjBiNTRmODdiYmQ0MjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgxOWIzZmU2ZDI2NGU5MDc5NDAzMWE3MTM2MWZlMWUwZWI2MjJlOTUxZDUxYmUyMTBiOWVkMDE5MmU4MzllZjAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3d06334e1a47422c999eff12df4dd854",
+      "statement": "서버별 환경변수 이름은 저장소 루트의 .env.example에 모여 있으며 실제 값은 커밋되지 않는 .env나 에이전트 설정의 env에 넣도록 안내한다.",
+      "evidence": [
+        {
+          "resource": "repo://.env.example#L1-L15",
+          "version": "repo-lines-v1:sha256:ccdaf7c47559fe923e4bdf02824310ae74113d052c714fcc47b795837d9a03da:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlMmRiNGFmMWJlNGU2OTA0NTExOTliZWE0NTkwYTM5NjQxNGQzNWYwOTYzMzA4MDRmZTdiNWI3ZDIzN2Q1OGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjMWQ5NjBhMDY0YzhlZTZmMzdkY2EwNGUwMDJhNjM1MTdiYTlhMjczYzZmMzY5YjJlNTk3Yzc4ZDhiYTg5NmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

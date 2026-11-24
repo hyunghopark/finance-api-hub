@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:bfcc50273604ecbe6d25253806234f1ed6324d6e45fe1cd8d3aeeeab11cd9de5",
+  "claims": [
+    {
+      "id": "claim_febde85e48824e82b8d56dba87f0b71e",
+      "statement": "pack.sh는 set -e 상태에서 오프라인 테스트를 먼저 실행하고, 통과한 경우에만 manifest.json·server·README.md를 zip으로 묶어 <이름>-readonly.mcpb를 만든다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/pack.sh#L1-L8",
+          "version": "repo-lines-v1:sha256:d09ac6c774823d05912fff187945b9fb2ee32d687f539021470673bdad71c256:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjg3NWY5Mjg1NDZhZWU3ODU1Y2IxZGI5YWZjOGFiM2YxYThhMzRkNDNkZTViYmQ2MmY3MDc2ZDdiYTlmMzkxNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTllZWJkNDIwZTAzNDM5ODdmYTlhMmQ2YTdmZmJkNjMxNzgzNzk2M2IxNzZlYTBkZGIzZWYzNzU5NGQxZGE5NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://krx/pack.sh#L1-L9",
+          "version": "repo-lines-v1:sha256:86122bb7d17a68b0bf41b55627a33da578f4ac3f8e889ea6e26d4c46c26f3a72:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjg3NWY5Mjg1NDZhZWU3ODU1Y2IxZGI5YWZjOGFiM2YxYThhMzRkNDNkZTViYmQ2MmY3MDc2ZDdiYTlmMzkxNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzU2YjA1NzNhN2JiN2NlNjE4NGJmNmE4ZTBiMGM2MmFkZTVmOWFiN2FiNGM2NTk0OTRjYmJmZmU5ZTNjZTM3OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8494a065793f460ba45854a972501178",
+      "statement": "manifest.json의 mcp_config는 확장 설치 위치의 server/index.js를 node로 실행하도록 지정하고, user_config 입력값을 ${user_config.*} 치환으로 환경변수에 연결한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/manifest.json#L10-L24",
+          "version": "repo-lines-v1:sha256:796328639ece2f100635d85a64024a9e1951def7f52795e362edbaf544d85fde:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM5MTAyZDBmNTA2NjlhZjk5NzEzYjQxMGU5MzUzY2IzYmVlMzUxZmY1NzY5NWNmZDg2MWQxN2Y2OWY1MGIwNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIxOGMxMDcxNTVjNTJhMzlhNzEyYTZmNWViNzdmMTc5ZDllNDU2NWFlYjI1NDFkOGJlNzc3OWU1ZWYyOGNjZjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE0ZTMxNzAzMmNiOGZhMzJlZGFjNzg4YjE4NDQxOTkzNzMxMDZmM2E4ZDc0ODRlYTUyODI1MTNlMjZjYWQ3ZjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_76aec47de29b4965bd0251dc0fbc7a5e",
+      "statement": "toss와 kis의 매니페스트는 인증 입력 칸을 필수로, 키체인을 지원하는 krx·dart·ecos·fred·edgar의 매니페스트는 선택으로 정의한다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/manifest.json#L22-L27",
+          "version": "repo-lines-v1:sha256:c8a34b1fbd9ac60b3bfe31a2864111d9c5c2c623233259f04dd7dd407e0232b2:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjU3MDg4MjY5YTJjZWY3YTQyYTQwMmZmZDQ2ODE2ZjRmODNjN2ZhYzJjNzVlYTdmZThkNjQzNzk0ZTNlNzZhMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjUzYzljYWE4NzIyMWQxNzYxNDkzODRkOTE5Njg3MzU2NTUwZWRhYWIyODY3MmNkNmI2OWJjNTBhZDgzODJmOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjM5ZTc5MmQ5MmFmYzBhZjljN2RjMjIwZTA0N2Q4MDI1YjRkNWEyYzllNDczY2MyNGRlNDIwNDIwMWMxNmEyMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTdjZTM3ZTExYzc3NDYxYjZjMjRhMDk1YTE1ZDZiYzBlMjcyNTAzYzQ3YjMyZGFjMmMxODI1NjJlNjk3ZmM4YiJ9"
+        },
+        {
+          "resource": "repo://kis/manifest.json#L67-L82",
+          "version": "repo-lines-v1:sha256:0ba5c8132447b861aad1183b4b08ee2d142210ae4d7852b29a2a9a895c0fb0d2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUwNGE4OTYyOWI3NDIzZTA3NTMxNmI2OTE1ZWU0YWJkMjY3YzU5ODYzZjNiMzMwNjFiNTQzMThhODA5Y2Y1ODEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhNTIxZjJiNjM3ZDg2MTNkYjQyMzFlNDlkZDc1ZGJmYWQzMGQwMWJiZDdmOTU5OGMzNzA5YjI1M2UxODE0ZTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJhZTQ4MzA5YjgwMzMyNWIzZjI2ZGI5OTk4ZWEwM2E3ZjNkMjZjNzg3MGU5NzQwYTFkZDgyYjIzM2ZmYjAzYWIifQ"
+        },
+        {
+          "resource": "repo://krx/manifest.json#L18-L23",
+          "version": "repo-lines-v1:sha256:f714b69088c383f8923920bd3678ea00e1a3b3f70d797037d836096256bba634:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODI3YjU2NWU4Yjc5Y2M1M2JjNWFmZTc5ZWQ5MDgzODcxM2RmMWY0NDBhNzNmY2ZjNTNhNWMzZDIzOTY0M2VkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjUzYzljYWE4NzIyMWQxNzYxNDkzODRkOTE5Njg3MzU2NTUwZWRhYWIyODY3MmNkNmI2OWJjNTBhZDgzODJmOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjM5ZTc5MmQ5MmFmYzBhZjljN2RjMjIwZTA0N2Q4MDI1YjRkNWEyYzllNDczY2MyNGRlNDIwNDIwMWMxNmEyMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTdjZTM3ZTExYzc3NDYxYjZjMjRhMDk1YTE1ZDZiYzBlMjcyNTAzYzQ3YjMyZGFjMmMxODI1NjJlNjk3ZmM4YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f8cb490d8eac4c6abd8708de34d3d574",
+      "statement": "kis 매니페스트는 로그 파일 경로 환경변수를 홈 디렉터리 아래로 지정하며, 서버는 이 변수가 있을 때만 파일에 로그를 남긴다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/manifest.json#L18-L22",
+          "version": "repo-lines-v1:sha256:c323db0756faee45ac5eefdd618011ea5bbc3690ad9753c1076f58fc7b7979bf:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDA4Yjc2YmU3MTk4NzcyYjA5MTliMzVmODRlMjFmOTMyMDJiNDhjYjY2MjQ2ZjI0ZjAyNjFmMDg0N2RiNWEzMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOWI2MmY2MGQ4NTkwYTU3OWNmNDZmOGQ2NzM3OGM0YzU3MmI5NjJjZWNjZGI5MGM3YTVmN2I0MmI5NjA3ODJhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWE0YzY2OWE0YWQ5OTAzZmY1YjkzYjY4ZWNiNmEwYjdhOTFkODQ0ZWYzYjVlYjE4YzE4MjU1NmQ1ZTkwYWI0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTdjZTM3ZTExYzc3NDYxYjZjMjRhMDk1YTE1ZDZiYzBlMjcyNTAzYzQ3YjMyZGFjMmMxODI1NjJlNjk3ZmM4YiJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L85-L92",
+          "version": "repo-lines-v1:sha256:448a810c86e9e8afcc4c923f331eb0b5ea7c2d3609e48e969e0f93fcaa62d72c:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFkYzAwOGUyMDAwODY5ZDEwNzk0YjYzZDI4NTcyNTA3ZjUxMWFmOWUzZmY5MjFlMTliOTViYTJhYWYyMjc1NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTgyYTc3N2RiM2JjY2E1ODlmMmM3ZjE0YzVlMGNhOGE4OGEzYjA3YTNiMjVmNDdiOGY1OTVlODM2MDI1MDE0YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjMwNWQzMTBmOTkwZWFhODFkY2FjMGU2MDYyZTRkMGI2ZDMyY2IwZTNmNGEyNThkNTg5MDRhNDUyNTI4NTIyMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_d892e16c00a146d08881306c368add41",
+      "statement": "확장 설정에서 키를 바꾼 뒤에는 확장을 꺼다 켜야 적용되고, 확장을 설치하거나 다시 설치하면 Claude Desktop이 로컬 확장을 모두 재시작한다.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L101-L108",
+          "version": "repo-lines-v1:sha256:14168e181dc6abc799b1d7936bd856de5a2d682b431a52ee1605936745c16cba:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTM2N2VlMzZlMzVmN2U0YTJlZDM0YWIxMDVlZTY5ZDUyMzU4OTljZWNlZWQxNjc0NDU1MjNlMjAwMzk4N2FhMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTI2MGMzOTEzNTkyMmIzZWFiZjRjOGE3NWU4ZDEwZDc2ZmZkN2E1ZGJhODdiNmZkZTEzOWRkODUxN2JiM2Y2OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODgwOTE4YWM2NDMwNzA0MDMwMDQzMjc4YWJiMTY3MDAxYzY4MzQzZmM1YTNhZGY3ZjgyYjYxNjk1MjliODRhZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjI2NWQ4YTFmNjM1NTM0N2FmMTZlNjAxMmM3NDY2YTFkYWY3ZjIzMzEyMTJiNmVlZjE0YTAwMTk1NzBlNzc4YiJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}
