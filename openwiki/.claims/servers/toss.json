@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:fd9c3629adda223f868959d5c2b4110b76edd3977df974cb3cf15c7088946a2d",
+  "pageVersion": "sha256:b1b069fde3ad008ae2058c47fdf3639924099144d1c5d1c950c9a67156e82fa5",
   "claims": [
     {
       "id": "claim_17f02ccc9bbd43808e0a13a8af0e2926",
@@ -41,8 +41,8 @@
       "statement": "등락률 순위(TOP_GAINERS·TOP_LOSERS)와 realtime 기간의 조합은 요청을 보내기 전에 거부된다.",
       "evidence": [
         {
-          "resource": "repo://toss/server/index.js#L289-L295",
-          "version": "repo-lines-v1:sha256:43fafd63b6003a9a768a9989cbb3e49a138e74c244127a0ec921e16ce474fef4:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzcyNDU3YTI0MDBjYmIwYmI0MzVlOGJmMzVlMjEyM2NlNWI3YTMxNWUxYzQwMDEzNGRhNTNhODcyMDFjNWRjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDg0MjAzZThjNjM4NDQ2YmZjOWUxZGI2ZDZmYjY5MjU3OWI0MzUzMTBiOTlkMDMyZmQ5MDVkMmE5OTVhM2IwMiJ9"
+          "resource": "repo://toss/server/index.js#L307-L314",
+          "version": "repo-lines-v1:sha256:8cfa48cb089ca44e8a5535fa2bc0e72edd0f8f71b5313dd07884e7e6e481fab4:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzcyNDU3YTI0MDBjYmIwYmI0MzVlOGJmMzVlMjEyM2NlNWI3YTMxNWUxYzQwMDEzNGRhNTNhODcyMDFjNWRjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDg0MjAzZThjNjM4NDQ2YmZjOWUxZGI2ZDZmYjY5MjU3OWI0MzUzMTBiOTlkMDMyZmQ5MDVkMmE5OTVhM2IwMiJ9"
         }
       ]
     },
@@ -90,13 +90,59 @@
       "evidence": [
         {
           "resource": "repo://toss/API_CHECKLIST.md#L3-L5",
-          "version": "repo-lines-v1:sha256:aad37a95ada8037b5807b8cad6e77b32d3b5dd5f590b35b7c699e9fad531663b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjY0OWM1ZTM4NDc2ZjIxY2MzODQxOTdlYjYzNGZjZTM2ZjEyNDRjYTRkOWJhYjIwYzRjNWNiNDgwY2UzMmE2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM4MDIwZTc3NzUyNDIwMTc5MWI1Y2M0ZjBiMWYzMmJmZGFkYjZjM2IzNjcyNGQzOTU1ZGI4NTQ1ZjA0MzNhMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjRmZDk0NmY5MzBkNGM1MzY2ZjhkYWJhOTkzM2Y1ODgyMTY4ODlkZmU4Y2M3ZjhlNTlmZTRkZTU0ZTRlMjIzNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2MwYjU1ODZiZDhkYzBiM2QxZjgxMjU3Yjk5NzM0ZDA5NzA1NzgwM2YxYjcxZGI5OTE4NzU4NTg5MDcyMzcxYiJ9"
+          "version": "repo-lines-v1:sha256:cbbf72f0f459aa197e79c1303177190807013421ad68e582228677975bff5eb5:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjgwNjM1MWNlNDU2Y2MxNTI2MDYwNTlkNDZhMjQxM2Y2YjViMmNhNzIzZWMyZjMxNzBmZTFmN2JhNGVmOWI3NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM4MDIwZTc3NzUyNDIwMTc5MWI1Y2M0ZjBiMWYzMmJmZGFkYjZjM2IzNjcyNGQzOTU1ZGI4NTQ1ZjA0MzNhMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjRmZDk0NmY5MzBkNGM1MzY2ZjhkYWJhOTkzM2Y1ODgyMTY4ODlkZmU4Y2M3ZjhlNTlmZTRkZTU0ZTRlMjIzNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2MwYjU1ODZiZDhkYzBiM2QxZjgxMjU3Yjk5NzM0ZDA5NzA1NzgwM2YxYjcxZGI5OTE4NzU4NTg5MDcyMzcxYiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_510944a1941c4a37bb43a8a667c9739d",
+      "statement": "toss_market_indicator_prices는 symbols가 배열이 아니거나 목록에 없는 심볼이 하나라도 있으면 일부만 조회하지 않고 요청 전에 거절한다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L208-L213",
+          "version": "repo-lines-v1:sha256:a2f4520c36750b6cf43648bd435f6c816bc898c5f08f79998fbf1662950b0dbf:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzM5NmU0Mzg1NThiMjkzYTFiMjgzZTQ2NWQxZjczY2YzODE1ODU0OWZhZjA2NTA4YzgxYTE4N2MzODM2NTRmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2JmZjM5MTBmZjE4ZTAyZjkzYTdmNGE0MzU4OTc3ZmZjNDkxZmU2OWRlOTQ5N2Y1NDMzZjk3YjY3YTE5YmUzMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2Y4ZTFiYjc3YjNhMjgwNTExZGRhZWNmY2VmMGM4OTdlYjg4ZTFjZGQ5OGE1MzE0YTY0YWVkMzgyOGNkZjA1ZSJ9"
+        },
+        {
+          "resource": "repo://toss/test/test.js#L99-L105",
+          "version": "repo-lines-v1:sha256:c66490aecef1162d80d3bd31818f64bb41de843febeb82e498b8deb28d02edee:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGQ0NTdhYzMzMDczNGU1NGEwNmI3NjRlMjNjNmY1YmI5NTczZDVjNmY5N2JkNjBmMTJmOWJkMmIzZjAwYTMzMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjMzNjRmMjYwMzQ0MTZmNWFiYzViYmE0ZTFlYmFmNTliM2M4YWNiNTBjM2RjOWQ4MDNlYmI5MTYxZWJmY2MyNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDU2OTRjYjJkYTJmM2E4NGYyYjFjMjRjZjM2ZjQ4OTdiMGVjNmE2NWYxNTQwOTcxMjI4MGNkM2Y0OTgxZWEzMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzEzNjEyYTM5ZTk2NzUzMTc2ZGRmODEzYjM3OWQwODJjNmFhMWNkMmFmNGRjMDEyNjI0ZTEzMTE3YjRmNWEyMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_d443599fc7f849b98b391ef8208b2414",
+      "statement": "count를 받는 toss 도구 8개는 countArg()로 생략 시 기본값을 쓰고, 준 값이 스키마 범위의 정수가 아니면(0·음수·소수·범위 밖) 제공처를 부르기 전에 거절한다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L38-L44",
+          "version": "repo-lines-v1:sha256:94bada9a06ce2e0e2ce801a74124a42c37c3128e56249e8bfd7f2b336581720b:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTg0NjkzMTJhMjQ5YWI4MmRkMTk1OGY5ZmJkMGVlNmJkZDk5NzYyMjBkNmZmNWU0NDhhZDNiYTAwZGQ4MGM5MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmQ2MzU4OTg2NTFlOTJlNmY4YmVlMmRlNDhiYTUzMWFjMWUzMzIxOTFlMDc1ZmVkZGMwMTk2ZTEwOWU3ZThiMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzljYzU1ZjhjMTZkZmE5MTczYTU4M2ZmZDJmYmYxYzIzOGQzNzJmNjg2YzVlYzQ4MWE4ZDgwZjg1MzQwZGFiMCJ9"
+        },
+        {
+          "resource": "repo://toss/test/test.js#L106-L121",
+          "version": "repo-lines-v1:sha256:34d1ac410d62f30addd8e36201ba25e2764e311addd554ce289b4a2d2689c619:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2ZDVlMmY3OTZmMTBiZmEyNDVhOWZkNDRjYjdmZDU5YzJiMmJhMTZmNmE0MjIzMGU1ZWRiZjEwYTE0ZTM3YjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyZmViZjZiNGQzMTE4ZDFiNGQ2YjQzMDMyMDc3Mzk2YzFmMzYyY2FmNjBjOWIzNGU4YTYzY2RmYjJiODVkZDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYwNmY3YmI4MGI3M2YyNjI0NDNhZmZlYWRlYTUzODgwMmVhODA4MTAzODU4OGY1MmY0NzE4MDY4Y2Y4NWIyODUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b4a78a416b8a48d89b6de9218d1cd028",
+      "statement": "toss_exchange_rate의 dateTime은 isoDateTime()이 날짜·시각·시간대가 모두 있는 ISO 8601 형식인지를 정규식으로, Date.parse()가 해석하는 값인지를 NaN 여부로만 확인하므로 13월 같은 값은 거절하지만 달력에 없는 날짜를 모두 걸러 내지는 않으며, 생략하거나 빈 문자열이면 현재 기준으로 조회한다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L252-L253",
+          "version": "repo-lines-v1:sha256:76d166c4eda00bcbd5ed7cda445b88ba558250325d6701a6066053747a967a96:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGFiZTEzY2JmZTViNmFiZmYwYmE0ZjdhNGViYTA0OTg1MTVmZWE2Mjg5OTdhNDM4OTVjOWQ5MzZkMDA4ZTc4NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjNhZGZjNjUxZjNlNzE5Njc1NjE2NGVhOTcwMzdjMGNkMTY1ZDFmMDY1ODRiZTc0MDk4ZDRkYTdkM2MyZGY3OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWFlOTUwOTc2NTBiNzg1YTA5NmYxNmVkZDIzMWM4ZGZmMTVjYjIzNTdkYmVhNWU2ZjNlOGMzYjFmNDIzMTZiZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWUyZTg0NzZlMzRkYjg3ODBlOGI2OTliYTQzMTBjYjViMGMyNjYxOGExOTAyMTgwZTZmY2QzOTM0MDk0OTJhNCJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L45-L51",
+          "version": "repo-lines-v1:sha256:b675524cbfe60e26accebea1a85db0bb602031ea5d8f823b7bfa957d83ed00f3:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2E2ZWMwNTBlMzMzZjBmMWJlY2VhMGY5NTVlOWE2ZGNjYzkxODE0OGJjZTgxZTFmNTU2MjJkZDg1MTY4NjA0NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTVhYTAzMDZhZjk0MmE2Y2JkNTkyNzU3MDIyNjQ3OTZlMzI0YzUwMWVkMzM0MjliYThiYjhjODU1Y2UwZTJkNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWY3MDMwMjU1ZmYyNzUzOGJhYjRkNDY2ZGNkYzk4ZDgzMzkxMDIyZWZlMzMwNGQwNzhhMDhmY2JjMDI4ZThiMyJ9"
+        },
+        {
+          "resource": "repo://toss/test/test.js#L122-L128",
+          "version": "repo-lines-v1:sha256:9a12a625ab4975b46d6726b05012bdd8b8512cefb29963260fd5a5366ec4ab68:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzViMDRjNTBmYThiMDgyZjY0MTc4YzlkYjYxMDFlM2Q2ZjlkYTA5MTQzNDU3MTQ5MDg2OWZmMGVmNjgwMTVjMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDgwYThhZWFhYzQ4ZTQ4YzJmNDlmMWM5NzhlNzJlY2I1NWMzODA2M2VkMTRmYmVlNTkyYjczYjUxYjM0ZWMwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDQ0NzEzZTRiYzVjMjMwZTM0MTY3NGZhZDQ4ZjcyYTJlZjI5ZDA3NmZjYmNlNWJlZDhhNjdjYWMxMDkzNDZlYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTdiNWZiZjZiNTFhZmJlNDIxZTEzZjAxZDIwYzM2MDMxYzczYTRlN2Q3NmVhMDJkNGY3YzdjMTE2OGE2ZjAyMCJ9"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T12:24:57.291Z"
+    "at": "2026-11-24T17:16:13.162Z"
   }
 }

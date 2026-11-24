@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:6d21ed89dd05a0d9d31da6eee2f162c2d61f25da43107375819b26923df17231",
+  "pageVersion": "sha256:25def0791e42f9d90f3451e78a62b2a0db13beafe2f117fbd3c314f2d62fcd76",
   "claims": [
     {
       "id": "claim_ed2baf4cbdd844508fc949816673c636",
@@ -171,10 +171,44 @@
           "version": "repo-lines-v1:sha256:31abc5178e4632fa993e6de09e753d8223446b3298d924c1e0093375a8e39ab5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMzZjkxMzJiMzAzZTJmYTJiNzE4YWI0OGRkMjg1ZThmOGQ0YjQ5Yjc0Y2RmNzkxMmVjZTFmNjgzNjJlYzNlYTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY0ODVjMjYxN2E2NWY1N2NhNjMwYjllYzY3ZTc0ZmUzMmY1MDJjN2U1ZjVmNGQzMzk1NTQyOGJmMjBiOWRmZjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIzZGE5NzEwMDZjYzczODRkNjhiMzYxNmYzNGZkZDU3MjEwYzIyNTJjYjZkNmZmYjg3ZmYwZWFmMTFlYTQ4Y2YifQ"
         }
       ]
+    },
+    {
+      "id": "claim_ebf3b976b8d148ba9b1fc618543df60e",
+      "statement": "toss 테스트는 잘못된 지표 심볼·count·dateTime이 오류로 끝나면서 외부 요청 수가 늘지 않는지 확인하고, count는 각 도구 스키마의 최솟값·최댓값·기본값으로 경계를 시험하며 count를 받는 도구 목록이 바뀌면 실패한다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/test/test.js#L86-L131",
+          "version": "repo-lines-v1:sha256:5b60e71cb38aa8bdbcb24a60fa79c3503e82338c338c240fdcbd47e833bf3f80:eyJzZWxlY3RlZExpbmVDb3VudCI6NDYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ5MjJjNmJmMTJhOGVmYzM4ZDA2YzM0NzZlMmQxMWEwMjI1YmU4NmQ2N2JlNzdhNDcxZTg3NzEyZTRhZDllNzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI5Y2ZhMzQwY2Q3MTc4ZTBiNWY2OGJhNWExNWViODJhODQyY2E1OWRiNWY4MmM3YjUwY2ZhYTZlMTlmZmE3ZDkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc2OGM4NzkyMDM4YmJhNmQxNjg0YmZiM2E2YTE2ZmZmNzZkYzJmMjY0ZDM1OTM0MDU2NTAxYjFhY2RlN2M5YjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ2OGFiNTBmMDBmODM3NzY2NzllYjdkNjhmOTc0NTgyOTkzNTFmNTZjMTIwMGIxM2IzZmFmOWU5MzA1YjQwMTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8af66d9bd9af4464b91644d548a1fb74",
+      "statement": "ecos 테스트는 start가 end보다 늦은 기간의 거절, 시장금리의 모르는 항목 키 거절, ecos_find_table의 limit 범위 맞춤을 고정한다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/test/offline.test.js#L145-L185",
+          "version": "repo-lines-v1:sha256:0032b1f589f2b0e85d80ba06d202b3df0f03b9dda31e424a22f701ce4f36bf8b:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkN2NmNWQ5ODZjNjM0NzEwMDZjNTZkOGFhMzFlZDY3MTNkZTcxNDc5MTUyNTA2M2VhZjQyMmMxMGQ4YWRiOGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE4ZjU2OTI0N2NkYWZmZjRhZTI0MTUyM2Q4MGUxODI0NmQwZGFlYzlhODYwMjc5OWQ1MTZjYWFkMjg5MTZhYzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkM2NkYjFjMjUwYzQxY2Q3YWExN2Y2ZmRiOWM2Mzc3NGQ4YzkwOGI3NTFhY2UxNGQxMDkzY2JkYzU5N2ViMmYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2ae64a635e20400fa50b0fbd8bfea242",
+      "statement": "dart 테스트는 기업 개황에서 없는 고유번호(013)가 오류가 되는지를, edgar 테스트는 그냥 빼면 오차가 난다는 전제를 먼저 단언한 뒤 계산한 분기 값의 오차 정리를 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/test/offline.test.js#L147-L150",
+          "version": "repo-lines-v1:sha256:c9bd53a549269f83aec46501397502213d406f0cfb327cc3c6360b22138fd9b3:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjQ2NDg0NjNiYjA1YTc1Y2I2ZGQ5MTZiZmNiOTg2YjQ3OTc4YWE2OGEyZTIzYWIxYWIyZDJjZjU3YTk3NzY1YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjAzYmE2NGE0YWFmYjBhMzE0MmI4NTkzZGNkODkzZTI3ODg0NzMwOGRkYzgwY2IwNjU1NmJhODJhYjVjMzNkZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjg2YzBlOTk1MTZlZDQzY2VlOWVkODY0OTFlMzYxMTIwODRiNjNmNGY4Yzk3MmRjM2IxMGE3M2M4ZmIxYjVlOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzI2ODhhNTY2NDg0YTRjMjAyY2QyM2RlMDJiYTM3MzljYzQ2ZGVlOTNjNTNlNjI4NzA0NzY3NzVkNGUwZmI3OSJ9"
+        },
+        {
+          "resource": "repo://edgar/test/offline.test.js#L291-L312",
+          "version": "repo-lines-v1:sha256:8c23c0a02e17a586a50e2dec189abe05bc76723aec75834120e730a89242a965:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1MmQyMGMxMDZmN2IwZTM3MWNjODIxNTBkM2E4NDgwMGU3ZjgyZDM3ODE0MjY3ZjNlM2EyMzk5ODEyMTU5NDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI1NGRkZDI3NmIyZWQyMDg3NGFlMjI2ZTVhYzExMGRhOTA1ZjkxMGI4NTY4MzRhOTBkYzcxYjljNDc1ZjQ5ODEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBkNzNkNmY4YzBiNDJkZGJiNWFlYTc0NGE0MTc5Y2ZmNTIzMjlkNTIyYmQ4ZjQ2MDViNDhjZmU5YmI5OTAxMWEifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T16:04:39.925Z"
+    "at": "2026-11-24T17:16:13.162Z"
   }
 }

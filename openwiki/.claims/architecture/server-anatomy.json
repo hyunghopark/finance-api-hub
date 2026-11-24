@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:868fa31a40a0a8b99a19f4ed802b32517424e6eb0aea293a470b9e187724e3b0",
+  "pageVersion": "sha256:e6735ff75d07d0b602fdf57cf6e04fa831d950ec8b1d964173b85a4778378347",
   "claims": [
     {
       "id": "claim_6f0569c482fb48e09f4e65168c3a690f",
@@ -131,8 +131,8 @@
       "statement": "krx, ecos, fred의 _setHost()는 테스트용 환경변수가 켜져 있을 때만 호출 대상을 로컬 가짜 서버로 바꾼다.",
       "evidence": [
         {
-          "resource": "repo://ecos/server/index.js#L397-L397",
-          "version": "repo-lines-v1:sha256:bd5ccd8c2b6b17d2ca9baba7fae2081093f6857b3fd471eae172c8ac663d7fcb:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmQ1Y2NkOGMyYjZiMTdkMmNhOWJhYmE3ZmFlMjA4MTA5M2Y2ODU3YjNmZDQ3MWVhZTE3MmM4YWM2NjNkN2ZjYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmQ1Y2NkOGMyYjZiMTdkMmNhOWJhYmE3ZmFlMjA4MTA5M2Y2ODU3YjNmZDQ3MWVhZTE3MmM4YWM2NjNkN2ZjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZmN2RjMzQ5OWRiNTZiOWVkOWUwYzhlNjQ3OTJhNTU3YzhiYzMwZmMzY2E3YTgyOTJlYjFhYjQyYmVhYmZlZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+          "resource": "repo://ecos/server/index.js#L403-L403",
+          "version": "repo-lines-v1:sha256:6bd78c080aef3f0f9b29906bc5bcb4ad56c2215c86ab0298ebc8520d01589f1f:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmJkNzhjMDgwYWVmM2YwZjliMjk5MDZiYzViY2I0YWQ1NmMyMjE1Yzg2YWIwMjk4ZWJjODUyMGQwMTU4OWYxZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNmJkNzhjMDgwYWVmM2YwZjliMjk5MDZiYzViY2I0YWQ1NmMyMjE1Yzg2YWIwMjk4ZWJjODUyMGQwMTU4OWYxZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZmN2RjMzQ5OWRiNTZiOWVkOWUwYzhlNjQ3OTJhNTU3YzhiYzMwZmMzY2E3YTgyOTJlYjFhYjQyYmVhYmZlZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
         },
         {
           "resource": "repo://fred/server/index.js#L516-L519",
@@ -223,10 +223,24 @@
           "version": "repo-lines-v1:sha256:1c4f379ace2d08b45704a4d37506f014f58232030ee67b1da01773a254643467:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM0ZjM3OWFjZTJkMDhiNDU3MDRhNGQzNzUwNmYwMTRmNTgyMzIwMzBlZTY3YjFkYTAxNzczYTI1NDY0MzQ2NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM0ZjM3OWFjZTJkMDhiNDU3MDRhNGQzNzUwNmYwMTRmNTgyMzIwMzBlZTY3YjFkYTAxNzczYTI1NDY0MzQ2NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg1N2UzOTM2M2VkYjdiMGRjYjRhNmZhNzAxNTNiMzkxNjRiNjUyNTNjNWY5ZDcyYTBmODQzN2NiM2ZjNDgwMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjZkMGQ3YTRmMDE5YTM2MWY3YWVhNGI5MmRiMjFmNGUxNzliNzUwNWI5M2M5YTA2ZDg4NTFlMzdlMGQyODViYyJ9"
         }
       ]
+    },
+    {
+      "id": "claim_35915fd1f2a24de1adb1199eed89a9cf",
+      "statement": "toss의 지표 심볼과 ecos의 시장금리 항목 키는 목록에 없는 값이 하나라도 있으면 걸러 내고 조회하는 대신 요청 전에 오류로 거절하며, 오류에 틀린 값과 쓸 수 있는 값을 담는다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L233-L235",
+          "version": "repo-lines-v1:sha256:32893eb1fd1b62da7f9086e3f997acc015a288ff8da0aa5e2fa90a6e4bab9735:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzJhN2QyNGZjNzAyYjcyNmNjNzAyZDI2OTQzNGMyNTlkMDYxNDk3MGEwMjQ1NDI5NmU0MDhjNDVmMWJiMTI5NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWQxMDc2M2EwYTcxZjc0YmZhMjQ4MjkzZmYxNjZiMDYyYzA5N2Q3NjJlNGUzMmEzNzgzMWY0ZTJhZDEyYjIzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjIxNzdmYjZiNTIwYzljNjQ5ZTRlMmFhOWE0MjI2OGM4NjQzOTAwYjg0ZWI3MjBlMWIwODNhMjg0OGZmZTI3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzI1ZWE2MmI4NTQ3ODU5MzZkZWM5NWNkYWEwZWIyY2Q5NmFiMDQ3NDRjN2ZmN2JmM2VkNGY4MWE2YTM3ZTEzOCJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L208-L212",
+          "version": "repo-lines-v1:sha256:743e08a9e26a5c95ffbf2f787d2ccdc607977b96facc4afaafb23bf268faee26:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTA3ZDdiNzNjNGI2NmVhMTIxMjgxMWY1ZjFjNTY5NGYzOTE0YzViMGM1NGVjYTAyODViMDEzZjdmYmY4ZjEyMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2JmZjM5MTBmZjE4ZTAyZjkzYTdmNGE0MzU4OTc3ZmZjNDkxZmU2OWRlOTQ5N2Y1NDMzZjk3YjY3YTE5YmUzMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTZiZmU3MTQyYzk2M2U5ZmU2NGFhMmI2MWNiZjQ1NzlhNjUwOTc3MzcwNjRjYzA0NjRjMDY0M2UwYzkxNjg5MCJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T16:04:39.925Z"
+    "at": "2026-11-24T17:09:12.439Z"
   }
 }
