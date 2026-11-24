@@ -13,7 +13,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const ALLOWED_HOSTS = new Set(['data.sec.gov', 'www.sec.gov', 'efts.sec.gov']);
 const CACHE_DIR = path.join(os.homedir(), '.edgar-mcp');
 const TICKER_CACHE = path.join(CACHE_DIR, 'company_tickers.json');
@@ -217,6 +217,7 @@ function dedupe(facts) {
 const ANNUAL_FORM = /^(10-K|20-F|40-F)/;
 const isAnnualDur = (d) => d >= 340 && d <= 380;
 const isQuarterDur = (d) => d >= 80 && d <= 100;
+const isHalfYearDur = (d) => d >= 165 && d <= 200;
 const isNineMonthDur = (d) => d >= 250 && d <= 290;
 const shapeFact = (f, extra) => {
   const o = { period_start: f.start, period_end: f.end, value: f.val, filed: f.filed, form: f.form, accession: f.accn };
@@ -227,6 +228,7 @@ const byEndDesc = (a, b) => String(b.period_end).localeCompare(String(a.period_e
 function buildSeries(facts, kind, period, limit) {
   const items = dedupe(facts);
   let rows = [];
+  const missing = [];
   if (kind === 'instant') {
     const annualEnds = new Set(facts.filter((f) => f.fp === 'FY' && ANNUAL_FORM.test(f.form || '')).map((f) => f.end));
     rows = items.filter((f) => !f.start && (period === 'quarterly' || annualEnds.has(f.end))).map((f) => shapeFact(f));
@@ -237,18 +239,33 @@ function buildSeries(facts, kind, period, limit) {
     } else {
       const quarters = dur.filter((x) => isQuarterDur(x.d));
       rows = quarters.map((x) => shapeFact(x.f));
+      const hasQuarter = (end) => quarters.some((q) => Math.abs(dayDiff(q.f.end, end)) <= 3);
+      // 누적값끼리 빼서 만든 분기: 기간은 앞 누적의 다음 날부터, 공시 정보는 뒤 누적의 것
+      const derive = (cum, prev) => rows.push({ period_start: addDays(prev.f.end, 1), period_end: cum.f.end, value: cum.f.val - prev.f.val,
+        filed: String(cum.f.filed) > String(prev.f.filed) ? cum.f.filed : prev.f.filed, form: cum.f.form, accession: cum.f.accn, derived: true });
+      // 현금흐름표처럼 10-Q에 누적값만 실리는 항목 → 2분기 = 6개월 누적 − 1분기, 3분기 = 9개월 누적 − 6개월 누적 (같은 시작일)
+      for (const h of dur.filter((x) => isHalfYearDur(x.d))) {
+        if (hasQuarter(h.f.end)) continue;
+        const q1 = quarters.find((x) => x.f.start === h.f.start);
+        if (q1) derive(h, q1); else missing.push({ period_end: h.f.end, quarter: '2분기', need: '1분기 값' });
+      }
+      for (const n of dur.filter((x) => isNineMonthDur(x.d))) {
+        if (hasQuarter(n.f.end)) continue;
+        const h = dur.find((x) => isHalfYearDur(x.d) && x.f.start === n.f.start);
+        if (h) derive(n, h); else missing.push({ period_end: n.f.end, quarter: '3분기', need: '6개월 누적' });
+      }
       // 4분기는 따로 공시되지 않음 → 연간 − 9개월 누적 (같은 시작일)
       for (const a of dur.filter((x) => isAnnualDur(x.d))) {
-        if (quarters.some((q) => Math.abs(dayDiff(q.f.end, a.f.end)) <= 3)) continue;
+        if (hasQuarter(a.f.end)) continue;
         const y9 = dur.find((x) => isNineMonthDur(x.d) && x.f.start === a.f.start);
-        if (!y9) continue;
-        rows.push({ period_start: addDays(y9.f.end, 1), period_end: a.f.end, value: a.f.val - y9.f.val,
-          filed: String(a.f.filed) > String(y9.f.filed) ? a.f.filed : y9.f.filed, form: a.f.form, accession: a.f.accn, derived: true });
+        if (y9) derive(a, y9); else missing.push({ period_end: a.f.end, quarter: '4분기', need: '9개월 누적' });
       }
     }
   }
   rows.sort(byEndDesc);
-  return rows.slice(0, limit);
+  const out = rows.slice(0, limit);
+  out.missing = missing; // 계산에 필요한 값이 없어 만들지 못한 분기(배열의 덧붙임 속성이라 JSON에는 나오지 않음)
+  return out;
 }
 
 const METRICS = {
@@ -386,7 +403,7 @@ const TOOLS = [
   },
   {
     name: 'sec_financials',
-    description: '핵심 재무 항목을 연간 또는 분기별로 정리합니다(XBRL 기준, 금액은 달러). 정정·재공시가 있으면 가장 늦게 공시된 값을 쓰고, 분기 모드에서 4분기는 "연간 − 9개월 누적"으로 계산해 derived=true로 표시합니다. metrics: ' +
+    description: '핵심 재무 항목을 연간 또는 분기별로 정리합니다(XBRL 기준, 금액은 달러). 정정·재공시가 있으면 가장 늦게 공시된 값을 쓰고, 분기 모드에서 4분기는 "연간 − 9개월 누적"으로 계산해 derived=true로 표시합니다. 현금흐름처럼 분기 보고서에 누적값만 실리는 항목은 2분기(6개월 누적 − 1분기)·3분기(9개월 누적 − 6개월 누적)도 같은 방식으로 계산해 derived=true로 표시하고, 계산할 수 없어 빠진 분기는 note에 적습니다. metrics: ' +
       Object.entries(METRICS).map(([k, v]) => `${k}(${v.label})`).join(', ') + '. 미국 GAAP 공시 회사용이며 IFRS(20-F) 회사는 sec_concept에서 taxonomy=ifrs-full로 조회하세요.',
     inputSchema: { type: 'object', properties: {
       company: COMPANY_ARG,
@@ -406,6 +423,7 @@ const TOOLS = [
         const m = METRICS[key];
         const merged = new Map();
         const used = [];
+        const missed = new Map();
         let unit = m.unit;
         for (const tag of m.tags) {
           const j = await getConcept(c.cik, 'us-gaap', tag);
@@ -418,9 +436,15 @@ const TOOLS = [
           used.push(tag);
           unit = pu.unit;
           for (const r of rows) { const k = `${r.period_start || ''}|${r.period_end}`; if (!merged.has(k)) merged.set(k, Object.assign({}, r, { tag })); }
+          for (const x of rows.missing || []) if (!missed.has(x.period_end)) missed.set(x.period_end, x);
         }
         const rows = [...merged.values()].sort(byEndDesc).slice(0, limit);
         const notes = [];
+        // 표시 범위 안에서, 다른 항목명으로도 채워지지 않은 분기만 알림
+        const gaps = rows.length ? [...missed.values()].filter((x) => x.period_end >= rows[rows.length - 1].period_end &&
+          ![...merged.values()].some((r) => Math.abs(dayDiff(r.period_end, x.period_end)) <= 3)).sort((x, y) => String(y.period_end).localeCompare(String(x.period_end))) : [];
+        if (gaps.length) notes.push(`${m.label}(${key})에서 빠진 분기: ` + gaps.slice(0, 8).map((x) => `${x.period_end}에 끝나는 ${x.quarter}(${x.need} 없음)`).join(', ') +
+          (gaps.length > 8 ? ` 외 ${gaps.length - 8}건` : '') + '. 계산에 필요한 값이 공시 자료에 없어 건너뜀');
         if (!rows.length) notes.push('자료 없음. 이 회사가 해당 us-gaap 항목을 쓰지 않거나(회사 고유 항목·IFRS), 해당 기간 공시가 없을 수 있음');
         if (rows.some((r) => r.derived) && /^eps_/.test(key)) notes.push('derived EPS는 (연간 − 9개월 누적)이라 주식수 변화로 근사값');
         if (used.length > 1) notes.push('여러 항목명을 이어 붙임(앞쪽 항목 우선): ' + used.join(', '));
@@ -431,7 +455,7 @@ const TOOLS = [
   },
   {
     name: 'sec_concept',
-    description: '임의의 XBRL 항목 하나의 시계열(회사·항목 지정). 항목 이름은 sec_financials에 없는 것을 볼 때 씁니다(예: us-gaap의 InventoryNet, ResearchAndDevelopmentExpense, dei의 EntityCommonStockSharesOutstanding). view=latest는 기간마다 최신 공시값만, view=all은 정정 이력까지 전부.',
+    description: '임의의 XBRL 항목 하나의 시계열(회사·항목 지정). 항목 이름은 sec_financials에 없는 것을 볼 때 씁니다(예: us-gaap의 InventoryNet, ResearchAndDevelopmentExpense, dei의 EntityCommonStockSharesOutstanding). view=latest는 기간마다 최신 공시값만, view=all은 정정 이력까지 전부. forms를 주면 그 양식의 공시 안에서 기간마다 최신 값을 고릅니다.',
     inputSchema: { type: 'object', properties: {
       company: COMPANY_ARG, tag: { type: 'string', description: 'XBRL 항목명 예: InventoryNet' },
       taxonomy: { type: 'string', default: 'us-gaap', description: 'us-gaap · ifrs-full · dei · srt' },
@@ -453,8 +477,9 @@ const TOOLS = [
       let facts = j.units[unit] || [];
       const forms = a.forms ? String(a.forms).split(',').map((s) => s.trim().toUpperCase()) : null;
       if (a.from && !isDate(a.from)) throw new Error('from은 YYYY-MM-DD');
-      if (a.view === 'all') facts = facts.slice(); else facts = dedupe(facts);
+      // 양식·기간을 먼저 거른 뒤에 기간별 최신 공시를 고름(같은 값이 나중에 다른 양식에 다시 실려도 그 기간이 빠지지 않게)
       facts = facts.filter((f) => (!forms || forms.includes(String(f.form).toUpperCase())) && (!a.from || f.end >= a.from));
+      if (a.view !== 'all') facts = dedupe(facts);
       facts.sort((x, y) => byEndDesc({ period_end: x.end, period_start: x.start }, { period_end: y.end, period_start: y.start }) || String(y.filed).localeCompare(String(x.filed)));
       const limit = clamp(a.limit, 1, 200, 40);
       return { company: { cik: c.cik, name: j.entityName, ticker: c.ticker }, taxonomy, tag: j.tag, label: j.label, description: j.description, unit, available_units: units, total: facts.length,
@@ -588,6 +613,73 @@ const TOOLS = [
   },
 ];
 
+// ───────────────────────── 출력 한도 ─────────────────────────
+// 응답이 한도를 넘으면 글자가 아니라 행 수를 줄여 유효한 JSON을 유지. 한도 이하 응답은 그대로 둠
+const TRUNC_HINT = {
+  sec_find_company: 'limit을 줄이거나 검색어를 더 구체적으로 주세요.',
+  sec_filings: 'limit을 줄이거나 forms·from·to로 좁히세요.',
+  sec_financials: 'limit을 줄이거나 metrics를 나눠서 조회하세요.',
+  sec_concept: 'limit을 줄이거나 forms·from으로 좁히세요.',
+  sec_frames: 'top을 줄이거나 min_value·max_value·name_contains로 좁히세요.',
+  sec_search: 'size를 줄이고 next_offset으로 이어서 조회하세요.',
+  sec_document: 'max_chars를 줄이고 offset으로 나눠 읽으세요.',
+};
+function fitOutput(out, toolName) {
+  const full = JSON.stringify(out, null, 1);
+  if (full.length <= MAX_OUTPUT_CHARS) return full;
+  const hint = TRUNC_HINT[toolName] || 'limit을 줄이거나 기간을 좁히세요.';
+  const isObj = out && typeof out === 'object' && !Array.isArray(out);
+  const topRows = isObj && Array.isArray(out.rows);
+  // 줄일 배열: 최상위 rows가 있으면 그것, 없으면 안쪽의 모든 배열(sec_financials의 항목별 rows 등)
+  const arraysIn = (o, depth, acc) => {
+    if (!o || typeof o !== 'object' || depth > 4) return acc;
+    for (const k of Object.keys(o)) { if (Array.isArray(o[k])) acc.push({ holder: o, key: k }); else arraysIn(o[k], depth + 1, acc); }
+    return acc;
+  };
+  const build = (n) => {
+    const c = JSON.parse(full);
+    let targets = topRows ? [{ holder: c, key: 'rows' }] : arraysIn(c, 0, []);
+    if (targets.some((t) => t.key === 'rows')) targets = targets.filter((t) => t.key === 'rows');
+    const before = Math.max(0, ...targets.map((t) => t.holder[t.key].length));
+    // 건수 제한 인자와 같은 쪽(앞쪽 = 최신·상위)을 남김
+    for (const t of targets) t.holder[t.key] = t.holder[t.key].slice(0, n);
+    const note = `출력 한도 6만 자 때문에 ${topRows ? '' : '배열마다 최대 '}${before}건 중 ${Math.min(n, before)}건만 표시. ${hint}`;
+    if (topRows) {
+      if ('shown' in c) c.shown = n;
+      if ('next_offset' in c && Number.isFinite(c.offset)) c.next_offset = c.offset + n < 10000 ? c.offset + n : null;
+    }
+    // truncated·note는 행 배열 앞에 두어 먼저 보이게 함
+    const res = {};
+    let placed = false;
+    const place = () => { res.truncated = true; res.note = c.note ? `${c.note} / ${note}` : note; placed = true; };
+    for (const k of Object.keys(c)) {
+      if (k === 'note') continue;
+      if (!placed && (k === 'rows' || k === 'metrics')) place();
+      res[k] = c[k];
+    }
+    if (!placed) place();
+    return { text: JSON.stringify(res, null, 1), before };
+  };
+  if (isObj) {
+    const max = build(Infinity).before;
+    let lo = 1, hi = max - 1, best = null;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      const t = build(mid).text;
+      if (t.length <= MAX_OUTPUT_CHARS) { best = t; lo = mid + 1; } else hi = mid - 1;
+    }
+    if (best) return best;
+  }
+  // 줄일 배열이 없거나 한 건만 남겨도 넘는 경우
+  const res = { truncated: true, total_chars: full.length, note: `출력 한도 6만 자를 넘어 앞부분만 표시(전체 ${full.length}자). ${hint}`, preview: '' };
+  for (let n = 50000; n >= 0; n -= 5000) {
+    res.preview = full.slice(0, n);
+    const t = JSON.stringify(res, null, 1);
+    if (t.length <= MAX_OUTPUT_CHARS) return t;
+  }
+  return JSON.stringify(res, null, 1);
+}
+
 // ───────────────────────── MCP stdio ─────────────────────────
 function send(msg) { process.stdout.write(JSON.stringify(msg) + '\n'); }
 
@@ -612,8 +704,7 @@ async function handle(msg) {
       if (!tool) return send({ jsonrpc: '2.0', id, error: { code: -32602, message: '알 수 없는 도구: ' + params.name } });
       try {
         const out = await tool.run(params.arguments || {});
-        let text = JSON.stringify(out, null, 1);
-        if (text.length > MAX_OUTPUT_CHARS) text = text.slice(0, MAX_OUTPUT_CHARS) + `\n…(잘림: 전체 ${text.length}자. limit·top을 줄이거나 기간을 좁히세요)`;
+        const text = fitOutput(out, tool.name);
         return send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } });
       } catch (e) {
         return send({ jsonrpc: '2.0', id, result: { isError: true, content: [{ type: 'text', text: mask(e.message || String(e)) }] } });
@@ -644,7 +735,7 @@ if (process.env.EDGAR_MCP_NO_STDIO !== '1') {
 }
 
 module.exports = {
-  TOOLS, METRICS, dedupe, buildSeries, rowsFromColumnar, htmlToText, normAccession, docUrl, resolveCompany, validArchiveUrl, secGet, mask,
+  TOOLS, METRICS, dedupe, buildSeries, fitOutput, MAX_OUTPUT_CHARS, rowsFromColumnar, htmlToText, normAccession, docUrl, resolveCompany, validArchiveUrl, secGet, mask,
   _setFetcher: (f) => { fetcher = f; respCache.clear(); textCache.clear(); },
   _setTickers: (l) => { tickerList = l; },
 };

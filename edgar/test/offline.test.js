@@ -40,6 +40,23 @@ const ASSETS = [
   inst('2026-03-28', 340000000000, 'Q2', '10-Q', '2026-05-01', '0000320193-26-000013'),
   inst('2026-09-26', 370000000000, 'FY', '10-K', '2026-11-03', '0000320193-26-000026'),
 ];
+// 현금흐름형: 10-Q에는 누적값만 실림(1분기 3개월, 6개월 누적, 9개월 누적, 연간). FY2025는 6개월 누적이 없어 3분기를 만들 수 없음
+const OCF = [
+  f('2025-09-28', '2025-12-27', 53925, 'Q1', '10-Q', '2026-01-30', 'q1'),
+  f('2025-09-28', '2026-03-28', 82000, 'Q2', '10-Q', '2026-05-01', 'q2'),
+  f('2025-09-28', '2026-06-27', 116996, 'Q3', '10-Q', '2026-07-31', 'q3'),
+  f('2025-09-28', '2026-09-26', 145097, 'FY', '10-K', '2026-11-03', 'k26'),
+  f('2024-09-29', '2024-12-28', 29935, 'Q1', '10-Q', '2025-01-31', 'p1'),
+  f('2024-09-29', '2025-06-28', 81754, 'Q3', '10-Q', '2025-08-01', 'p3'),
+  f('2024-09-29', '2025-09-27', 111482, 'FY', '10-K', '2025-10-31', 'k25'),
+];
+// 같은 연간 값이 10-K 뒤에 DEF 14A에 다시 실린 회사(마이크로소프트형)
+const MSFT_NET = [
+  f('2025-07-01', '2026-06-30', 133749, 'FY', '10-K', '2026-07-29', 'm-10k'),
+  f('2025-07-01', '2026-06-30', 133749, 'FY', 'DEF 14A', '2026-10-21', 'm-def'),
+  f('2024-07-01', '2025-06-30', 101832, 'FY', '10-K', '2025-07-30', 'm-10k-25'),
+  f('2024-07-01', '2025-06-30', 101832, 'FY', 'DEF 14A', '2026-10-21', 'm-def'),
+];
 const concept = (tag, label, units) => ({ cik: 320193, taxonomy: 'us-gaap', tag, label, description: label + ' 설명', entityName: 'Apple Inc.', units });
 
 const SUB_RECENT = {
@@ -61,6 +78,8 @@ const MOCK = {
   'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/NetIncomeLoss.json': concept('NetIncomeLoss', 'Net Income (Loss)', { USD: NET }),
   'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json': concept('RevenueFromContractWithCustomerExcludingAssessedTax', 'Revenue', { USD: REV_A }),
   'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/Revenues.json': concept('Revenues', 'Revenues', { USD: REV_B }),
+  'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/NetCashProvidedByUsedInOperatingActivities.json': concept('NetCashProvidedByUsedInOperatingActivities', 'OCF', { USD: OCF }),
+  'https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/NetIncomeLoss.json': concept('NetIncomeLoss', 'Net Income (Loss)', { USD: MSFT_NET }),
   'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/Assets.json': concept('Assets', 'Assets', { USD: ASSETS }),
   'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/EarningsPerShareDiluted.json': concept('EarningsPerShareDiluted', 'EPS', { 'USD/shares': [f('2024-09-29', '2025-09-27', 7.46, 'FY', '10-K', '2025-10-31', 'a')] }),
   'https://data.sec.gov/submissions/CIK0000320193.json': { cik: '0000320193', name: 'Apple Inc.', tickers: ['AAPL'], exchanges: ['Nasdaq'], sic: '3571', sicDescription: 'Electronic Computers', fiscalYearEnd: '0926',
@@ -208,6 +227,67 @@ S._setFetcher(async (url) => {
   assert.ok(!/method:\s*'(POST|PUT|DELETE|PATCH)'/i.test(src), 'GET 외 방식 금지');
   assert.strictEqual(S.TOOLS.length, 7);
 
+  // 16) sec_concept: forms·from을 먼저 거른 뒤 기간별 최신 공시를 고름
+  const mLatest = await tool('sec_concept').run({ company: 'MSFT', tag: 'NetIncomeLoss' });
+  assert.deepStrictEqual(mLatest.rows.map((r) => r.form), ['DEF 14A', 'DEF 14A'], '필터가 없으면 가장 늦은 공시');
+  const m10k = await tool('sec_concept').run({ company: 'MSFT', tag: 'NetIncomeLoss', forms: '10-K', from: '2023-07-01' });
+  assert.strictEqual(m10k.total, 2, '나중에 DEF 14A에 다시 실려도 10-K 행이 남아야 함');
+  assert.deepStrictEqual(m10k.rows.map((r) => [r.period_end, r.form, r.accession]), [['2026-06-30', '10-K', 'm-10k'], ['2025-06-30', '10-K', 'm-10k-25']]);
+  assert.strictEqual((await tool('sec_concept').run({ company: 'MSFT', tag: 'NetIncomeLoss', forms: '10-K', from: '2025-07-01' })).total, 1);
+  assert.strictEqual((await tool('sec_concept').run({ company: 'MSFT', tag: 'NetIncomeLoss', view: 'all', forms: '10-K' })).total, 2);
+
+  // 17) 누적값만 공시되는 항목의 분기 계산: 2분기 = 6개월 − 1분기, 3분기 = 9개월 − 6개월, 4분기 = 연간 − 9개월
+  const oq = S.buildSeries(OCF, 'duration', 'quarterly', 20);
+  const fy26 = oq.filter((r) => r.period_end > '2025-09-27');
+  assert.deepStrictEqual(fy26.map((r) => [r.period_start, r.period_end, r.value, !!r.derived]), [
+    ['2026-06-28', '2026-09-26', 145097 - 116996, true], ['2026-03-29', '2026-06-27', 116996 - 82000, true],
+    ['2025-12-28', '2026-03-28', 82000 - 53925, true], ['2025-09-28', '2025-12-27', 53925, false]]);
+  assert.strictEqual(fy26.reduce((s, r) => s + r.value, 0), 145097, '네 분기 합 = 연간');
+  assert.strictEqual(fy26[1].accession, 'q3', '계산값의 공시 정보는 뒤쪽 누적의 것');
+  assert.deepStrictEqual(oq.filter((r) => r.period_end <= '2025-09-27').map((r) => r.period_end), ['2025-09-27', '2024-12-28'], '6개월 누적이 없으면 2·3분기를 만들지 않음');
+  assert.deepStrictEqual(oq.missing.map((x) => [x.period_end, x.quarter]), [['2025-06-28', '3분기']]);
+  assert.ok(!q.some((r) => r.derived && r.period_end !== '2026-09-26'), '분기 값이 직접 공시된 항목에는 2·3분기 계산값을 넣지 않음');
+  assert.deepStrictEqual(q.missing.map((x) => [x.period_end, x.quarter]), [['2025-09-27', '4분기'], ['2024-09-28', '4분기']]);
+  const finO = await tool('sec_financials').run({ company: 'AAPL', metrics: ['operating_cash_flow', 'net_income'], period: 'quarterly', limit: 6 });
+  assert.strictEqual(finO.metrics.operating_cash_flow.rows.length, 6);
+  assert.ok(/operating_cash_flow.*빠진 분기: 2025-06-28에 끝나는 3분기\(6개월 누적 없음\)/.test(finO.metrics.operating_cash_flow.note), finO.metrics.operating_cash_flow.note);
+  assert.strictEqual(finO.metrics.net_income.note, undefined, '표시 범위 밖의 빠진 분기는 알리지 않음');
+  assert.strictEqual((await tool('sec_financials').run({ company: 'AAPL', metrics: ['operating_cash_flow'], period: 'quarterly', limit: 4 })).metrics.operating_cash_flow.note, undefined);
+
+  // 18) 출력 한도: 넘으면 행 수를 줄여 유효한 JSON 유지, 넘지 않으면 그대로
+  const LIM = S.MAX_OUTPUT_CHARS;
+  const small = { total_matched: 2, shown: 2, rows: [{ a: 1 }, { a: 2 }] };
+  assert.strictEqual(S.fitOutput(small, 'sec_filings'), JSON.stringify(small, null, 1), '한도 이하는 한 글자도 바뀌지 않음');
+  const mk = (n) => Array.from({ length: n }, (_, i) => ({ form: '4', filing_date: '2026-01-01', accession: String(i).padStart(18, '0'), url: 'https://www.sec.gov/Archives/edgar/data/320193/' + 'x'.repeat(250) }));
+  const bigF = { company: { cik: '0000320193' }, total_matched: 1005, shown: 200, rows: mk(200) };
+  const tF = S.fitOutput(bigF, 'sec_filings');
+  const jF = JSON.parse(tF);
+  assert.ok(tF.length <= LIM, '길이 ' + tF.length);
+  assert.strictEqual(jF.truncated, true);
+  assert.ok(jF.rows.length > 0 && jF.rows.length < 200);
+  assert.strictEqual(jF.shown, jF.rows.length, 'shown은 실제 행 수');
+  assert.strictEqual(jF.total_matched, 1005, '전체 건수는 그대로');
+  assert.deepStrictEqual(jF.rows, bigF.rows.slice(0, jF.rows.length), '앞쪽(최신)을 남김');
+  assert.ok(new RegExp('출력 한도 6만 자 때문에 200건 중 ' + jF.rows.length + '건만 표시').test(jF.note) && /limit/.test(jF.note), jF.note);
+  assert.ok(JSON.stringify(Object.assign({}, jF, { rows: bigF.rows.slice(0, jF.rows.length + 1), shown: jF.rows.length + 1 }), null, 1).length > LIM, '한도 안에서 최대한 남김');
+  assert.strictEqual(bigF.rows.length, 200, '원본은 건드리지 않음');
+  const jS = JSON.parse(S.fitOutput({ query: 'q', total: 2298, offset: 100, shown: 200, next_offset: 300, rows: mk(200) }, 'sec_search'));
+  assert.strictEqual(jS.next_offset, 100 + jS.rows.length, '쪽 넘김 값은 줄인 뒤 기준');
+  assert.ok(/next_offset/.test(jS.note));
+  const jN = JSON.parse(S.fitOutput({ query: 'q', count: 500, rows: mk(300), note: '기존 안내' }, 'sec_find_company'));
+  assert.ok(jN.note.startsWith('기존 안내 / 출력 한도') && jN.count === 500 && !('shown' in jN));
+  const metrics = {};
+  for (const k of ['revenue', 'net_income', 'capex']) metrics[k] = { label: k, unit: 'USD', tags_used: ['A', 'B', 'C'], rows: mk(120) };
+  const tM = S.fitOutput({ company: { cik: '1' }, period: 'quarterly', metrics }, 'sec_financials');
+  const jM = JSON.parse(tM);
+  assert.ok(tM.length <= LIM && jM.truncated === true && /metrics/.test(jM.note));
+  const lens = Object.values(jM.metrics).map((m) => m.rows.length);
+  assert.ok(lens[0] > 0 && lens[0] < 120 && lens.every((n) => n === lens[0]), '항목마다 같은 수만큼 최신 쪽을 남김');
+  assert.deepStrictEqual(jM.metrics.revenue.tags_used, ['A', 'B', 'C']);
+  const tD = S.fitOutput({ url: 'u', total_chars: 9, offset: 0, next_offset: null, text: '"\n'.repeat(40000) }, 'sec_document');
+  const jD = JSON.parse(tD);
+  assert.ok(tD.length <= LIM && jD.truncated === true && jD.total_chars > LIM && typeof jD.preview === 'string' && /max_chars/.test(jD.note));
+
   // 14) 접수번호·오류 가림
   assert.strictEqual(S.normAccession('000032019326000026'), '0000320193-26-000026');
   assert.strictEqual(S.mask('failed for tester@example.com here'), 'failed for ***@*** here');
@@ -234,6 +314,6 @@ S._setFetcher(async (url) => {
   assert.ok(byId(3).result.isError && /User-Agent/.test(byId(3).result.content[0].text), JSON.stringify(byId(3)));
   assert.strictEqual(byId(4).error.code, -32602);
 
-  console.log('통과: 정정값 우선, 연간/분기/4분기 계산, 시점값, 회사 지정, 항목 이어 붙이기, 공시 목록(옛 공시·xsl), frames 정렬, 전문검색 주소, 원문 변환·찾기·주소 제한, 허용 호스트·GET 고정, MCP 프로토콜(7개 도구), User-Agent 없음 안내');
+  console.log('통과: 정정값 우선, 연간/분기/4분기 계산, 시점값, 회사 지정, 항목 이어 붙이기, 공시 목록(옛 공시·xsl), frames 정렬, 전문검색 주소, 원문 변환·찾기·주소 제한, 허용 호스트·GET 고정, MCP 프로토콜(7개 도구), User-Agent 없음 안내, 양식 필터 순서, 누적값 분기 계산·빠진 분기 알림, 출력 한도(유효한 JSON)');
   process.exit(0);
 })().catch((e) => { console.error(e); process.exit(1); });

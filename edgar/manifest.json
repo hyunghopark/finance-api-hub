@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "edgar-readonly",
   "display_name": "SEC EDGAR (조회 전용)",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "미국 SEC EDGAR 조회 전용 MCP. 상장사 찾기, 공시 목록(10-K·10-Q·8-K 등), XBRL 재무(연간·분기·4분기 계산), 임의 XBRL 항목 시계열, 기간별 전 종목 비교(frames), 공시 전문 검색, 공시 원문 텍스트.",
   "author": { "name": "hyunghopark" },
   "server": {
