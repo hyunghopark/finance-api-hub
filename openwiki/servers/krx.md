@@ -3,13 +3,15 @@ type: server
 title: 한국거래소 서버 (krx)
 description: krx-readonly 서버가 명세 표 하나로 KRX API 31개를 7개 도구로 만드는 구조, 최근 영업일 탐색, 문자열 응답의 값 변환, 서버 쪽 거르기·정렬, 이용신청 오류 안내를 설명한다.
 tags: [krx, exchange, daily-data, spec-driven, market-breadth]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
+  - id: openwiki-source-58587dabe01ba58a9f47765f
+    resource: repo://krx/README.md
   - id: openwiki-source-110194fb47b75af2466f370f
     resource: repo://krx/server/index.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # 한국거래소 서버 (krx)
@@ -78,13 +80,29 @@ KRX는 조건 검색을 지원하지 않는다. 한 번 호출하면 그날 시�
 
 | 인자 | 동작 |
 |---|---|
-| `code` | 종목코드·단축코드·표준코드 항목에 이 글자가 들어간 행만 |
+| `code` | 종목코드·단축코드·표준코드 항목에 이 글자가 들어간 행만 (부분 일치) |
 | `name_contains` | 이름 계열 항목에 이 글자가 들어간 행만 |
 | `sort_by`, `ascending` | 출력 항목 하나로 정렬. 빈 값은 방향과 무관하게 항상 뒤 |
 | `limit` | 표시할 행 수 (기본 50, 최대 3000) |
 | `fields` | 필요한 출력 항목만 |
 
 응답에는 전체 건수(`total`), 조건에 맞는 건수(`matched`), 표시한 건수(`shown`)가 함께 들어가, 잘린 경우 얼마나 잘렸는지 알 수 있다.
+
+**표준코드로 찾기.** `code`에는 단축코드(`005930`)와 12자리 표준코드(`KR7005930003`)를 모두 넣을 수 있다. 다만 일별 매매처럼 응답에 표준코드 항목이 없는 API가 있다. 그런 API에 표준코드가 들어오면 그대로는 어느 행과도 맞지 않으므로, 표준코드 안의 단축코드(4~9번째 글자)를 꺼내 그것으로 찾는다. 종목 기본정보처럼 표준코드 항목이 있는 API에서는 준 값 그대로 비교한다.
+
+**걸러서 0건이 된 경우.** 그날 자료는 있는데 `code`나 `name_contains`에 맞는 행이 없으면, `note`에 그날 자료가 몇 건이었고 어느 조건에 걸렸는지를 적는다. 자료 자체가 없는 날(휴장일이거나 갱신 전)의 안내와 문구가 달라, "조건이 틀렸다"와 "그날 자료가 없다"를 구분할 수 있다. 이때도 시장 요약은 시장 전체 기준으로 그대로 들어간다.
+
+### 출력 한도
+
+응답은 6만 자까지다. 전 항목을 다 받으면 유가증권 일별 매매는 약 200행에서 한도에 닿는다고 서버 README에 적혀 있어, `limit`을 최대 3000까지 올릴 수 있어도 실제로 받는 행은 그보다 적을 수 있다.
+
+한도를 넘으면 `fitOutput()`이 글자를 자르지 않고 행 수를 줄여 유효한 JSON으로 돌려준다. 공통 동작은 [MCP 서버 공통 구조](../architecture/server-anatomy.md)의 "출력 한도"에 있고, krx에서의 세부는 다음과 같다.
+
+- 정렬 순서의 앞쪽 행이 남는다. `limit`이 남기는 쪽과 같다.
+- `truncated: true`가 붙고 `shown`이 실제 행 수로 바뀐다. `note`는 "출력 한도 6만 자 때문에 M건 중 N건만 표시"(M은 조건에 맞는 건수)와 좁히는 방법(`limit`, `fields`, `sort_by`, `name_contains`, `code`)으로 바뀐다.
+- `total`, `matched`, `market_summary`는 줄이기 전 값 그대로다.
+
+많은 행이 필요하면 `fields`로 항목을 골라 한 행의 길이를 줄이는 것이 가장 효과적이다.
 
 ## 시장 요약
 

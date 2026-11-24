@@ -3,9 +3,6 @@ type: architecture
 title: MCP 서버 공통 구조
 description: 모든 서버가 공유하는 단일 파일 구조, stdio JSON-RPC 처리, 도구 정의 방식, 조회 전용 원칙을 지키는 장치, 오류를 돌려주는 방식을 설명한다.
 tags: [mcp, architecture, json-rpc, read-only, stdio]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
   - id: openwiki-source-1d34fa17b34fe29bbe8f60ee
     resource: repo://dart/server/index.js
@@ -21,7 +18,10 @@ sources:
     resource: repo://krx/server/index.js
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # MCP 서버 공통 구조
@@ -64,7 +64,7 @@ kis에서는 주문과 조회가 같은 호스트의 다른 경로와 거래 ID(
 
 ## 도구 정의
 
-`TOOLS`는 `{name, description, inputSchema, run}` 객체의 배열이다. `tools/list` 응답에는 앞의 세 항목과 `readOnlyHint: true`, `openWorldHint: true` 주석을 붙여 내보낸다.
+`TOOLS`는 `{name, description, inputSchema, run}` 객체의 배열이다. `tools/list` 응답에는 앞의 세 항목과 `readOnlyHint: true`, `openWorldHint: true` 주석을 붙여 내보낸다. 일부 서버는 도구 객체에 출력 한도 처리에 쓰는 항목을 더 두는데(아래 "출력 한도"), 이 항목은 목록 응답에 나가지 않는다.
 
 도구 이름은 `<서버>_<대상>` 형식이다(`kis_stock_price`, `dart_financials`). 여러 서버를 함께 등록해도 이름이 겹치지 않는다.
 
@@ -85,7 +85,7 @@ krx는 도구를 손으로 쓰지 않고 명세 표에서 만든다. `APIS`의 3
 | `initialize` | 프로토콜 버전, 서버 이름·버전, 사용 안내(`instructions`) |
 | `ping` | 빈 결과 |
 | `tools/list` | 도구 목록 |
-| `tools/call` | 도구 실행 결과를 JSON 문자열로 담은 텍스트 |
+| `tools/call` | 도구 실행 결과를 JSON 문자열로 담은 텍스트 (긴 결과는 "출력 한도" 처리를 거침) |
 
 `id`가 없는 메시지는 알림으로 보고 응답하지 않는다. 알 수 없는 메서드는 `-32601`로 답한다.
 
@@ -98,6 +98,34 @@ toss와 kis는 지원하는 프로토콜 버전 목록을 두고, 클라이언�
 오류 문구는 한국어로 원인과 조치를 함께 적는다. 예를 들어 krx는 401을 받으면 인증키 문제인지 API 이용신청 미승인인지와 신청 위치를 알려 준다. 문구는 내보내기 전에 `mask()`를 거친다.
 
 toss와 kis는 `UserError` 클래스로 "사용자에게 그대로 보여 줄 오류"를 구분한다. 그 밖의 예외는 `오류:` 접두어를 붙이고, 시간 초과는 "응답 시간 초과(15초)"로 바꾼다.
+
+## 출력 한도
+
+krx, dart, ecos, fred, edgar는 도구 응답 한 번의 길이를 6만 자(`MAX_OUTPUT_CHARS`)로 제한한다. `handle()`은 도구 결과를 바로 문자열로 만들지 않고 `fitOutput()`에 넘긴다. 이 함수는 한도를 넘는 결과에서 **글자가 아니라 행 수를 줄인다.** 그래서 응답은 길이와 관계없이 항상 해석할 수 있는 JSON이다.
+
+코드는 서버마다 따로 있지만 약속은 같다.
+
+- 한도 이하인 결과는 한 글자도 바꾸지 않는다.
+- 한도를 넘으면 행 배열에서 한도 안에 들어가는 가장 많은 행 수를 이분 탐색으로 찾아 그만큼만 남긴다.
+- 줄인 결과에는 `truncated: true`가 붙고, `note`에 몇 건 중 몇 건을 표시했는지와 그 도구에서 범위를 좁히는 방법이 들어간다. `shown`은 실제로 돌려준 행 수가 된다.
+- 전체 건수를 뜻하는 항목(`total`, `count`, `matched` 등)은 줄이기 전 값 그대로다.
+- 줄일 배열이 없는 결과가 한도를 넘으면 `{ truncated, total_chars, note, preview }` 형태로 앞부분만 문자열에 담아 돌려준다.
+
+남기는 쪽은 그 도구의 건수 제한 인자가 남기는 쪽과 같다. 대부분 앞쪽(정렬 순서의 위쪽, 최신·상위)이고, fred의 관측값만 최근 쪽인 뒤를 남긴다.
+
+서버마다 다른 것은 "어느 배열을 줄이고 어떤 안내를 붙이는가"를 정하는 방법이다. 이 정보는 `TOOLS`의 도구 객체에 `tools/list`로는 나가지 않는 항목으로 붙어 있다.
+
+| 서버 | 줄일 대상과 안내를 정하는 방법 |
+|---|---|
+| krx | `rows`, 없으면 가장 큰 배열. 안내 문구는 하나로 고정 |
+| ecos | `rows`·`results`, 없으면 가장 큰 배열. 도구의 `narrow` 문구를 안내로 사용 |
+| dart | 도구의 `rowsKey`와 `narrow`. `afterFit`으로 줄인 뒤의 `next_offset`을 다시 맞춤 |
+| fred | 도구의 `trim`(`key`, 남기는 쪽 `keep`, `hint`). 없으면 응답 안에서 가장 큰 목록을 찾아 줄임 |
+| edgar | 최상위 `rows`, 없으면 안쪽의 모든 배열을 같은 수로 줄임. 안내는 도구 이름별 표(`TRUNC_HINT`) |
+
+kis와 toss에는 이 장치가 없다. kis는 제공처가 많이 주는 도구에서 `count` 인자로 행 수를 줄인다([호출 한도와 캐시](rate-limits-and-caching.md)).
+
+이전에는 한도를 넘으면 문자열을 6만 자에서 잘라 끝에 안내 문구를 붙였다. 그 응답은 JSON이 아니었고 `shown`이 실제 행 수와 맞지 않았다. 지금의 동작은 [오프라인 테스트](../testing/offline-tests.md)가 서버마다 고정한다.
 
 ## 시작 방식과 테스트 스위치
 

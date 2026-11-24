@@ -3,13 +3,15 @@ type: server
 title: FRED 서버 (fred)
 description: fred-readonly 서버의 허용 경로 목록, 브리핑용 묶음 도구가 최신값과 변화를 고르는 방식, 순유동성 어림값 계산과 단위 환산, 결측값 처리를 설명한다.
 tags: [fred, us-rates, macro, liquidity, time-series]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
   - id: openwiki-source-8fdaa5aa1e2f741c83ecbba1
     resource: repo://fred/server/index.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+  - id: openwiki-source-f59bba96fbc1585fb324a768
+    resource: repo://fred/test/offline.test.js
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # FRED 서버 (fred)
@@ -81,9 +83,34 @@ FRED는 휴장일 등의 결측을 `.`으로 준다. 서버는 이를 `null`로 
 | `fred_series_info` | 시리즈 정보와 소속 릴리스, 다음 발표일 |
 | `fred_release_calendar` | 경제지표 발표 일정 (미래 일정 포함) |
 
-`fred_release_calendar`의 날짜는 원 기관이 정한 발표일이다. 발표 시각과 예상치는 FRED에 없다.
-
 시리즈 정보는 프로세스 메모리에 캐시한다. 묶음 조회에서 같은 시리즈의 정보를 반복해 받지 않기 위해서다.
+
+## 발표 일정: fred_release_calendar
+
+기간(`start`, `end`)과 릴리스 이름의 일부(`name_contains`)로 발표 일정을 찾는다. 날짜는 원 기관이 정한 발표일이다. 발표 시각과 예상치는 FRED에 없다.
+
+FRED의 전체 발표 일정은 하루 수십 건이라 긴 기간을 통째로 받을 수 없다. 그래서 조회 경로가 둘이다.
+
+**이름이 있으면 릴리스별로 조회한다.** 먼저 릴리스 목록(`releases`)을 받아 이름이 맞는 릴리스를 고르고, 릴리스마다 발표일(`release/dates`)을 따로 조회해 기간 안의 날짜만 모은다. 전체 일정을 훑지 않으므로 긴 과거 기간도 빠짐없이 온다. 결과는 날짜순, 같은 날은 릴리스 이름순이다.
+
+**이름이 없으면 전체 일정을 훑는다.** `releases/dates`를 `start`부터 1,000건씩 최대 5쪽(5,000건) 읽는다. 맞는 릴리스가 15개를 넘거나 릴리스 목록이 한 쪽에 다 들어오지 않을 때도 이 경로로 돌아간다.
+
+전체 훑기에서 `end`까지 읽지 못하면 응답에 `truncated: true`가 붙고, `note`에 몇 건을 읽었고 어느 날짜까지 읽었는지가 적힌다. 그 날짜를 `start`로 옮겨 이어서 조회하거나 `name_contains`로 좁히라는 안내도 함께 들어간다. 읽은 마지막 날짜 당일은 일부만 있을 수 있다는 점도 문구에 있다. 한도에 걸린 것을 알리지 않으면 "그 기간에 발표가 없었다"로 읽히기 때문이다.
+
+## 출력 한도
+
+한 번의 응답은 6만 자까지이고, 넘으면 `fitOutput()`이 행 수를 줄여 유효한 JSON으로 돌려준다. 공통 동작은 [MCP 서버 공통 구조](../architecture/server-anatomy.md)의 "출력 한도"에 있다. fred는 도구 객체의 `trim` 항목으로 줄이는 방법을 정한다.
+
+| 도구 | 줄이는 목록 | 남기는 쪽 |
+|---|---|---|
+| `fred_observations` | `rows` | 최근 쪽 (뒤) |
+| `fred_search` | `results` | 앞 (정렬 순서의 위쪽) |
+| `fred_release_calendar` | `rows` | 이른 날짜 |
+| `fred_get` | 응답에서 가장 큰 목록 | 앞 |
+
+관측값만 뒤를 남기는 것은 `limit` 인자가 최근 쪽을 남기는 것과 맞춘 것이다. 줄인 응답에는 `truncated: true`, `note`, 실제 행 수 `shown`이 붙고, 전체 건수 `count`는 그대로다. 발표 일정이 쪽 한도와 출력 한도에 함께 걸리면 두 안내가 모두 `note`에 남는다.
+
+`fred_get`은 FRED 응답을 그대로 넘기므로 목록의 이름과 위치가 경로마다 다르다. 그래서 `trim`에 목록 이름을 두지 않고, `largestCollection()`이 응답 안에서 가장 큰 묶음을 찾는다. 배열뿐 아니라 항목이 객체의 키로 들어 있는 묶음(릴리스 표의 `elements`)도 대상이다. 한 건만 남겨도 한도를 넘으면 그 안의 다음으로 큰 묶음을 줄이기를 되풀이하고, 이때 `note`에 줄인 위치가 경로로 적힌다. 응답에 `offset`이 있으면 이어서 볼 다음 `offset` 값을 안내한다.
 
 ## 반영 시각
 

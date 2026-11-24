@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:14da5e8b08510b60d3d76a7ae9c705ea53b7584b8ccaf75e87fc912d3d4034e1",
+  "pageVersion": "sha256:5193baabde3cfd91f663ecfd455097c3af726705f6aa1dc6938f62eb45bb37ec",
   "claims": [
     {
       "id": "claim_3926a7ef54df4034876268e043f446b3",
@@ -21,8 +21,8 @@
       "statement": "fred_get은 허용 경로 중 하나를 골라 인자를 그대로 넘기는 범용 도구이며, 인자 이름은 소문자와 밑줄만, 값은 객체가 아닌 것만 받는다.",
       "evidence": [
         {
-          "resource": "repo://fred/server/index.js#L339-L354",
-          "version": "repo-lines-v1:sha256:bcc6f755022930c8df88f2ef3cc1fb719c04e9ee9c09a020ebb1b5db2099c7da:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkxN2IzZGYyZDU5ZWU0N2E4OGVkYTU0NGJmNmQwNzg4Zjk1YjliOTdjMThhYjA4Y2E1YjlmNzczMmYxMGRiNzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNmOGUxYmI3N2IzYTI4MDUxMWRkYWVjZmNlZjBjODk3ZWI4OGUxY2RkOThhNTMxNGE2NGFlZDM4MjhjZGYwNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyNjJkMzlkZThlOTRhOTdmZjQ3MjFkNDNhM2MyODRiYWE4YWNkZmFiN2NmODJiMTYxMWY3MTkzMTZmZjVlM2QifQ"
+          "resource": "repo://fred/server/index.js#L443-L460",
+          "version": "repo-lines-v1:sha256:4439d0f37602c584a1e1175a7d85ce3ec161edcde4fc40376d7cefbe4ea217d4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIxMTFmMjM5YWM2NWM5ZmVjZDRmNzk3NWQ0ZWUwYzY3N2I1OGE4ZWE2Nzg1MmVhMjVkMjc5MjM5MjUxOGQyZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImViMjM4MTNlOTMyYTRkOGE5NDE3ODgwYWU3MWFlNDk5Y2VlODk2NmY5MzdiZTZhMGVjYWJhM2E5NGEyMTllMTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyNjJkMzlkZThlOTRhOTdmZjQ3MjFkNDNhM2MyODRiYWE4YWNkZmFiN2NmODJiMTYxMWY3MTkzMTZmZjVlM2QifQ"
         }
       ]
     },
@@ -79,10 +79,74 @@
           "version": "repo-lines-v1:sha256:846af5240c30e691fd4ffd8b47b486ea227ebc03e8851cdd78e25728ef63953a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4YmI1NWRlZDFkZGY3ZmYzNDlkN2YxMDVjZTA5ZjFlMmQ1MzhlMjgxMjU5NjU4MGI3ZGI4YjY3ZmI1M2E0YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5ZGMxMGI2ZWY4Y2NmNmUxNzMzMDAxN2RhMGQ1YWI0ZTZkZDlhN2E0ZTc0NThjYzZlMWMyYWY0MzQ2NTA2Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3MTY5YjI4ZGNjZWY1ZDc3ZWZhMzY3MDMzM2U3OTU2MjU0NzU5M2U3M2VkYjljMWZlZWYwOGQ3OGI5OThkOGMifQ"
         }
       ]
+    },
+    {
+      "id": "claim_584e3072137341d6978ea224b334528b",
+      "statement": "fred_release_calendar는 name_contains가 있으면 릴리스 목록에서 이름이 맞는 릴리스를 찾아 릴리스별 발표일(release/dates)로 조회하고, 맞는 릴리스가 15개를 넘거나 이름이 없으면 전체 일정(releases/dates)을 훑는다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L20-L21",
+          "version": "repo-lines-v1:sha256:9e5e74e5bd44368a260299a041b8107950c73dc7afee3b27e15bf578addea42f:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjUxNDFjNTQzNWFhMzljZjY3MzljMDlhOGE1ZGZkMGQwOTA0Zjk3MjhlYzc2ZTRhOTU2ZTA0Y2EzMDc4YjQ2ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWQ4MjI0ODkwNjBjNTYxOTkwYzE0NzM2YmUzY2Q4OTk0MjAzNjJmYTJjNWFjNjg5MGVkMDk4MjJhNmE4YjljNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTNmNGRiMzZiYjM0ODE3OTczNWYyODY1NWU4MDQyYmM2ZWU1MzE5NzlhZjI2MzQ1ZjkwYmY0OTdkMDNjYWZmZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGNhYmZjZDBhMmU4MjNiM2QwY2VmNjM1MjY5ZWQ5YzMxOWI4MGUwZGI3MDZjMjZmN2M5NTNmOGJmZjAxNmZlNCJ9"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L400-L433",
+          "version": "repo-lines-v1:sha256:793faef26806bf04c85802f203541108d52b2d30c1fe205688f8bbbc038a2d5e:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMTkzMzVhNDA2Yzg4ZjQwMzcwNDVhMmYyYjU1ZDE4ODFhNzhkODI4OTZkMTVkZDE0OTNlYWUzNDBhZDBlOTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAxYmM5YTdjZDhhNmUxOWFlZTRiYzc2NDE1NmZhMDZiOTJiMTYwZDA1NzliMzlkMGM4ZmJhNDAwNGMzMzcwMzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdiOWZkMjQ0ZDIzZDY0MjEyZWQ1ZjQ2M2YwNTE2OWJjOWQzNGIwMGM5N2ExMzBhMjg1ZWE3NWEwZGNiMDQ2YWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9a3827d40ff948dab9d10219c689fefd",
+      "statement": "전체 일정 훑기는 1,000건씩 최대 5쪽까지만 읽고, end까지 읽지 못하면 응답에 truncated: true를 붙이고 note에 읽은 건수와 마지막 날짜, 이어서 조회하는 방법을 적는다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L425-L440",
+          "version": "repo-lines-v1:sha256:41985784645f350fe487c6e87c6e8c2448c73cfbed1b6aacdc28becd2c2fedad:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY2YjhkYjM2NGEzYTMzNTc1YzMwOThmMzIyMzQ3NjJkM2Y0YzRkMDQ3OTNiMDA2MzFjYWVjMDcxM2VjM2U2NDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2M2RkNTg2OGE2NmVjN2E5YTJiMzNhZjAzNzYwZjNiMWMyMGM2NzcxMzFjMDk5Y2EzNTY2MzU3ZGRlYWM2ODkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImViZDQ3ZTk2ODQ3MDQzYjdkOTFlMzUxNTk3YTJlYzliY2Y5ZmI0NWNmZGIwNDg1YWNiNDVjNGQ1ZWFmNDk1NjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNmOGUxYmI3N2IzYTI4MDUxMWRkYWVjZmNlZjBjODk3ZWI4OGUxY2RkOThhNTMxNGE2NGFlZDM4MjhjZGYwNWUifQ"
+        },
+        {
+          "resource": "repo://fred/test/offline.test.js",
+          "version": "repo-file-v1:sha256:f68a61a79870e33fce5496801d8aaaaa9d7f561661ee02f3483bab7d2663f4aa"
+        }
+      ]
+    },
+    {
+      "id": "claim_47086e16fd8946c7b3e9d9de50d65f25",
+      "statement": "fred의 출력 한도는 도구의 trim 설정을 따라 fred_observations는 rows의 최근 쪽을, fred_search와 fred_release_calendar는 앞쪽을 남기고, 전체 건수 count는 그대로 두면서 shown을 실제 행 수로 맞춘다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L249-L288",
+          "version": "repo-lines-v1:sha256:03c589f36891456ca0ec37e1007b017226f5baea85399652efb4419da09f87a3:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjMGIxMGQxNzc5MDkyZjE0MDFjMGNkZmU1OWE0MTIwOWU3Yjk3ODJkNmQzMjc4MzYxMzEzY2IyMTNkMzM3NzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzYWQyNDUzMDNjZjUxYTIwNzA2ZGVmZjgzNTc0ZDA3Yzk1ZmEyYmMwNDk4MTQ2OWQwZTkyNTAwMGYxOWY1OTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNjBkMmM1NjcwMTBlMGVlYTlhZjg5MTQxYmI2MDY2MWJiZmM5ZTBjNDRmZDhhODkxYjg3N2YyYjQyYTU3NDMifQ"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L324-L324",
+          "version": "repo-lines-v1:sha256:1c4f379ace2d08b45704a4d37506f014f58232030ee67b1da01773a254643467:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM0ZjM3OWFjZTJkMDhiNDU3MDRhNGQzNzUwNmYwMTRmNTgyMzIwMzBlZTY3YjFkYTAxNzczYTI1NDY0MzQ2NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM0ZjM3OWFjZTJkMDhiNDU3MDRhNGQzNzUwNmYwMTRmNTgyMzIwMzBlZTY3YjFkYTAxNzczYTI1NDY0MzQ2NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg1N2UzOTM2M2VkYjdiMGRjYjRhNmZhNzAxNTNiMzkxNjRiNjUyNTNjNWY5ZDcyYTBmODQzN2NiM2ZjNDgwMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjZkMGQ3YTRmMDE5YTM2MWY3YWVhNGI5MmRiMjFmNGUxNzliNzUwNWI5M2M5YTA2ZDg4NTFlMzdlMGQyODViYyJ9"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L351-L351",
+          "version": "repo-lines-v1:sha256:7ed179c583ebb9999e5f6999a4c58dfb23646c873ed62cd4da8d10289e252ad2:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2VkMTc5YzU4M2ViYjk5OTllNWY2OTk5YTRjNThkZmIyMzY0NmM4NzNlZDYyY2Q0ZGE4ZDEwMjg5ZTI1MmFkMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2VkMTc5YzU4M2ViYjk5OTllNWY2OTk5YTRjNThkZmIyMzY0NmM4NzNlZDYyY2Q0ZGE4ZDEwMjg5ZTI1MmFkMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWI2YTdhMGFmZWQ0YzA1YTk1MzEwNTNmMjBiYTBlYTRkMTkyYTA1MWZiMDg5Y2U4ODFmNzMwM2ZmMWUxNWI1MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDQxNzQ0ZTY0ZThlZDcxMzQ0OGFlZjI2MWMyN2MwYTZiNDhlZmNiODc2NTFkMmNhNGFjNDIzM2ZlZTAyZTIyMCJ9"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L399-L399",
+          "version": "repo-lines-v1:sha256:5dd107fcf720410db136ef40f80262158bb81be83c9a9a01a90a5af7dc95f074:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWRkMTA3ZmNmNzIwNDEwZGIxMzZlZjQwZjgwMjYyMTU4YmI4MWJlODNjOWE5YTAxYTkwYTVhZjdkYzk1ZjA3NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWRkMTA3ZmNmNzIwNDEwZGIxMzZlZjQwZjgwMjYyMTU4YmI4MWJlODNjOWE5YTAxYTkwYTVhZjdkYzk1ZjA3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTZlY2I3YjQwMDllZDkyNmQzNDViM2U5OTVkMWMwY2Y5NzNlMzEwYjI2NTRjMzkxYjg2Yzk3NDgyN2ExNjlhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTRmODhiMDhlNTdlMTA0OGM1OGVmMWI4YjA4NGU3YTRmNWU4ODIzODk3MDM3YmNkYzI0MDhjYmMyMzE3MzM0OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_cb49f8247d9441969d1ad5ac62d9bff1",
+      "statement": "fred_get의 응답이 한도를 넘으면 largestCollection()이 배열이나 항목 묶음 객체 중 가장 큰 것을 찾아 줄이고, 한 건만 남겨도 넘으면 그 안의 다음으로 큰 묶음을 줄이며 note에 줄인 위치를 적는다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L230-L248",
+          "version": "repo-lines-v1:sha256:f2ff95e94aee0f8f7765da07dd75bda62502bcb1c86a8a30d7391eeb4c3b019a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNlNjFkZDQ2OWQwYzQyMTllNzNlOTQyMDc2YmY3NzE3ZTNjODVhNDlmNjMyMTBlNzc0NWNlZGJkN2VhMTNkYzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhhNDYwNmI2ZWY5ZDk1NDg5MDhiNjJkMzk0Zjk3MjU4OTNlOTA3M2NhZDQxZWY5ODZkZGFiNmZjYjM4OWI0ODUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg3YmM2ZTc3MTIzZmU0NTQzYzAyZDcyOGQwN2UyYzJlNzliM2E2ODIwNTg0NmUwYjRiNWNkMWRiMGQyYjUxMDYifQ"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L268-L288",
+          "version": "repo-lines-v1:sha256:fdfb10fdccab0347048822c2fb1629192437269a49f9eb86ec7490c96b2f97ae:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkxZmI1MGYzZjc2OTJlMmViN2Y1YjQ0MmI3MWY1ZWExYTUzMDUyYjdiZDFjMjVjY2MxYmIwODZhOGQxMDQ0MjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyNjFlZjYwMDA4MDg4YTYxMGZmN2ZlZGNmNzFjNDljYWYwNDU0MWNmZTQ2ODIwYzMwMDhlNWRlZTMwMzAyMzMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNjBkMmM1NjcwMTBlMGVlYTlhZjg5MTQxYmI2MDY2MWJiZmM5ZTBjNDRmZDhhODkxYjg3N2YyYjQyYTU3NDMifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T12:24:57.291Z"
+    "at": "2026-11-24T16:04:39.925Z"
   }
 }
