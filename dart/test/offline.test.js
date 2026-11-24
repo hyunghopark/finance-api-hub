@@ -78,6 +78,71 @@ assert.ok(S.decodeText(euc).endsWith('배당'), 'EUC-KR 디코딩');
   // 7) 여러 회사 지정
   const many = await S.resolveCorps('005930, 088980');
   assert.deepStrictEqual(many.map((c) => c.corp_code), ['00126380', '00600000']);
+  // 여러 회사를 고유번호로 주면 이름·종목코드를 목록에서 채움. 목록에 없는 고유번호와 한 회사 지정은 그대로
+  const byCode = await S.resolveCorps('00126380, 00600000, 12345678');
+  assert.deepStrictEqual(byCode.map((c) => [c.corp_code, c.corp_name, c.stock_code]),
+    [['00126380', '삼성전자', '005930'], ['00600000', '맥쿼리인프라', '088980'], ['12345678', undefined, undefined]]);
+  assert.deepStrictEqual(await S.resolveCorps('00126380'), [{ corp_code: '00126380' }], '한 회사는 고유번호만으로 진행');
+  assert.strictEqual(S.nameOf('00126380', byCode), '삼성전자');
+  assert.strictEqual(S.nameOf('00126380', [{ corp_code: '00126380' }]), '삼성전자', '이름 없는 항목이 있어도 목록에서 이름을 찾음');
+  assert.strictEqual(S.nameOf('12345678', byCode), '12345678', '목록에도 없으면 고유번호 그대로');
+
+  // 8) 출력 한도: 한도 이하는 그대로, 넘으면 행 수를 줄여 유효한 JSON으로
+  const tool = (n) => S.TOOLS.find((x) => x.name === n);
+  const small = { corp: { corp_code: '00126380' }, count: 2, rows: [{ a: 1 }, { a: 2 }] };
+  for (const x of S.TOOLS) assert.strictEqual(S.fitOutput(small, x), JSON.stringify(small, null, 1), x.name + ' 한도 이하 결과는 변화 없음');
+  const longRow = (i) => ({ rcept_no: String(i), memo: '가'.repeat(900) });
+  const checkFit = (out, tl, key) => {
+    const text = S.fitOutput(out, tl);
+    assert.ok(text.length <= S.MAX_OUTPUT_CHARS, '길이 ' + text.length);
+    const j = JSON.parse(text);
+    assert.strictEqual(j.truncated, true);
+    assert.ok(j[key].length > 0 && j[key].length < out[key].length, '행 수를 줄임');
+    assert.strictEqual(j.shown, j[key].length, 'shown은 실제 행 수');
+    assert.deepStrictEqual(j[key], out[key].slice(0, j[key].length), '앞쪽 행을 남김');
+    assert.ok(new RegExp(`출력 한도 6만 자 때문에 ${out[key].length}건 중 ${j.shown}건만 표시`).test(j.note), j.note);
+    assert.ok(JSON.stringify({ ...out, [key]: out[key].slice(0, j.shown + 1) }, null, 1).length > S.MAX_OUTPUT_CHARS - 400, '한도 안에서 최대한 남김');
+    return j;
+  };
+  const fin = checkFit({ corp: {}, year: '2025', scope: 'all', count: 300, rows: Array.from({ length: 300 }, (_, i) => longRow(i)) }, tool('dart_financials'), 'rows');
+  assert.strictEqual(fin.count, 300, '전체 건수 항목은 그대로');
+  assert.ok(/statement/.test(fin.note));
+  const dis = checkFit({ corp: null, total_count: 5000, shown: 100, note: 'rm 표시', list: Array.from({ length: 100 }, (_, i) => longRow(i)) }, tool('dart_disclosures'), 'list');
+  assert.strictEqual(dis.total_count, 5000);
+  assert.ok(dis.note.startsWith('rm 표시 / '), '기존 note는 남김');
+  checkFit({ total: 100, results: Array.from({ length: 100 }, (_, i) => longRow(i)) }, tool('dart_find_corp'), 'results');
+  checkFit({ etc: [1, 2], hits: Array.from({ length: 100 }, (_, i) => longRow(i)) }, tool('dart_document'), 'hits'); // 행 배열 지정이 없으면 가장 큰 배열
+  for (const out of [{ text: '나'.repeat(70000) }, { rows: [{ memo: '"'.repeat(70000) }] }, 'x'.repeat(70000)]) {
+    const text = S.fitOutput(out, tool('dart_company'));
+    const j = JSON.parse(text);
+    assert.ok(text.length <= S.MAX_OUTPUT_CHARS && j.truncated === true && j.total_chars > S.MAX_OUTPUT_CHARS && j.preview.length > 0 && j.note, '줄일 배열이 없으면 preview');
+  }
+
+  // 9) dart_report 쪽 넘김: 지분공시는 접수일 최신순·기간 필터, 그 밖은 순서 유지
+  const eq = Array.from({ length: 250 }, (_, i) => ({ rcept_no: String(20240101000000 + i), rcept_dt: `2024-${String(1 + (i % 12)).padStart(2, '0')}-${String(1 + (i % 28)).padStart(2, '0')}` }));
+  const p1 = S.pageReport('equity', eq, {});
+  assert.deepStrictEqual([p1.count, p1.total, p1.shown, p1.offset, p1.next_offset, p1.rows.length], [250, 250, 100, 0, 100, 100]);
+  const seen = [];
+  for (let off = 0, guard = 0; off !== undefined && guard < 10; guard++) { const pg = S.pageReport('equity', eq, { offset: off }); seen.push(...pg.rows); off = pg.next_offset; }
+  assert.strictEqual(seen.length, 250, 'offset으로 끝까지');
+  assert.strictEqual(new Set(seen.map((x) => x.rcept_no)).size, 250);
+  for (let i = 1; i < seen.length; i++) assert.ok(seen[i - 1].rcept_dt >= seen[i].rcept_dt, '접수일 최신순');
+  assert.strictEqual(seen[0].rcept_dt, eq.map((x) => x.rcept_dt).sort().pop());
+  const flt = S.pageReport('equity', eq, { bgn_de: '20240301', end_de: '20240331', limit: 500 });
+  assert.ok(flt.total > 0 && flt.total === flt.rows.length && flt.next_offset === undefined);
+  assert.ok(flt.rows.every((x) => x.rcept_dt.startsWith('2024-03')), '접수일 필터');
+  const per = S.pageReport('periodic', eq.slice(0, 30), {});
+  assert.deepStrictEqual(per, { count: 30, total: 30, shown: 30, offset: 0, rows: eq.slice(0, 30) }, 'limit 이하는 순서 그대로, next_offset 없음');
+  assert.deepStrictEqual(S.pageReport('major', eq, { limit: 3, offset: 5 }).rows, eq.slice(5, 8), '그 밖의 항목은 DART 순서 유지');
+  assert.strictEqual(S.pageReport('major', eq, { limit: 9999 }).shown, 250);
+  assert.strictEqual(S.pageReport('major', Array.from({ length: 600 }, () => ({})), { limit: 9999 }).shown, 500, 'limit 상한 500');
+  const big = { corp: {}, endpoint: 'otrCprInvstmntSttus', title: 't', ...S.pageReport('periodic', Array.from({ length: 134 }, (_, i) => longRow(i)), { offset: 10 }) };
+  assert.strictEqual(big.next_offset, 110);
+  const bj = checkFit(big, tool('dart_report'), 'rows');
+  assert.deepStrictEqual([bj.count, bj.total, bj.offset, bj.next_offset], [134, 134, 10, 10 + bj.shown], 'next_offset은 실제로 보여 준 행의 다음');
+  const last = { corp: {}, ...S.pageReport('periodic', Array.from({ length: 90 }, (_, i) => longRow(i)), {}) };
+  assert.strictEqual(last.next_offset, undefined);
+  assert.strictEqual(checkFit(last, tool('dart_report'), 'rows').next_offset, JSON.parse(S.fitOutput(last, tool('dart_report'))).shown, '잘리면 next_offset이 생김');
 
   // 5) MCP 프로토콜 (키 없는 상태에서 도구 호출 시 isError로 안내)
   const p = spawn(process.execPath, [path.join(__dirname, '../server/index.js')], { env: { ...process.env, DART_MCP_NO_STDIO: '0', DART_API_KEY: '${user_config.api_key}', HOME: '/tmp/dart-mcp-test-home' } });
@@ -100,5 +165,5 @@ assert.ok(S.decodeText(euc).endsWith('배당'), 'EUC-KR 디코딩');
   assert.strictEqual(res[1].result.tools.length, 8);
   assert.ok(res[2].result.isError && /키가 없습니다/.test(res[2].result.content[0].text), JSON.stringify(res[2]));
   assert.ok(res[3].result.isError && /허용 목록/.test(res[3].result.content[0].text));
-  console.log('통과: zip, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개+재무 API), 여러 회사 지정');
+  console.log('통과: zip, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개+재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 쪽 넘김·지분공시 최신순');
 })().catch((e) => { console.error('실패:', e); process.exit(1); });

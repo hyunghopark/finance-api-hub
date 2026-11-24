@@ -12,7 +12,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.2.1';
+const VERSION = '0.2.2';
 const HOST = 'opendart.fss.or.kr';
 const CACHE_DIR = path.join(os.homedir(), '.dart-mcp');
 const CORP_CACHE = path.join(CACHE_DIR, 'corpcode.json');
@@ -242,12 +242,91 @@ async function resolveCorps(input) {
   if (!parts.length) throw new Error('회사를 하나 이상 지정하세요.');
   const out = [];
   for (const p of parts) out.push(await resolveCorp(p));
+  // 고유번호(8자리)로 준 회사는 이름·종목코드가 비어 있음. 여러 회사 결과에서 회사를 구분할 수 있게 고유번호 목록에서 채움
+  // (목록을 받지 못해도 고유번호만으로 조회는 되므로 그대로 진행)
+  if (out.length > 1 && out.some((c) => !c.corp_name)) {
+    let list = null;
+    try { list = await loadCorpList(); } catch (_) { /* 이름 없이 진행 */ }
+    for (let i = 0; list && i < out.length; i++) {
+      if (out[i].corp_name) continue;
+      const hit = list.find((c) => c.corp_code === out[i].corp_code);
+      if (hit) out[i] = hit;
+    }
+  }
   return out;
 }
 function nameOf(corp_code, corps) {
-  const c = corps.find((x) => x.corp_code === corp_code) || (corpList || []).find((x) => x.corp_code === corp_code);
-  return c && c.corp_name ? c.corp_name : corp_code;
+  // 이름이 있는 항목만 인정: 이름 없는 항목(고유번호로 준 회사)에 걸려 목록을 보지 않던 문제를 막음
+  const named = (list) => (list || []).find((x) => x.corp_code === corp_code && x.corp_name);
+  const c = named(corps) || named(corpList);
+  return c ? c.corp_name : corp_code;
 }
+// dart_report 쪽 넘김. 지분공시(equity)는 제공처가 전체를 오름차순으로 주므로 접수일 최신순으로 바꾸고 bgn_de·end_de로 거름
+const REPORT_DEFAULT_LIMIT = 100;
+const REPORT_MAX_LIMIT = 500;
+function pageReport(kind, rows, a = {}) {
+  const int = (v, d) => (v === undefined || v === null || v === '' || !Number.isFinite(+v) ? d : Math.trunc(+v));
+  const limit = Math.min(Math.max(int(a.limit, REPORT_DEFAULT_LIMIT), 1), REPORT_MAX_LIMIT);
+  const offset = Math.max(int(a.offset, 0), 0);
+  if (kind === 'equity') {
+    const day = (x) => String(x.rcept_dt || '').replace(/\D/g, '');
+    const filtered = a.bgn_de || a.end_de;
+    rows = rows.filter((x) => !filtered || (day(x) && (!a.bgn_de || day(x) >= a.bgn_de) && (!a.end_de || day(x) <= a.end_de)))
+      .sort((x, y) => day(y).localeCompare(day(x)) || String(y.rcept_no || '').localeCompare(String(x.rcept_no || '')));
+  }
+  const total = rows.length;
+  const page = rows.slice(offset, offset + limit);
+  const out = { count: total, total, shown: page.length, offset };
+  if (offset + page.length < total) out.next_offset = offset + page.length;
+  out.rows = page;
+  return out;
+}
+
+// 출력 한도: 응답 text가 MAX_OUTPUT_CHARS를 넘으면 글자가 아니라 행 수를 줄여 유효한 JSON으로 맞춤(앞쪽 행을 남김). 넘지 않으면 그대로
+function fitOutput(out, tool = {}) {
+  const full = JSON.stringify(out, null, 1);
+  if (full.length <= MAX_OUTPUT_CHARS) return full;
+  const how = tool.narrow ? ' ' + tool.narrow : '';
+  if (out && typeof out === 'object' && !Array.isArray(out)) {
+    let key = Array.isArray(out[tool.rowsKey]) ? tool.rowsKey : null;
+    if (!key) {
+      let best = 0;
+      for (const [k, v] of Object.entries(out)) {
+        if (!Array.isArray(v)) continue;
+        const len = JSON.stringify(v).length;
+        if (len > best) { best = len; key = k; }
+      }
+    }
+    if (key) {
+      const all = out[key];
+      const build = (n) => {
+        const o = { ...out, [key]: all.slice(0, n) };
+        o.shown = n;
+        o.truncated = true;
+        const msg = `출력 한도 6만 자 때문에 ${all.length}건 중 ${n}건만 표시.${how}`;
+        o.note = out.note ? `${out.note} / ${msg}` : msg;
+        if (tool.afterFit) tool.afterFit(o, n);
+        return JSON.stringify(o, null, 1);
+      };
+      let lo = 1, hi = all.length - 1, fit = null;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        const s = build(mid);
+        if (s.length <= MAX_OUTPUT_CHARS) { fit = s; lo = mid + 1; } else hi = mid - 1;
+      }
+      if (fit) return fit;
+    }
+  }
+  const note = `출력 한도 6만 자를 넘어 앞부분만 표시(preview는 잘린 문자열).${how}`;
+  const preview = (n) => JSON.stringify({ truncated: true, total_chars: full.length, note, preview: full.slice(0, n) }, null, 1);
+  let lo = 0, hi = MAX_OUTPUT_CHARS;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (preview(mid).length <= MAX_OUTPUT_CHARS) lo = mid; else hi = mid - 1;
+  }
+  return preview(lo);
+}
+
 const IDX_CODES = { profitability: 'M210000', stability: 'M220000', growth: 'M230000', activity: 'M240000' };
 
 // ───────────────────────── 도구 ─────────────────────────
@@ -257,6 +336,7 @@ const REPORT_ARG = { type: 'string', enum: ['annual', 'half', 'q1', 'q3'], descr
 const TOOLS = [
   {
     name: 'dart_find_corp',
+    rowsKey: 'results', narrow: 'limit을 줄이거나 query를 더 구체적으로 주세요.',
     description: '회사명 일부나 종목코드로 DART 고유번호(corp_code)를 찾습니다. 고유번호 목록은 7일마다 새로 받아 ~/.dart-mcp 에 캐시합니다.',
     inputSchema: { type: 'object', properties: {
       query: { type: 'string', description: '회사명 일부 또는 종목코드' },
@@ -275,6 +355,7 @@ const TOOLS = [
   },
   {
     name: 'dart_company',
+    narrow: 'corp를 다시 확인하세요.',
     description: '기업 개황: 정식 명칭, 대표자, 법인 구분, 업종코드, 설립일, 결산월, 홈페이지, IR 주소 등.',
     inputSchema: { type: 'object', properties: { corp: CORP_ARG }, required: ['corp'] },
     run: async ({ corp }) => {
@@ -286,6 +367,7 @@ const TOOLS = [
   },
   {
     name: 'dart_disclosures',
+    rowsKey: 'list', narrow: 'page_count를 표시된 건수 이하로 줄여 page_no로 넘기거나, 기간·pblntf_ty·pblntf_detail_ty로 좁히세요.',
     description: '공시 목록 검색. corp를 빼면 전체 회사 대상(이때 기간은 최대 3개월). 기본 기간은 최근 30일. 결과마다 DART 원문 보기 주소(url)와 접수번호(rcept_no)를 줍니다. 원문 텍스트는 dart_document로.',
     inputSchema: { type: 'object', properties: {
       corp: CORP_ARG,
@@ -317,6 +399,7 @@ const TOOLS = [
   },
   {
     name: 'dart_financials',
+    rowsKey: 'rows', narrow: 'scope=all은 statement(BS·IS·CIS·CF·SCE)로 재무제표 하나씩 받으세요. 여러 회사는 fs_div를 지정하거나 회사 수를 줄이세요.',
     description: '정기보고서 재무제표. scope=major는 주요계정(매출·영업이익·순이익·자산·부채·자본, 연결/별도 모두), scope=all은 전체 재무제표(fs_div로 연결 CFS/별도 OFS 선택). major는 corp에 여러 회사를 쉼표로 넣으면 다중회사 주요계정 API로 한 번에 조회. 금액 단위는 원. 2015년 이후 자료.',
     inputSchema: { type: 'object', properties: {
       corp: { type: 'string', description: CORP_ARG.description + '. scope=major에서는 쉼표로 여러 회사 가능 (예: 005930,000660,066570)' },
@@ -367,6 +450,7 @@ const TOOLS = [
   },
   {
     name: 'dart_indicators',
+    rowsKey: 'rows', narrow: 'category를 하나로 지정하거나 회사 수를 줄이세요.',
     description: '주요 재무지표(DART가 XBRL 재무제표로 계산한 값): 수익성(영업이익률·ROE 등), 안정성(부채비율 등), 성장성, 활동성. 한 회사는 단일회사, 쉼표로 여러 회사를 넣으면 다중회사 API. 2023년 3분기 보고서부터 제공. 지표값(idx_val)은 DART 원값 그대로.',
     inputSchema: { type: 'object', properties: {
       corp: { type: 'string', description: CORP_ARG.description + '. 쉼표로 여러 회사 가능' },
@@ -396,6 +480,7 @@ const TOOLS = [
   },
   {
     name: 'dart_dividends',
+    rowsKey: 'rows', narrow: 'year·report를 다시 확인하세요.',
     description: '정기보고서의 배당에 관한 사항: 주당 현금배당금, 현금배당수익률, 배당성향, 당기순이익 등(당기·전기·전전기).',
     inputSchema: { type: 'object', properties: { corp: CORP_ARG, year: { type: 'string', description: '사업연도 YYYY' }, report: REPORT_ARG }, required: ['corp', 'year'] },
     run: async (a) => {
@@ -410,14 +495,21 @@ const TOOLS = [
   },
   {
     name: 'dart_report',
+    rowsKey: 'rows', narrow: 'next_offset을 offset에 넣어 이어 받거나 limit을 줄이세요(지분공시는 bgn_de·end_de로도 좁힐 수 있음).',
+    afterFit: (o, n) => { if (o.offset + n < o.total) o.next_offset = o.offset + n; },
     description: '정기보고서 주요정보·지분공시·주요사항보고서 조회(허용 목록만). endpoint 목록: ' +
       Object.entries(REPORT_ENDPOINTS).map(([k, v]) => `${k}(${v})`).join(', ') +
-      '. 정기보고서 항목은 year·report, 주요사항보고서는 bgn_de·end_de가 필요, 지분공시(majorstock·elestock)는 corp만.',
+      '. 정기보고서 항목은 year·report, 주요사항보고서는 bgn_de·end_de가 필요, 지분공시(majorstock·elestock)는 corp만.' +
+      ' 한 번에 limit건(기본 100, 최대 500)을 주고 total(전체 행 수)·shown·offset과, 더 있으면 next_offset을 돌려줍니다(next_offset을 offset에 넣어 이어 받기).' +
+      ' 지분공시는 접수일 최신순이며 bgn_de·end_de를 주면 접수일로 거릅니다. 그 밖의 항목은 DART가 준 순서 그대로.',
     inputSchema: { type: 'object', properties: {
       corp: CORP_ARG,
       endpoint: { type: 'string', enum: Object.keys(REPORT_ENDPOINTS) },
       year: { type: 'string' }, report: REPORT_ARG,
-      bgn_de: { type: 'string', description: 'YYYYMMDD (주요사항보고서)' }, end_de: { type: 'string', description: 'YYYYMMDD (주요사항보고서)' },
+      bgn_de: { type: 'string', description: 'YYYYMMDD (주요사항보고서는 필수. 지분공시는 선택, 접수일 기준 시작일)' },
+      end_de: { type: 'string', description: 'YYYYMMDD (주요사항보고서는 필수. 지분공시는 선택, 접수일 기준 종료일)' },
+      limit: { type: 'integer', default: REPORT_DEFAULT_LIMIT, minimum: 1, maximum: REPORT_MAX_LIMIT, description: '한 번에 받을 행 수 (기본 100, 최대 500)' },
+      offset: { type: 'integer', default: 0, minimum: 0, description: '건너뛸 행 수 (앞 응답의 next_offset)' },
     }, required: ['corp', 'endpoint'] },
     run: async (a) => {
       if (!REPORT_ENDPOINTS[a.endpoint]) throw new Error('허용 목록에 없는 endpoint: ' + a.endpoint);
@@ -430,14 +522,17 @@ const TOOLS = [
       } else if (kind === 'major') {
         if (!a.bgn_de || !a.end_de) throw new Error('주요사항보고서는 bgn_de, end_de가 필요합니다.');
         Object.assign(params, { bgn_de: a.bgn_de, end_de: a.end_de });
+      } else {
+        for (const k of ['bgn_de', 'end_de']) if (a[k] && !/^\d{8}$/.test(String(a[k]))) throw new Error(`${k}는 YYYYMMDD 8자리 숫자`);
       }
       const j = await dartJson(`${a.endpoint}.json`, params);
       const rows = (j.list || []).map((x) => { const y = { ...x }; delete y.corp_code; delete y.corp_name; delete y.corp_cls; return y; });
-      return { corp: corpInfo(c), endpoint: a.endpoint, title: REPORT_ENDPOINTS[a.endpoint], count: rows.length, rows };
+      return { corp: corpInfo(c), endpoint: a.endpoint, title: REPORT_ENDPOINTS[a.endpoint], ...pageReport(kind, rows, a) };
     },
   },
   {
     name: 'dart_document',
+    narrow: 'max_chars를 줄이거나 find를 더 구체적으로 주세요.',
     description: '공시 원문(접수번호 rcept_no)을 내려받아 태그를 지운 텍스트로 돌려줍니다. 길면 offset·max_chars로 나눠 읽습니다. find를 주면 그 단어 주변만 보여줍니다.',
     inputSchema: { type: 'object', properties: {
       rcept_no: { type: 'string', description: '접수번호 14자리 (dart_disclosures 결과)' },
@@ -507,8 +602,7 @@ async function handle(msg) {
       if (!tool) return send({ jsonrpc: '2.0', id, error: { code: -32602, message: '알 수 없는 도구: ' + params.name } });
       try {
         const out = await tool.run(params.arguments || {});
-        let text = JSON.stringify(out, null, 1);
-        if (text.length > MAX_OUTPUT_CHARS) text = text.slice(0, MAX_OUTPUT_CHARS) + `\n…(잘림: 전체 ${text.length}자. 범위를 좁히거나 page·offset을 쓰세요)`;
+        const text = fitOutput(out, tool);
         return send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } });
       } catch (e) {
         return send({ jsonrpc: '2.0', id, result: { isError: true, content: [{ type: 'text', text: mask(e.message || String(e)) }] } });
@@ -538,4 +632,4 @@ if (process.env.DART_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { unzip, parseCorpXml, htmlToText, decodeText, resolveCorp, resolveCorps, reportCode, KIND, REPORT_ENDPOINTS, TOOLS, _setCorpList: (l) => { corpList = l; } };
+module.exports = { fitOutput, pageReport, MAX_OUTPUT_CHARS, unzip, parseCorpXml, htmlToText, decodeText, resolveCorp, resolveCorps, nameOf, reportCode, KIND, REPORT_ENDPOINTS, TOOLS, _setCorpList: (l) => { corpList = l; } };

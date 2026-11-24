@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 버전 | 0.2.1 |
+| 버전 | 0.2.2 |
 | 대상 API | [DART 오픈 API](https://opendart.fss.or.kr) 공식 85개 중 58개 |
 | 호출 대상 | `opendart.fss.or.kr` 고정, GET만 사용 |
 | 인증 | `DART_API_KEY` 환경변수, 없으면 macOS 키체인(서비스 `dart-api`, 계정 `opendart`) |
@@ -61,6 +61,19 @@ security add-generic-password -s dart-api -a opendart -w
 - 회사 지정: 종목코드 6자리, 고유번호 8자리, 정확한 회사명 중 아무거나. `dart_financials`(주요계정)와 `dart_indicators`는 쉼표로 여러 회사 가능
 - 보고서 구분: `annual`(사업보고서 11011) · `half`(반기 11012) · `q1`(1분기 11013) · `q3`(3분기 11014)
 - 재무지표 분류(idx_cl_code): 수익성 M210000 · 안정성 M220000 · 성장성 M230000 · 활동성 M240000
+
+### dart_report 나눠 받기
+
+- `limit`(기본 100, 최대 500)과 `offset`(기본 0)으로 나눠 받습니다. 응답에는 `count`·`total`(둘 다 전체 행 수), `shown`(이번에 준 행 수), `offset`이 있고, 더 남았으면 `next_offset`이 붙습니다. `next_offset`을 `offset`에 넣어 이어 받습니다.
+- 지분공시(`majorstock`, `elestock`)는 DART가 기간 인자 없이 전체를 오래된 순으로 주므로, 이 서버가 접수일 최신순으로 바꿔 줍니다. `bgn_de`·`end_de`(YYYYMMDD)를 주면 접수일로 거릅니다.
+- 그 밖의 항목은 DART가 준 순서 그대로입니다.
+
+### 출력 한도
+
+- 도구 응답은 항상 유효한 JSON이며 6만 자를 넘지 않습니다.
+- 결과가 6만 자를 넘으면 글자를 자르지 않고 행 수를 줄입니다(앞쪽 행을 남김). 이때 결과에 `truncated: true`가 붙고, `shown`은 실제로 준 행 수가 되며, `note`에 "출력 한도 6만 자 때문에 M건 중 N건만 표시"와 그 도구에서 좁히는 방법이 적힙니다. `count`·`total`·`total_count` 같은 전체 건수는 그대로입니다.
+- `dart_report`는 줄어든 만큼 `next_offset`도 당겨지므로 그대로 이어 받으면 됩니다. `dart_financials`의 `scope=all`은 `statement`로 재무제표 하나씩 받으면 한도 안에 들어옵니다.
+- 줄일 행이 없는 결과가 한도를 넘으면 `{ truncated, total_chars, note, preview }` 형태로 앞부분만 줍니다.
 
 ## DART 오픈 API 전체 목록 (공식 85개)
 
@@ -208,10 +221,11 @@ security add-generic-password -s dart-api -a opendart -w
 ```
 node test/offline.test.js
 ```
-네트워크 없이 다음을 검증합니다: zip 해석, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개 + 재무 API), 여러 회사 지정
+네트워크 없이 다음을 검증합니다: zip 해석, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개 + 재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 나눠 받기·지분공시 최신순
 
 ## 변경 이력
 
+- v0.2.2 (2026-11-25): `dart_report`에 `limit`·`offset` 나눠 받기 추가, 지분공시는 접수일 최신순으로 주고 `bgn_de`·`end_de`로 거름. 응답이 6만 자를 넘으면 글자 대신 행 수를 줄여 유효한 JSON 유지(`truncated`, `shown`, `note`). 여러 회사를 고유번호로 지정해도 회사명 표시
 - v0.2.1 (2026-11-09): Desktop이 래퍼로 실행할 때 서버가 요청을 듣지 않던 문제 수정(`require.main` 조건 제거, 테스트에서만 `DART_MCP_NO_STDIO=1`)
 - v0.2.0 (2026-11-09): 공식 가이드 대조 후 23개 추가 — 재무지표(단일·다중), 다중회사 주요계정, 주요사항보고서·정기보고서 주요정보 20개
 - v0.1.0 (2026-11-09): 최초 릴리스 (35개 API)
