@@ -8,10 +8,10 @@ sources:
     resource: repo://dart/server/index.js
   - id: openwiki-source-d53fd8d8dad0d480596f2844
     resource: repo://dart/test/offline.test.js
-generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+generated: { by: "claude-code", at: "2026-11-24T17:09:12.439Z" }
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T16:04:39.925Z
+    at: 2026-11-24T17:09:12.439Z
 ---
 
 # 금융감독원 DART 서버 (dart)
@@ -51,6 +51,8 @@ DART는 HTTP 200으로 응답하면서 본문의 `status`로 결과를 알린다
 - `000`은 정상이다.
 - `013`(조회된 데이터 없음)은 **오류가 아니라 빈 목록**으로 바꿔 돌려준다. 해당 연도에 배당이 없거나 공시가 없는 것은 정상적인 결과이기 때문이다. 도구들은 빈 결과일 때 대신 무엇을 조회할지 `note`로 안내한다.
 - 그 밖의 코드는 한국어 설명을 붙인 오류가 된다(`020`은 하루 2만 건 한도 초과).
+
+`013`을 빈 결과로 두지 않는 도구가 하나 있다. 기업 개황(`dart_company`)에서는 `013`이 "그 고유번호의 회사가 없다"는 뜻이다. 8자리 숫자는 목록 확인 없이 고유번호로 통과하므로, 없는 번호를 주면 이전에는 내용 없는 결과가 정상 응답으로 돌아왔다. 지금은 `companyResult()`가 이를 "고유번호를 DART에서 찾지 못함" 오류로 바꾸고 `dart_find_corp`로 확인하라고 안내한다. 회사가 있으면 `status`와 `message`만 뺀 응답을 그대로 돌려준다.
 
 ## 도구 구성
 

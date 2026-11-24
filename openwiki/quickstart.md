@@ -8,10 +8,10 @@ sources:
     resource: repo://.env.example
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+generated: { by: "claude-code", at: "2026-11-24T17:09:12.439Z" }
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T16:04:39.925Z
+    at: 2026-11-24T17:09:12.439Z
 ---
 
 # 빠른 시작
@@ -85,6 +85,7 @@ node kis/test/offline.test.js
 | 오늘 자료를 요청했는데 어제 것이 왔다 | [데이터 반영 시각과 거래소 기준](concepts/data-timing.md), [한국거래소 서버](servers/krx.md) |
 | 응답에 `truncated: true`가 붙고 행이 요청보다 적다 | [MCP 서버 공통 구조](architecture/server-anatomy.md)의 "출력 한도" |
 | 종목별 투자자 조회가 시간 제한 오류를 낸다 | [한국투자증권 서버](servers/kis.md)의 "종목별 투자자의 기본 기준일" |
+| 인자가 틀렸다는 오류가 나고 조회가 되지 않는다 | [MCP 서버 공통 구조](architecture/server-anatomy.md)의 "입력 검증", 해당 서버 페이지 |
 | 한도 초과 오류가 난다 | [호출 한도와 캐시](architecture/rate-limits-and-caching.md) |
 | 인증 오류가 난다 | [인증 정보와 비밀 값 처리](architecture/credentials-and-secrets.md) |
 | 새로 상장한 회사를 찾지 못한다 | [호출 한도와 캐시](architecture/rate-limits-and-caching.md) (목록 캐시 수명) |

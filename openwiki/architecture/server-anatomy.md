@@ -18,10 +18,12 @@ sources:
     resource: repo://krx/server/index.js
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+  - id: openwiki-source-20f822cbebdb1e3dd39b9e72
+    resource: repo://toss/server/index.js
+generated: { by: "claude-code", at: "2026-11-24T17:09:12.439Z" }
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T16:04:39.925Z
+    at: 2026-11-24T17:09:12.439Z
 ---
 
 # MCP 서버 공통 구조
@@ -75,6 +77,8 @@ krx는 도구를 손으로 쓰지 않고 명세 표에서 만든다. `APIS`의 3
 ## 입력 검증
 
 도구는 인자를 그대로 주소에 넣지 않는다. 종목코드, 날짜, 열거값을 정규식과 목록으로 확인한 뒤에만 요청을 만든다. 경로에 값이 들어가는 toss에서는 `../orders` 같은 입력이 다른 API를 가리킬 수 있으므로 이 검증이 허용 목록의 일부 역할을 한다. 검증에 실패하면 외부 서버에 요청을 보내지 않고 바로 오류를 돌려준다.
+
+목록에 없는 값은 조용히 빼지 않고 거절한다. toss의 지표 심볼과 ecos의 시장금리 항목 키는 모르는 값이 하나라도 있으면 조회하지 않고, 어느 값이 틀렸는지와 쓸 수 있는 값을 오류에 담는다. 틀린 값을 걸러 내고 나머지만 조회하면 요청한 것 일부가 빠진 결과가 정상 응답처럼 보이기 때문이다. 같은 이유로 ecos는 시작 시점이 끝 시점보다 늦은 기간을, toss는 범위를 벗어난 `count`와 시간대가 없는 시각을 요청 전에 거절한다. 세부는 [한국은행 ECOS 서버](../servers/ecos.md)와 [토스증권 서버](../servers/toss.md)에 있다.
 
 ## MCP 통신
 
