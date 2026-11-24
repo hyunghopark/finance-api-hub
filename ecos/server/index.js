@@ -12,7 +12,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.2';
+const VERSION = '0.1.3';
 const HOST = 'ecos.bok.or.kr';
 let testHost = null; // 시험 전용: 로컬 가짜 서버 (ECOS_MCP_NO_STDIO=1일 때만 설정 가능)
 // 시험(ECOS_MCP_NO_STDIO=1)에서만 캐시 위치를 바꿀 수 있음 — 실제 캐시를 덮지 않도록
@@ -153,6 +153,10 @@ function checkDate(cycle, s, label) {
   if (!re) throw new Error('cycle은 A(연), S(반년), Q(분기), M(월), SM(반월), D(일) 중 하나');
   if (!re.test(s)) throw new Error(`${label} 형식이 주기(${cycle})와 맞지 않음. 예: A 2026, S 2026S1, Q 2026Q3, M 202610, SM 202610S1, D 20261109`);
 }
+// 주기별 날짜 형식은 자릿수가 고정이라 문자열 비교가 곧 시간 순서 (checkDate를 통과한 값만 넣을 것)
+function checkRange(start, end) {
+  if (start > end) throw new Error(`start(${start})가 end(${end})보다 늦음. start는 end와 같거나 그보다 앞이어야 합니다.`);
+}
 
 // ───────────────────────── 통계표 목록(캐시) ─────────────────────────
 let tableList = null;
@@ -216,17 +220,19 @@ const TOOLS = [
     description: '한국 시장금리(일별, 통계표 817Y002, 27개 항목 전부 선택 가능)를 날짜별 표로: 국고채 1~50년, 회사채 3년 AA-·BBB-, CD·CP 91일, 콜·KOFR, KORIBOR, 통안증권 등과 계산값(회사채 AA-−국고채 3년 신용 스프레드, 국고채 10년−3년 금리차, bp). 기본은 최근 14일. 한국은행 집계 값이며 금융투자협회 최종호가와 같은 기준인지는 별도 확인 필요. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
     narrow: '기간(start, end)을 좁히거나 items로 항목을 줄이세요.',
     inputSchema: { type: 'object', properties: {
-      start: { type: 'string', description: '시작일 YYYYMMDD (기본: 14일 전)' },
+      start: { type: 'string', description: '시작일 YYYYMMDD (기본: end의 14일 전). end보다 늦으면 오류' },
       end: { type: 'string', description: '종료일 YYYYMMDD (기본: 오늘, KST)' },
       items: { type: 'array', items: { type: 'string', enum: Object.keys(RATE_ITEMS) },
-        description: '항목 키 (기본: ' + RATE_DEFAULT.join(', ') + '). 전체: ' + Object.entries(RATE_ITEMS).map(([k, v]) => `${k}=${v[1]}`).join(', ') },
+        description: '항목 키 (기본: ' + RATE_DEFAULT.join(', ') + '). 모르는 키가 있으면 오류. 전체: ' + Object.entries(RATE_ITEMS).map(([k, v]) => `${k}=${v[1]}`).join(', ') },
     } },
     run: async (a) => {
       const end = a.end || ymd(kstNow());
       let start = a.start;
       if (!start) { const d = new Date(Date.UTC(+end.slice(0, 4), +end.slice(4, 6) - 1, +end.slice(6, 8))); d.setUTCDate(d.getUTCDate() - 14); start = ymd(d); }
-      checkDate('D', start, 'start'); checkDate('D', end, 'end');
-      const keys = (a.items && a.items.length ? a.items : RATE_DEFAULT).filter((k) => RATE_ITEMS[k]);
+      checkDate('D', start, 'start'); checkDate('D', end, 'end'); checkRange(start, end);
+      const keys = a.items && a.items.length ? a.items : RATE_DEFAULT;
+      const unknown = keys.filter((k) => !Object.prototype.hasOwnProperty.call(RATE_ITEMS, k));
+      if (unknown.length) throw new Error(`items에 모르는 키: ${unknown.join(', ')}. 쓸 수 있는 키: ${Object.keys(RATE_ITEMS).join(', ')}`);
       const need = new Set([...keys, 'ktb3y', 'ktb10y', 'corpAA']);
       const byDate = {};
       for (const k of need) {
@@ -252,12 +258,12 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: {
       stat_code: { type: 'string', description: '통계표코드 (예: 817Y002 시장금리 일별, 722Y001 한국은행 기준금리)' },
       cycle: { type: 'string', enum: Object.keys(CYCLES) },
-      start: { type: 'string' }, end: { type: 'string' },
+      start: { type: 'string', description: '시작 시점 (주기에 맞는 형식). end보다 늦으면 오류' }, end: { type: 'string', description: '끝 시점 (start와 같아도 됨)' },
       item1: { type: 'string', description: '항목코드1 (비우면 전체)' }, item2: { type: 'string' }, item3: { type: 'string' }, item4: { type: 'string' },
       max_rows: { type: 'integer', default: 500, maximum: 5000 },
     }, required: ['stat_code', 'cycle', 'start', 'end'] },
     run: async (a) => {
-      checkDate(a.cycle, a.start, 'start'); checkDate(a.cycle, a.end, 'end');
+      checkDate(a.cycle, a.start, 'start'); checkDate(a.cycle, a.end, 'end'); checkRange(a.start, a.end);
       const r = await ecosGetAll('StatisticSearch', [a.stat_code, a.cycle, a.start, a.end, a.item1, a.item2, a.item3, a.item4], Math.min(a.max_rows || 500, 5000));
       const rows = r.rows.map((x) => ({ time: x.TIME, value: x.DATA_VALUE,
         item: [x.ITEM_NAME1, x.ITEM_NAME2, x.ITEM_NAME3, x.ITEM_NAME4].filter(Boolean).join(' / '),
@@ -292,7 +298,7 @@ const TOOLS = [
       query: { type: 'string', description: '통계표 이름 일부 또는 통계표코드' },
       parent_code: { type: 'string', description: '이 상위 통계표코드 바로 아래 것만 (분류 트리 따라가기, 예: 0000000001 통화/금융)' },
       searchable_only: { type: 'boolean', default: true, description: '조회 가능한 통계표만(상위 분류 제외)' },
-      limit: { type: 'integer', default: 30, maximum: 200 },
+      limit: { type: 'integer', default: 30, minimum: 1, maximum: 200, description: '돌려줄 최대 건수 (1~200, 기본 30). 200보다 크면 200으로, 1보다 작으면 1로 맞춤' },
       refresh: { type: 'boolean', default: false },
     } },
     run: async (a) => {
@@ -301,7 +307,7 @@ const TOOLS = [
       let hits = list.filter((t) => !q || t.stat_name.includes(q) || t.stat_code === q.toUpperCase());
       if (a.parent_code) hits = hits.filter((t) => t.parent_code === a.parent_code);
       if (a.searchable_only !== false) hits = hits.filter((t) => t.searchable);
-      return { total: hits.length, results: hits.slice(0, a.limit || 30).map((t) => ({ ...t, cycle_name: CYCLES[t.cycle] || t.cycle })) };
+      return { total: hits.length, results: hits.slice(0, Math.max(1, Math.min(Math.floor(a.limit || 30), 200))).map((t) => ({ ...t, cycle_name: CYCLES[t.cycle] || t.cycle })) };
     },
   },
   {
@@ -394,4 +400,4 @@ if (process.env.ECOS_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { TOOLS, RATE_ITEMS, SERVICES, checkDate, bp, mask, ecosGet, fitOutput, MAX_OUTPUT_CHARS, _setKey: (k) => { cachedKey = k; }, _setHost: (h) => { if (process.env.ECOS_MCP_NO_STDIO === '1') testHost = h; } };
+module.exports = { TOOLS, RATE_ITEMS, SERVICES, checkDate, checkRange, bp, mask, ecosGet, fitOutput, MAX_OUTPUT_CHARS, _setKey: (k) => { cachedKey = k; }, _setHost: (h) => { if (process.env.ECOS_MCP_NO_STDIO === '1') testHost = h; } };

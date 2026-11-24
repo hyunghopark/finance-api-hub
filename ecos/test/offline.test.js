@@ -14,6 +14,7 @@ const S = require('../server/index.js');
 
 const KEY = 'TESTKEY1234567890';
 const seen = [];
+let manyTables = false; // true면 통계표 목록을 250개로 돌려줌 (limit 상한 시험)
 const VAL = { '010200000': '3.70', '010210000': '3.95', '010300000': '4.30', '010320000': '10.4', '010502000': '3.1' };
 const srv = http.createServer((req, res) => {
   seen.push(req.url);
@@ -32,6 +33,7 @@ const srv = http.createServer((req, res) => {
     return send({ StatisticSearch: { list_total_count: rows.length, row: rows } });
   }
   if (svc === 'StatisticItemList') return send({ StatisticItemList: { list_total_count: 1, row: [{ STAT_CODE: p[8], STAT_NAME: '물가', GRP_CODE: 'Group1', GRP_NAME: '품목', ITEM_CODE: 'A', ITEM_NAME: '쌀', P_ITEM_CODE: 'P', P_ITEM_NAME: '식료품', CYCLE: 'M', START_TIME: '2000', END_TIME: '202610', DATA_CNT: 3, UNIT_NAME: '2020=100', WEIGHT: '3.5' }] } });
+  if (svc === 'StatisticTableList' && manyTables) return send({ StatisticTableList: { list_total_count: 250, row: Array.from({ length: 250 }, (_, i) => ({ P_STAT_CODE: '0000000001', STAT_CODE: 'T' + String(i).padStart(3, '0'), STAT_NAME: '표 ' + i, CYCLE: 'M', SRCH_YN: 'Y', ORG_NAME: null })) } });
   if (svc === 'StatisticTableList') return send({ StatisticTableList: { list_total_count: 3, row: [
     { P_STAT_CODE: '*', STAT_CODE: '0000000001', STAT_NAME: '1. 통화/금융', CYCLE: null, SRCH_YN: 'N', ORG_NAME: null },
     { P_STAT_CODE: '0000000001', STAT_CODE: '722Y001', STAT_NAME: '1.3.1. 한국은행 기준금리', CYCLE: 'D', SRCH_YN: 'Y', ORG_NAME: '한국은행' },
@@ -140,6 +142,47 @@ const srv = http.createServer((req, res) => {
   assert.ok(blob.length <= MAX && bj.truncated === true && bj.total_chars > MAX && typeof bj.preview === 'string' && bj.preview.length > 0 && /앞부분만/.test(bj.note));
   for (const t of S.TOOLS) assert.ok(t.narrow && /truncated/.test(t.description), t.name + ': 좁히는 방법과 설명');
 
+  // 11) start가 end보다 늦으면 제공처를 부르기 전에 거절 (주기 6종 모두), 같으면 정상
+  S.checkRange('20261109', '20261109');
+  for (const [cyc, early, late] of [['A', '2025', '2026'], ['S', '2026S1', '2026S2'], ['S', '2025S2', '2026S1'], ['Q', '2025Q4', '2026Q1'], ['Q', '2026Q2', '2026Q3'],
+    ['M', '202512', '202601'], ['M', '202609', '202610'], ['SM', '202610S1', '202610S2'], ['SM', '202609S2', '202610S1'], ['D', '20261031', '20261101'], ['D', '20251231', '20260101']]) {
+    const n = seen.length;
+    await assert.rejects(() => tool('ecos_search').run({ stat_code: '817Y002', cycle: cyc, start: late, end: early }), (e) => /보다 늦음/.test(e.message) && e.message.includes(late) && e.message.includes(early), cyc + ' 역순 거절');
+    assert.strictEqual(seen.length, n, cyc + ': 거절은 제공처 호출 전');
+    for (const [a, b] of [[early, late], [early, early]]) {
+      await tool('ecos_search').run({ stat_code: '817Y002', cycle: cyc, start: a, end: b });
+      assert.ok(seen[seen.length - 1].endsWith(`/817Y002/${cyc}/${a}/${b}`), cyc + ' 정상 순서·같은 시점은 통과: ' + seen[seen.length - 1]);
+    }
+  }
+  { const n = seen.length;
+    await assert.rejects(() => tool('ecos_market_rates').run({ start: '20261109', end: '20261101', items: ['ktb3y'] }), /start\(20261109\)가 end\(20261101\)보다 늦음/);
+    await assert.rejects(() => tool('ecos_market_rates').run({ start: '20991231' }), /보다 늦음/, 'end 기본값(오늘)보다 늦은 start');
+    assert.strictEqual(seen.length, n);
+    const same = await tool('ecos_market_rates').run({ start: '20261109', end: '20261109', items: ['ktb3y'] });
+    assert.strictEqual(same.period, '20261109~20261109'); }
+
+  // 12) 시장금리 items: 모르는 키가 하나라도 있으면 틀린 키와 쓸 수 있는 키 목록으로 거절, 올바른 키와 기본값은 그대로
+  { const n = seen.length;
+    await assert.rejects(() => tool('ecos_market_rates').run({ start: '20261101', end: '20261109', items: ['ktb3y', 'bogus', 'KTB10Y'] }),
+      (e) => /모르는 키: bogus, KTB10Y\./.test(e.message) && Object.keys(S.RATE_ITEMS).every((k) => e.message.includes(k)));
+    await assert.rejects(() => tool('ecos_market_rates').run({ start: '20261101', end: '20261109', items: ['toString'] }), /모르는 키: toString/);
+    assert.strictEqual(seen.length, n, '거절은 제공처 호출 전');
+    const ok = await tool('ecos_market_rates').run({ start: '20261101', end: '20261109', items: ['ktb3y', 'ktb10y', 'corpAA', 'corpBBB'] });
+    assert.deepStrictEqual(ok, mr, '올바른 키만 준 호출은 그대로');
+    const def = await tool('ecos_market_rates').run({ start: '20261101', end: '20261109' });
+    assert.deepStrictEqual(Object.keys(def.rows[0]), ['date', 'CD(91일)', '국고채(2년)', '국고채(3년)', '국고채(5년)', '국고채(10년)', '국고채(30년)', '회사채(3년, AA-)', '회사채(3년, BBB-)', '신용 스프레드(회사채AA−국고3년, bp)', '국고 10년−3년(bp)']);
+    assert.deepStrictEqual(await tool('ecos_market_rates').run({ start: '20261101', end: '20261109', items: [] }), def, '빈 배열은 기본값'); }
+
+  // 13) ecos_find_table limit: 1~200으로 맞춤 (max_rows처럼 오류 없이), 기본 30
+  manyTables = true;
+  const cnt = async (limit) => (await tool('ecos_find_table').run({ refresh: limit === 'first', ...(typeof limit === 'number' ? { limit } : {}) })).results.length;
+  assert.strictEqual(await cnt('first'), 30, '기본 30');
+  assert.strictEqual(await cnt(500), 200, '200 초과는 200');
+  assert.strictEqual(await cnt(200), 200); assert.strictEqual(await cnt(201), 200); assert.strictEqual(await cnt(7), 7); assert.strictEqual(await cnt(1), 1);
+  assert.strictEqual(await cnt(-5), 1, '1 미만은 1'); assert.strictEqual(await cnt(0), 30, '0은 기본값'); assert.strictEqual(await cnt(2.9), 2);
+  assert.strictEqual((await tool('ecos_find_table').run({ limit: 500 })).total, 250, 'total은 전체 건수');
+  manyTables = false;
+
   // 6) Desktop처럼 다른 스크립트에서 불러온 상태로 MCP 통신 (키 없음 안내 포함)
   const wrap = path.join(os.tmpdir(), 'ecos-wrap-' + process.pid + '.js');
   fs.writeFileSync(wrap, `require(${JSON.stringify(path.join(__dirname, '../server/index.js'))});`);
@@ -163,5 +206,5 @@ const srv = http.createServer((req, res) => {
   assert.ok(res[2].result.isError && /키가 없습니다/.test(res[2].result.content[0].text));
 
   srv.close();
-  console.log('통과: 날짜 형식, 시장금리 표·스프레드 계산, 빈 값 처리, 주소 형식(%3F·생략), 자료 없음, 오류·키 가림, 한글 인코딩, 래퍼 실행 MCP 통신(7개 도구), 키 없음 안내, 시장금리 27개 공식 목록 대조, 가중치·상위 코드 보존, 분류 트리 찾기, 출력 한도(행 수 줄임·유효한 JSON)');
+  console.log('통과: 날짜 형식, 시장금리 표·스프레드 계산, 빈 값 처리, 주소 형식(%3F·생략), 자료 없음, 오류·키 가림, 한글 인코딩, 래퍼 실행 MCP 통신(7개 도구), 키 없음 안내, 시장금리 27개 공식 목록 대조, 가중치·상위 코드 보존, 분류 트리 찾기, 출력 한도(행 수 줄임·유효한 JSON), 기간 역순 거절(주기 6종), 모르는 items 키 거절, limit 상한');
 })().catch((e) => { console.error('실패:', e); srv.close(); process.exit(1); });
