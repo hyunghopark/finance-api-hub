@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 버전 | 0.2.1 |
+| 버전 | 0.2.2 |
 | 대상 API | 토스증권 Open API (명세 v1.2.28) |
 | 호출 대상 | `https://openapi.tossinvest.com` 고정 |
 | 인증 | OAuth2 client credentials (`TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET`) |
@@ -71,6 +71,14 @@
 - **허용 IP**: 등록되지 않은 IP에서 호출하면 403이 반환됩니다.
 - 항목별 반영·확정 시각은 [DATA_TIMING.md](../DATA_TIMING.md)를 참고하세요.
 
+## 입력 검사
+
+아래 값은 토스증권 서버를 부르기 전에 오류로 거절하고, 어느 인자가 어떤 값이어야 하는지 알려 줍니다.
+
+- `toss_market_indicator_prices`의 `symbols`에 목록에 없는 심볼이 하나라도 있으면 거절합니다. 일부만 조회하지 않습니다.
+- `count`는 도구 스키마에 적힌 범위의 정수여야 합니다(캔들 도구 1~200, 그 밖의 도구 1~100). `0`도 거절합니다. 생략하면 도구별 기본값을 씁니다.
+- `toss_exchange_rate`의 `dateTime`은 시간대가 붙은 ISO 8601 시각이어야 합니다(예: `2026-11-20T15:30:00+09:00`). 날짜만 주거나 시간대가 없으면 거절합니다.
+
 ## 테스트
 
 ```bash
@@ -78,3 +86,7 @@ node test/test.js
 ```
 
 모의 응답으로 검증하며 실제 서버에 접속하지 않습니다.
+
+## 변경 이력
+
+- v0.2.2 (2026-11-25): 입력 검사 추가. `toss_market_indicator_prices`의 목록에 없는 심볼, 범위 밖 `count`, 형식이 틀린 `dateTime`을 제공처 호출 전에 거절
