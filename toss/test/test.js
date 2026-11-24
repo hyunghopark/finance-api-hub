@@ -103,7 +103,7 @@ const { handle, TOOLS, READ_ENDPOINTS } = require('../server/index.js');
   await passed('toss_market_indicator_prices', {}, 'symbols=KOSPI%2CKOSDAQ%2CKR_BOND_3Y%2CKR_BOND_10Y');
   await passed('toss_market_indicator_prices', { symbols: [] }, 'symbols=KOSPI%2CKOSDAQ%2CKR_BOND_3Y%2CKR_BOND_10Y');
   await passed('toss_market_indicator_prices', { symbols: ['KOSDAQ', 'KR_BOND_2Y'] }, 'symbols=KOSDAQ%2CKR_BOND_2Y');
-  // count: 도구 9개의 스키마 범위·기본값과 서버 검사가 같은지
+  // count: 도구 8개의 스키마 범위·기본값과 서버 검사가 같은지
   const base = { toss_market_investor_trading: { market: 'KOSPI' }, toss_market_indicator_candles: { symbol: 'KOSPI' }, toss_investor_trading_rankings: {},
     toss_stock_investor_trading: { symbol: '005930' }, toss_stock_short_selling: { symbol: '005930' }, toss_stock_program_trades: { symbol: '005930' },
     toss_stock_rankings: {}, toss_stock_candles: { symbol: '005930' } };
