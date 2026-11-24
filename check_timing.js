@@ -155,7 +155,8 @@ async function run() {
 
   // 4. FRED - 미국 금리
   try {
-    const res = await callMcp(mcpConfig.fred.args[0], mcpConfig.fred.env, 'fred_bundle', { bundle: 'rates' }, 12000);
+    // rates 묶음은 FRED를 24회(0.55초 간격) 부르므로 13초쯤 걸림. 12초로는 항상 "호출 지연"이 찍혀 넉넉히 둠
+    const res = await callMcp(mcpConfig.fred.args[0], mcpConfig.fred.env, 'fred_bundle', { bundle: 'rates' }, 30000);
     const text = res?.content?.[0]?.text;
     if (text) {
       const data = JSON.parse(text);
