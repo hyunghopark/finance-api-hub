@@ -32,8 +32,13 @@ global.fetch = async (url, opt) => {
   if (u.pathname === '/uapi/domestic-stock/v1/quotations/inquire-price') {
     if (u.searchParams.get('FID_INPUT_ISCD') === '000000') return reply({ rt_cd: '1', msg_cd: 'TESTERR01', msg1: `없는 종목 ${h.appkey} ${h.appsecret} ${h.authorization}` });
     if (u.searchParams.get('FID_INPUT_ISCD') === '111111') return reply('<html>점검 중</html>', 503);
-    return reply({ rt_cd: '0', msg_cd: 'MCA00000', msg1: '정상처리 되었습니다.', output: { stck_prpr: '219500', prdy_vrss: '-2500', prdy_ctrt: '-1.13', acml_vol: '12345678' } });
+    if (u.searchParams.get('FID_INPUT_ISCD') === '999999') return reply({ rt_cd: '0', msg_cd: 'MCA00000', msg1: '정상처리 되었습니다.', output: { stck_prpr: '0', lstn_stcn: '0', acml_vol: '0' } });
+    return reply({ rt_cd: '0', msg_cd: 'MCA00000', msg1: '정상처리 되었습니다.', output: { stck_prpr: '219500', prdy_vrss: '-2500', prdy_ctrt: '-1.13', acml_vol: '12345678', lstn_stcn: '5846278608' } });
   }
+  const days = (n) => Array.from({ length: n }, (_, i) => ({ stck_bsop_date: String(20261124 - i), frgn_ntby_tr_pbmn: String(i) }));
+  if (u.pathname.endsWith('/inquire-investor-daily-by-market')) return reply({ rt_cd: '0', output: days(300) });
+  if (u.pathname.endsWith('/investor-trade-by-stock-daily')) return reply({ rt_cd: '0', output1: { stck_prpr: '1' }, output2: days(30) });
+  if (u.pathname.endsWith('/daily-credit-balance')) return reply({ rt_cd: '0', output: days(30) });
   return reply({ rt_cd: '0', msg_cd: 'MCA00000', msg1: '정상처리 되었습니다.', output: {} });
 };
 
@@ -166,6 +171,19 @@ const tokenPath = () => path.join(tokenDir(), fs.readdirSync(tokenDir()).filter(
   assert.strictEqual(TOOLS.length, 10);
   console.log('도구 10개: 주소·tr_id·쿼리 확인');
 
+  // 9-1b) 긴 응답은 count 만큼만 돌려줌 (KIS 는 시장 수급 300일치, 종목 수급·신용잔고 30일치를 한 번에 줌)
+  const rows = async (name, args, key) => JSON.parse((await call(23, name, args)).content[0].text)[key];
+  assert.strictEqual((await rows('kis_market_investor_daily', { market: 'KOSPI' }, 'output')).length, 5);
+  assert.strictEqual((await rows('kis_market_investor_daily', { market: 'KOSPI', count: 300 }, 'output')).length, 300);
+  assert.strictEqual((await rows('kis_stock_investor_daily', { symbol: '005930' }, 'output2')).length, 5);
+  assert.strictEqual((await rows('kis_stock_investor_daily', { symbol: '005930', count: 30 }, 'output2')).length, 30);
+  const cr = await rows('kis_credit_balance_daily', { symbol: '005930' }, 'output');
+  assert.strictEqual(cr.length, 10); assert.strictEqual(cr[0].stck_bsop_date, '20261124', '최신 행부터 잘라야 함');
+  // 없는 종목은 KIS 가 0 으로 채운 정상 응답을 주므로 오류로 바꿈
+  const zero = await call(24, 'kis_stock_price', { symbol: '999999' });
+  assert(zero.isError && /시세가 없습니다/.test(zero.content[0].text));
+  console.log('count 자르기·없는 종목 처리 확인');
+
   // 9-2) 날짜·시각·코드 검증
   assert.strictEqual(S.ymd('2026-11-24', 'd'), '20261124'); assert.strictEqual(S.ymd('20261124', 'd'), '20261124'); assert.strictEqual(S.ymd('', 'd', 'x'), 'x');
   assert.throws(() => S.ymd('2026-02-30', 'd')); assert.throws(() => S.ymd('어제', 'd'));
@@ -177,9 +195,10 @@ const tokenPath = () => path.join(tokenDir(), fs.readdirSync(tokenDir()).filter(
     ['kis_market_investor_daily', {}], ['kis_market_investor_daily', { market: 'KOSPI', sector: '../x' }], ['kis_stock_investor_daily', { symbol: '005930', date: '11/20' }],
     ['kis_credit_balance_daily', { symbol: 'x' }], ['kis_overseas_price', { exchange: 'NASDAQ', symbol: 'AAPL' }], ['kis_overseas_price', { exchange: 'NAS', symbol: 'A/../B' }],
     ['kis_overseas_daily_chart', { kind: 'Z', code: '.DJI' }], ['kis_overseas_daily_chart', { kind: 'N', code: 'a b' }],
+    ['kis_market_investor_daily', { market: 'KOSPI', count: 301 }], ['kis_stock_investor_daily', { symbol: '005930', count: 0 }], ['kis_credit_balance_daily', { symbol: '005930', count: 1.5 }],
   ]) { const x = await call(22, name, args); assert(x.isError, name + ' ' + JSON.stringify(args)); }
   assert.strictEqual(calls.length, n3, '잘못된 입력이 서버로 나감');
-  console.log('잘못된 입력 13건 거부');
+  console.log('잘못된 입력 16건 거부');
 
   // 10) 동시에 여러 번 불러도 토큰은 한 번만 발급
   fs.rmSync(tokenPath()); S._forgetMemToken(); const t0 = tokenIssued;
