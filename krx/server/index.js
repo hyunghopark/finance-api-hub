@@ -9,7 +9,7 @@
 const https = require('https');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const HOST = 'data-dbg.krx.co.kr';
 const BASE = '/svc/apis/';
 let testHost = null; // 시험 전용: 로컬 가짜 서버 (KRX_MCP_NO_STDIO=1일 때만 설정 가능)
@@ -225,7 +225,9 @@ async function query(toolName, a) {
   }
   let rows = all;
   if (a.code) {
-    const c = String(a.code).trim().toUpperCase();
+    let c = String(a.code).trim().toUpperCase();
+    // 표준코드 항목이 없는 서비스(일별매매 등)에 12자리 표준코드가 오면 그 안의 단축코드(4~9번째 글자)로 찾음
+    if (/^KR[0-9A-Z]{10}$/.test(c) && !labels.includes('표준코드')) c = c.slice(3, 9);
     rows = rows.filter((r) => CODE_LABELS.some((k) => r[k] && String(r[k]).toUpperCase().includes(c)));
   }
   if (a.name_contains) {
@@ -243,6 +245,9 @@ async function query(toolName, a) {
     });
   }
   out.matched = rows.length;
+  if (!rows.length && (a.code || a.name_contains)) {
+    out.note = `이 날짜의 자료 ${all.length}건 중 조건(${[a.code && 'code', a.name_contains && 'name_contains'].filter(Boolean).join('·')})에 맞는 행이 없습니다. 값을 확인하거나 조건을 빼고 조회하세요.`;
+  }
   const limit = Math.max(1, Math.min(Number(a.limit) || DEFAULT_LIMIT, MAX_LIMIT));
   rows = rows.slice(0, limit);
   if (pick) rows = rows.map((r) => Object.fromEntries(pick.map((f) => [f, r[f] === undefined ? null : r[f]])));
@@ -252,6 +257,53 @@ async function query(toolName, a) {
   return out;
 }
 
+// ───────────────────────── 출력 한도 ─────────────────────────
+// 6만 자를 넘으면 글자를 자르지 않고 행 수를 줄여 항상 유효한 JSON으로 돌려줌. 한도 이하면 그대로
+function fitOutput(out) {
+  const text = JSON.stringify(out, null, 1);
+  if (text.length <= MAX_OUTPUT_CHARS) return text;
+  if (out && typeof out === 'object' && !Array.isArray(out)) {
+    let key = Array.isArray(out.rows) ? 'rows' : null;
+    if (!key) { // 행 배열이 없으면 가장 큰 배열을 줄임
+      let best = 0;
+      for (const k of Object.keys(out)) {
+        if (!Array.isArray(out[k])) continue;
+        const n = JSON.stringify(out[k]).length;
+        if (n > best) { best = n; key = k; }
+      }
+    }
+    if (key) {
+      const full = out[key];
+      const m = key === 'rows' && typeof out.matched === 'number' ? out.matched : full.length;
+      const build = (n) => {
+        const o = {};
+        for (const k of Object.keys(out)) {
+          if (k === key || k === 'note' || k === 'truncated') continue;
+          o[k] = k === 'shown' ? n : out[k];
+        }
+        o.truncated = true;
+        o.note = `출력 한도 6만 자 때문에 ${m}건 중 ${n}건만 표시. limit를 줄이거나 fields로 항목을 고르고, sort_by·name_contains·code로 좁히세요.`;
+        o[key] = full.slice(0, n); // limit와 같이 앞쪽(정렬 순서의 위쪽)을 남김
+        return JSON.stringify(o, null, 1);
+      };
+      let lo = 1; let hi = full.length - 1; let fit = null; // 한 행도 못 담으면 아래 preview로
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1; const t = build(mid);
+        if (t.length <= MAX_OUTPUT_CHARS) { fit = t; lo = mid + 1; } else hi = mid - 1;
+      }
+      if (fit) return fit;
+    }
+  }
+  const o = { truncated: true, total_chars: text.length, note: '출력 한도 6만 자를 넘어 앞부분만 preview에 담았습니다. limit를 줄이거나 fields로 항목을 고르세요.', preview: '' };
+  for (let n = MAX_OUTPUT_CHARS - 1000; n > 0; n = Math.floor(n / 2)) {
+    o.preview = text.slice(0, n);
+    const t = JSON.stringify(o, null, 1);
+    if (t.length <= MAX_OUTPUT_CHARS) return t;
+  }
+  o.preview = '';
+  return JSON.stringify(o, null, 1);
+}
+
 // ───────────────────────── 도구 (분야별 7개) ─────────────────────────
 const TOOLS = GROUPS.map(([name, cat, what]) => {
   const list = APIS.filter((x) => x.tool === name);
@@ -259,12 +311,12 @@ const TOOLS = GROUPS.map(([name, cat, what]) => {
     name,
     description: `한국거래소(KRX) ${cat}: ${what}. 일별 자료(2010년 이후)이며 다음 영업일 아침에 갱신되어 당일 값은 없습니다. type별 출력 항목 — `
       + list.map((x) => `${x.type}(${x.name}, ${x.from}~): ${x.fields.map((f) => f[0]).join('·')}`).join(' / ')
-      + '. API마다 KRX에 활용 신청·승인이 따로 필요합니다.',
+      + '. API마다 KRX에 활용 신청·승인이 따로 필요합니다. 응답은 6만 자까지이며, 넘으면 행 수를 줄이고 truncated: true와 note로 알립니다(shown이 실제 행 수).',
     inputSchema: { type: 'object', properties: {
       type: { type: 'string', enum: list.map((x) => x.type), description: list.map((x) => `${x.type}=${x.name}`).join(', ') },
       date: { type: 'string', description: '기준일자 YYYYMMDD. 비우면 자료가 있는 가장 최근 영업일' },
       name_contains: { type: 'string', description: '이름(종목명·지수명·계열구분 등)에 이 글자가 들어간 것만' },
-      code: { type: 'string', description: '종목코드(단축 또는 표준)로 거르기. 예: 005930' },
+      code: { type: 'string', description: '종목코드로 거르기(부분 일치). 단축코드(예: 005930) 또는 12자리 표준코드(예: KR7005930003). 표준코드 항목이 없는 서비스에서는 표준코드 안의 단축코드로 찾음' },
       sort_by: { type: 'string', description: '정렬할 출력 항목명. 예: 거래대금, 등락률, 시가총액' },
       ascending: { type: 'boolean', default: false, description: '오름차순(기본은 내림차순)' },
       limit: { type: 'integer', default: DEFAULT_LIMIT, maximum: MAX_LIMIT, description: '표시할 행 수' },
@@ -298,8 +350,7 @@ async function handle(msg) {
       if (!tool) return send({ jsonrpc: '2.0', id, error: { code: -32602, message: '알 수 없는 도구: ' + params.name } });
       try {
         const out = await tool.run(params.arguments || {});
-        let text = JSON.stringify(out, null, 1);
-        if (text.length > MAX_OUTPUT_CHARS) text = text.slice(0, MAX_OUTPUT_CHARS) + `\n…(잘림: 전체 ${text.length}자. limit를 줄이거나 fields로 항목을 고르세요)`;
+        const text = fitOutput(out);
         return send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } });
       } catch (e) {
         return send({ jsonrpc: '2.0', id, result: { isError: true, content: [{ type: 'text', text: mask(e.message || String(e)) }] } });
@@ -329,6 +380,6 @@ if (process.env.KRX_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { TOOLS, APIS, GROUPS, conv, shape, checkDate, addDays, mask, krxGet,
+module.exports = { TOOLS, APIS, GROUPS, fitOutput, MAX_OUTPUT_CHARS, conv, shape, checkDate, addDays, mask, krxGet,
   _setKey: (k) => { cachedKey = k; }, _clearCache: () => dayCache.clear(),
   _setHost: (h) => { if (process.env.KRX_MCP_NO_STDIO === '1') testHost = h; } };

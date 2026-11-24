@@ -36,6 +36,8 @@ const srv = http.createServer((req, res) => {
   if (u.pathname === '/svc/apis/esg/esg_index_info') return send(200, { OutBlock_9: [{ BAS_DD: d, IDX_NM: 'KRX ESG Leaders 150', CLSPRC_IDX: '2,345.67', PRV_DD_CMPR: '-1.2', UPDN_RATE: '-0.05', TRD_ISU_CNT: '150', ACC_TRDVOL: '10', ACC_TRDVAL: '20' }] });
   if (d > LAST_OPEN) return send(200, { OutBlock_1: [] }); // 휴장·갱신 전
   if (u.pathname === '/svc/apis/sto/stk_bydd_trd') return send(200, { OutBlock_1: STK.map((r) => ({ ...r, BAS_DD: d })) });
+  if (u.pathname === '/svc/apis/sto/ksq_bydd_trd') return send(200, { OutBlock_1: Array.from({ length: 1500 }, (_, i) => ({ ...STK[1], BAS_DD: d, ISU_CD: String(100000 + i), ISU_NM: '큰응답' + i, MKT_NM: 'KOSDAQ', FLUC_RT: i % 2 ? '1.00' : '-1.00', ACC_TRDVAL: String(1000 + i), MKTCAP: '2000' })) });
+  if (u.pathname === '/svc/apis/etp/etf_bydd_trd') return send(200, { OutBlock_1: [{ BAS_DD: d, ISU_CD: '069500', ISU_NM: 'KODEX 200', TDD_CLSPRC: '73,770', NAV: '73,831.46' }, { BAS_DD: d, ISU_CD: '0184E0', ISU_NM: '1Q 200채권혼합50액티브', TDD_CLSPRC: '9,125', NAV: '9,115.71' }] });
   if (u.pathname === '/svc/apis/sto/stk_isu_base_info') return send(200, { OutBlock_1: [{ ISU_CD: 'KR7005930003', ISU_SRT_CD: '005930', ISU_NM: '삼성전자보통주', ISU_ABBRV: '삼성전자', ISU_ENG_NM: 'SamsungElectronics', LIST_DD: '19750611', MKT_TP_NM: 'KOSPI', SECUGRP_NM: '주권', SECT_TP_NM: '', KIND_STKCERT_TP_NM: '보통주', PARVAL: '100', LIST_SHRS: '5969782550' },
     { ISU_CD: 'KR7000001234', ISU_SRT_CD: '000001', ISU_NM: '무액면회사', ISU_ABBRV: '무액면', ISU_ENG_NM: 'NoPar', LIST_DD: '20200102', MKT_TP_NM: 'KOSPI', SECUGRP_NM: '주권', SECT_TP_NM: '', KIND_STKCERT_TP_NM: '보통주', PARVAL: '무액면', LIST_SHRS: '1000' }] });
   if (u.pathname === '/svc/apis/idx/krx_dd_trd') return send(200, { OutBlock_1: [
@@ -146,9 +148,50 @@ const srv = http.createServer((req, res) => {
   assert.strictEqual(S.mask('키 WRONGKEY9999 노출'), '키 *** 노출');
   S._setKey(KEY);
 
+  // 8-1) code: 표준코드 항목이 없는 서비스는 표준코드 안의 단축코드로 찾고, 걸러서 0건이면 note로 알림
+  const c1 = await tool('krx_stock').run({ type: 'kospi', date: D, code: 'KR7005930003' });
+  assert.strictEqual(c1.matched, 1); assert.strictEqual(c1.rows[0]['종목명'], '삼성전자'); assert.ok(!('note' in c1));
+  const c2 = await tool('krx_etp').run({ type: 'etf', date: D, code: 'kr70184e0005' });
+  assert.strictEqual(c2.matched, 1); assert.strictEqual(c2.rows[0]['종목코드'], '0184E0');
+  const c3 = await tool('krx_stock').run({ type: 'kospi', date: D, code: '00593', fields: ['종목코드'] });
+  assert.deepStrictEqual(c3.rows, [{ 종목코드: '005930' }, { 종목코드: '005935' }], '단축코드 부분 일치는 그대로');
+  const c4 = await tool('krx_stock').run({ type: 'kospi_info', date: D, code: 'KR7000001234' });
+  assert.strictEqual(c4.matched, 1, '표준코드 항목이 있는 서비스는 표준코드 그대로 찾음'); assert.strictEqual(c4.rows[0]['단축코드'], '000001');
+  const c5 = await tool('krx_stock').run({ type: 'kospi', date: D, code: 'KR7123456003' });
+  assert.strictEqual(c5.total, 4); assert.strictEqual(c5.matched, 0); assert.strictEqual(c5.shown, 0); assert.deepStrictEqual(c5.rows, []);
+  assert.ok(/4건 중 조건\(code\)에 맞는 행이 없습니다/.test(c5.note) && !/자료가 없습니다/.test(c5.note), c5.note);
+  assert.ok('market_summary' in c5, '0건이어도 시장 요약은 시장 전체 기준');
+  const c6 = await tool('krx_stock').run({ type: 'kospi', date: D, code: '005930', name_contains: '없는이름' });
+  assert.ok(/조건\(code·name_contains\)/.test(c6.note), c6.note);
+
+  // 8-2) 출력 한도 6만 자: 글자가 아니라 행 수를 줄여 유효한 JSON으로, 한도 이하는 그대로
+  const small = await tool('krx_stock').run({ type: 'kospi', date: D });
+  assert.strictEqual(S.fitOutput(small), JSON.stringify(small, null, 1), '한도 이하는 한 글자도 달라지지 않음');
+  const big = await tool('krx_stock').run({ type: 'kosdaq', date: D, limit: 3000, sort_by: '거래대금' });
+  assert.strictEqual(big.shown, 1500); assert.ok(JSON.stringify(big, null, 1).length > S.MAX_OUTPUT_CHARS);
+  const bt = S.fitOutput(big);
+  assert.ok(bt.length <= S.MAX_OUTPUT_CHARS, '길이 ' + bt.length);
+  const bj = JSON.parse(bt);
+  assert.strictEqual(bj.truncated, true);
+  assert.ok(bj.rows.length > 0 && bj.rows.length < 1500); assert.strictEqual(bj.shown, bj.rows.length);
+  assert.strictEqual(bj.total, 1500); assert.strictEqual(bj.matched, 1500);
+  assert.ok(bj.note.includes(`출력 한도 6만 자 때문에 1500건 중 ${bj.shown}건만 표시`) && /limit/.test(bj.note) && /fields/.test(bj.note), bj.note);
+  assert.deepStrictEqual(bj.rows, big.rows.slice(0, bj.shown), 'limit와 같이 정렬 순서의 앞쪽을 남김');
+  assert.strictEqual(bj.rows[0]['거래대금'], 2499);
+  assert.deepStrictEqual(bj.market_summary, big.market_summary); assert.deepStrictEqual(bj.market_summary, { 상승: 750, 하락: 750, 보합: 0, 거래대금_합계: 1500 * 1000 + (1499 * 1500) / 2, 시가총액_합계: 3000000 });
+  assert.strictEqual(big.shown, 1500, '원본 결과 객체는 바꾸지 않음'); assert.ok(!('truncated' in big));
+  const noRows = JSON.parse(S.fitOutput({ a: 1, items: Array.from({ length: 5000 }, (_, i) => ({ i, t: 'x'.repeat(20) })), small: [1, 2] }));
+  assert.strictEqual(noRows.truncated, true); assert.ok(noRows.items.length > 0 && noRows.items.length < 5000); assert.deepStrictEqual(noRows.small, [1, 2]);
+  assert.ok(noRows.note.includes(`5000건 중 ${noRows.items.length}건만 표시`));
+  for (const v of [{ blob: 'x"\n'.repeat(40000) }, 'y'.repeat(70000), { rows: [{ t: 'z'.repeat(70000) }] }]) {
+    const t = S.fitOutput(v); assert.ok(t.length <= S.MAX_OUTPUT_CHARS);
+    const j = JSON.parse(t);
+    assert.strictEqual(j.truncated, true); assert.ok(j.total_chars > S.MAX_OUTPUT_CHARS); assert.ok(typeof j.note === 'string' && j.preview.length > 0);
+  }
+
   // 9) 도구 설명에 type과 출력 항목이 들어 있음
   const dsc = tool('krx_etp').description;
-  assert.ok(dsc.includes('etf(ETF 일별매매정보') && dsc.includes('순자산가치(NAV)') && dsc.includes('활용 신청'));
+  assert.ok(dsc.includes('etf(ETF 일별매매정보') && dsc.includes('순자산가치(NAV)') && dsc.includes('활용 신청') && dsc.includes('truncated'));
   assert.deepStrictEqual(tool('krx_derivative').inputSchema.properties.type.enum, ['futures', 'stock_futures_kospi', 'stock_futures_kosdaq', 'options', 'stock_options_kospi', 'stock_options_kosdaq']);
 
   // 10) Desktop처럼 다른 스크립트에서 불러온 상태로 MCP 통신 (키 없음 안내 포함)
@@ -179,5 +222,5 @@ const srv = http.createServer((req, res) => {
   assert.strictEqual(res[3].error.code, -32602);
 
   srv.close();
-  console.log('통과: 공식 31개 명세(경로·항목 수) 대조, 값 변환, 주소·AUTH_KEY 헤더·GET, 시장 요약, 정렬·거르기·항목 고르기, 하루 캐시, 최근 영업일 찾기, 종목기본정보 코드 찾기, 자료 없는 날, 인자 오류 사전 차단, 미승인 API 안내·키 가림·JSON 아님·한도 초과, 래퍼 실행 MCP 통신(7개 도구)');
+  console.log('통과: 공식 31개 명세(경로·항목 수) 대조, 값 변환, 주소·AUTH_KEY 헤더·GET, 시장 요약, 정렬·거르기·항목 고르기, 하루 캐시, 최근 영업일 찾기, 종목기본정보 코드 찾기, 자료 없는 날, 인자 오류 사전 차단, 미승인 API 안내·키 가림·JSON 아님·한도 초과, 표준코드로 찾기·0건 안내, 출력 한도 6만 자(행 수 줄이기), 래퍼 실행 MCP 통신(7개 도구)');
 })().catch((e) => { console.error('실패:', e); srv.close(); process.exit(1); });

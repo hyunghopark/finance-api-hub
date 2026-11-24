@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "krx-readonly",
   "display_name": "한국거래소 KRX (조회 전용)",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "한국거래소(KRX) Open API 조회 전용 MCP. 공식 31개 서비스 전부: 지수(업종지수 포함), 주식 전 종목 일별매매·종목기본정보, ETF·ETN·ELW, 채권, 선물·옵션, 석유·금·배출권, ESG. 일별 자료(전일까지).",
   "author": { "name": "hyunghopark" },
   "server": {
