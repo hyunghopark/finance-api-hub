@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3918123821f6a649c7b528a1709be9e7118963c77189531702bae6ffb6d9fbf8",
+  "claims": [
+    {
+      "id": "claim_0bd7f91f3dc44d4681867db5ec8e5b1d",
+      "statement": "resolveCorp()는 8자리 숫자를 고유번호로 그대로 쓰고, 6자리는 종목코드로 목록에서 찾으며, 그 밖의 입력은 회사명이 정확히 일치하는 것만 고르고 하나로 정해지지 않으면 후보 최대 10개를 담은 오류를 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L172-L191",
+          "version": "repo-lines-v1:sha256:ece9bf743477a999ce415ac1b96ff03cfcb14e95e5c40a9a4d2cf12f26e9da34:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM2NjAzZTU5NmZjZTIxMjRhYTNkM2IwOGFhYzlhMzc3MjNjYjYyYjMzZmFjMzVmODRmMGIzMWU1ZDc0ZTFkYzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFhN2Q1ZmY4ODM2NzRlNzkyMzM3MjIyZTFjNTE0ZGY1MTJhNTM2MDc3NGFlNjA1ODRmODM2MDQ0MjBiZDUwZmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ2OGViZmViZjU5OGEyMTdmMGZlN2I3NWYyNjNhZTVkMDJhN2I5NjE5MTIwZDNlYTE2NGRkNjRkNTk5Y2VkMTgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c717a2b4f9124594bd8f24410dbf5ef5",
+      "statement": "unzip()은 외부 패키지 없이 zip 중앙 디렉터리를 직접 읽어 무압축과 deflate 항목만 풀고, 그 밖의 압축 방식은 데이터를 null로 남긴다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L96-L125",
+          "version": "repo-lines-v1:sha256:fab4ce5adfd1092bf0321e38a1f15dcbc29fd599180f7a3c754da6f3c9f0af9c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxNTAwYzVkZDk1MGZkZWRkNDRkYzQ0M2IyMjkwOGIzMzQxZmQxMGE4ZTlkOGE5NDRmMWE4YzQ4ZThiYzVlM2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU0MDlmMWUzOWYzYTkzOWJlOGNiOWRjYzEwNmQ4NThiMzAzOWNhNmZlNDk2MjBlMWIyNjYxZGE0Mzk3OTk3MGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlYzk3MzkyNGMwNjk3MGUyMWQ3MmZiNThmYWU0ZTA5N2EyYTQ4ZTI0ZWExMWI5ZjE5NGVhYzRjMjhhYjlkMDYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ce7afb7828f94a6b832da2822ce8e050",
+      "statement": "assertZip()은 응답의 첫 4바이트가 zip 서명이 아니면 본문에서 DART 상태 코드와 메시지를 뽑아 오류로 만든다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L87-L94",
+          "version": "repo-lines-v1:sha256:221ad91adcf14e9c38030c90d5a811c3d6348a6248eb0c41fdcadbccb7bac475:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2YxODhjYjE3MDU1NjlkMDYxNzgzZTI0MzIwNDJjODI4ZDg1MDZlOTY4NDk5MmYwY2M1NWM0NzhlMTZkNmJhYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODBmZjQ0YTI1ODBkOGM2YTRiYTBlMjQ3NmEyODNiMzYxNzQ2ZjMyOGUzNzIzM2NkZTRiZWVjMDQzODBjNzVmZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzI2YzY3MWY1NTM4NjBlNzkxZTBkNWU5YWUwODJlYjViNWFjOGU1N2Q5MjcyNzQ0YWQ4OTNlYjRhODZiNGJmOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9db5f3d4a85f4f089d7035795a46fb52",
+      "statement": "dartJson()은 DART 상태 013(조회된 데이터 없음)을 오류가 아닌 빈 목록으로 바꾸고, 000이 아닌 다른 상태는 한국어 설명을 붙인 오류로 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L71-L85",
+          "version": "repo-lines-v1:sha256:b7e32b59e0e7637a35521626020d741e30a49c4b10997dd6df70af1b70537f99:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5Yjg5OGNkYTczMTE0YzA0YzI3YTk0ODQ2YjA1MjZiZjk0YWI1ZWY0ZTUyOWRlMzc1ZWFjMzM5NWI0OTZlZWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJkMGYyZDNhM2FhZGEyNzU4NjQ1NzhkMGE0MzkxNTYzOGQ1NDNmZWNhMmM5NDg1OGRiOTQxMjExZTg2Y2VmMmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmM2MyMTdhNDg5ZGM2ZWQyZjg1NDI0MmE2ZWJiYWEzNjcyY2JkZGI4M2MwZGUyMzAzNDAxMzY2Y2E2ZjQyNmQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6dcb09f454c84d1ea22965eefe861e42",
+      "statement": "decodeText()는 문서 앞부분의 encoding 선언을 먼저 따르고, 없으면 UTF-8, EUC-KR 순으로 해석을 시도한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L127-L133",
+          "version": "repo-lines-v1:sha256:625d94087fa8550caf79e33608d07fa62cdca4acf2c93395ba476b6f62ff2005:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDE5ZWQ4ODc0MjMwNDdlNzk3NGYzZGUxNTZlNzU4NDAxNDc4ZDU2MzEzZjk3NmQ3YzUwZWVmZTY1YWFkNjg5NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDI3OWI2ODA1MjBlZDUyNmRjYzRjOGFhMzczNTI3NTkwZTI4MTk1ZTQwZmJlNjEwN2UxZTViNDk1YTQ1NzczNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODYzZjhhODYwZDc5NTk1NGUyOTdlZTAxZWU5NDA2YTgyMmJiOTM2OTdiM2ZmYmVjNTRlZTZlNGFkNDMzODgzMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a826c97a79b8419184a61c5f024aca09",
+      "statement": "dart_financials는 회사가 여럿이면 다중회사 주요계정 API를 호출하고 scope=major만 허용하며, 전체 재무제표는 연결 결과가 비어 있고 fs_div를 지정하지 않았을 때 별도 재무제표로 한 번 더 조회한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L329-L362",
+          "version": "repo-lines-v1:sha256:198047c1ac0cccc962c548bf9c5e7a7c44ad90af05a8fd1b16c53a5ff7c51986:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliNjJmNjBkODU5MGE1NzljZjQ2ZjhkNjczNzhjNGM1NzJiOTYyY2VjY2RiOTBjN2E1ZjdiNDJiOTYwNzgyYTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAzNTI4OTQ4YWQ1YjUyZjlhMjc5YmVlNDZhNThiODdkYjZiZDI5NGViZDcwMWRjNzc1ODUxOTZhNjQ0MDBkYmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVlMjUxZmMxMjYwNDVhODJjYzFiYjJkZDg3MGZkMDJmZGQ2MGY0ZWJmN2RjZTI2OWRjZjAwMjkwZjcyNDhmMzcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a40bc702cbdc4bf2a4a0c2cb1969208d",
+      "statement": "dart_report는 허용 목록에 없는 endpoint를 거부하고, KIND()가 판정한 묶음에 따라 정기보고서 항목은 year를, 주요사항보고서는 bgn_de와 end_de를 요구한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L206-L237",
+          "version": "repo-lines-v1:sha256:ad0a53fb5fe682b49a45f344822157e303abc46e46b4a01008eb672a6ac2f61f:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiNTQzMWRlYzM4OTQzNTExNzQ3ODgyMmYwM2U1YmNmMzkyNDlmYzc1MWM0MzE5OTA1ZDAyZTZiOGQ0ZGZlMmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYyYTk4ZmUzZGNjYzZlYjU5YmU3MjA3ZmUxNTQwMjJlZjk1NDkwNzZjM2VkOWMyZjAzMzY4ZWFkM2ViODgxNmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1Mzg5Zjk3ZDk3ZGQ2Y2YxMWE3NjM1MTNmNzllODg4ZWRhMDZkYTM3YmFhNzFmZTFjMDNmNmViOTc4ZjI4ZDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiN2RhMWM4ZDY1MWFhMjkyZGFhMzVlOTZlNTViZWYyNWY4MWQxNjZjMmFlMDUzYjI2ZTBmMGU4MDFlNWU2YjcifQ"
+        },
+        {
+          "resource": "repo://dart/server/index.js#L422-L437",
+          "version": "repo-lines-v1:sha256:076a8d63d03137b09c5f8c2a33ff72a47e42733a970e491dae1bf02e2e6e9cf6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1YTEwNjhlNmE1MmQ0ZTZkNjJiNTQ0Njk0MDQ4NzA3YWNlMjdmMzA3MTBkODQwMGJhNzM3NGIwMTc5M2NiNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmYWQzZTBhMDZjNWNiOWFhNmUwN2Y1ZGY0ZDY0MzhlMDg2MzM4YmRiZjUwMmU5YjM2NjkwNzY2NGVmM2I5M2UifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5ade66eef2ef4659b8770aad47180e7f",
+      "statement": "dart_document는 원문 zip을 풀어 태그를 지운 텍스트를 offset·max_chars로 나눠 돌려주고, find가 있으면 해당 단어 앞뒤 400자를 최대 15곳까지만 돌려준다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L449-L469",
+          "version": "repo-lines-v1:sha256:ba76a6714b70c5c907238c56750303412ad1d94ef39ec3770aa1f924248ea83a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmZjAzNjNlMjI1MGIwMDQ3ZTVhNDdiOGJhZWEzNmVhZGM2OGIwZDM4NzA4NWI0YzE3NWRkMDkxODJhYWQxNjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE4YTkxNzU5NzJmZTE1ZTJhOTY0MWFiMTMxZjU3MWU2YzdjYWJjYTA2ODM3NjJlYmE1ZjIzNTNlNDgzYzNkNTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_729f7d3562a14e8781a1e899c58c236f",
+      "statement": "dart_disclosures의 title_contains는 DART에 보내는 조건이 아니라 받은 페이지의 보고서명을 서버에서 거르는 것이고, 기간을 비우면 한국 시각 오늘부터 30일 전까지를 조회한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L301-L316",
+          "version": "repo-lines-v1:sha256:0f3f096bb7b162ddd4c1e2f8cc974feee2155b87248f6faecd4bfbd5078d7b8a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmYjMwZDJiMzI3MWRiYTYzZWYyZGM1YzBkMDJkMTZkZjAwODhhMDlkOWVkZTIyMjhmMGU1YTYxZDhhYzllZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVlN2UzYWE3MmM3ZTAyZDRlMTU3ZmI0OWJkM2IzNjMzNDdlNjM1NDNjMGQzZTExMDY2ZGE5Zjc4Mzg0YmYzYmYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

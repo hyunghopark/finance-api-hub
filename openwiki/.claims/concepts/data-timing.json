@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:5f4af3687101f0966f01ea0be82ac3d46b13e9636d41bf446ebd5f979d0d972e",
+  "claims": [
+    {
+      "id": "claim_7ef56f83bb624b98845033b7e453f189",
+      "statement": "DATA_TIMING.md는 실제 호출이나 공식 문서로 본 것만 '확인'으로, 보지 못한 것은 '미확인'으로 적고 추정은 적지 않으며 확인 날짜를 함께 기록하는 규칙을 둔다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L3-L7",
+          "version": "repo-lines-v1:sha256:4383b44ef0965aec74907222c47c03e76795caf9081a9e920e57e18074f20bcd:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODNhYjQ1MGEyMjIzZTk4NWMyZTkzNzFhY2U1NDNmNDZmZjAxNmE2MmY1ZjI0Nzc5NGY5N2I5ZGNmYjQ3YzBhMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWRkNzEzYzM0YjdhMTkyNTMwZjYzNzIxNmViYTM3OWIxYmM2MmNkMGU0NjYwNjE4NzJkYTE1NTk4Y2RjMDA1NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmIzMGZiNmVkNTBlODI4NmFlNmU0Y2E0YThiYjMzNzU5NDM5ZWUzMzUyMjdhNjI4M2NlMWQ4YTNmNjU3ZmRhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjI3ZTUxNjBkNTY1Y2UyNDhlNTdmYjhjZDI0YTI3NjU1YTg0YmFkZDlmMjY3NTI5MmVmZmE3Yzg0OWM5MmQ4ZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b1b47a8e28f04b32957d3fdf2e20b81e",
+      "statement": "toss의 국내 종목 시세는 KRX와 NXT를 합친 통합 기준이라 장 마감 뒤에는 NXT 애프터마켓 체결가가 나오며, 이 경고가 도구 설명과 서버 instructions에 적혀 있다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L59-L59",
+          "version": "repo-lines-v1:sha256:7fcc1f2579f9d80246c4c0cddf8bc0057707b455df91911fd39a4a7acdadb5f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ZjYzFmMjU3OWY5ZDgwMjQ2YzRjMGNkZGY4YmMwMDU3NzA3YjQ1NWRmOTE5MTFmZDM5YTRhN2FjZGFkYjVmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ZjYzFmMjU3OWY5ZDgwMjQ2YzRjMGNkZGY4YmMwMDU3NzA3YjQ1NWRmOTE5MTFmZDM5YTRhN2FjZGFkYjVmNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTcxYmIzY2Y5NTMwOTdjOWU0NGIyYjZlOTc4MjAxYjdjN2ZmNDY5MTkyM2FjNjkwMWNjZjI0OTcxNzJmODA1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTYzYjUxNDgzOGFkYjQxMDA2ZWUwN2FjMWM1YTY1Mzc5ZWYzYjBiODcwMmY4Nzk0NjJhZDA3MzQ2NDBkNjNhMiJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L298-L299",
+          "version": "repo-lines-v1:sha256:f8446564c85af08c296d3972cf3aca0b08d7158dda524df5e70f9c27d5f7b3c5:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQzYmU5YzNkMTMxODIwMjJlOTcxOWE2ZjQ1NzY1NGMwMzYxZGRlYzI1Njc4ZGVkOTQ4MjMxZGQyODVjZTI2YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTZmZTVlMDMwNzhkOTVlNzhlNGMwMjQ1MmM5MzlhYjllM2Y4MzZhODNkMWMyNWEyNDdhNjBiZDQ4OTZkMDYxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2Y4ZTFiYjc3YjNhMjgwNTExZGRhZWNmY2VmMGM4OTdlYjg4ZTFjZGQ5OGE1MzE0YTY0YWVkMzgyOGNkZjA1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTUzYmRiZWNmNjhkNTIwYWYyNzVmNzNkYjRlNWY5M2RiODQwOWI1ZjU3ZDZkM2ExMWQ0MTEzNTAyYzg5NDQ4YyJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L336-L336",
+          "version": "repo-lines-v1:sha256:6494b9a6cbc2730aef2cb5ee4d19bdb8f339216f447b6c80f53530d80ed36609:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ5NGI5YTZjYmMyNzMwYWVmMmNiNWVlNGQxOWJkYjhmMzM5MjE2ZjQ0N2I2YzgwZjUzNTMwZDgwZWQzNjYwOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ5NGI5YTZjYmMyNzMwYWVmMmNiNWVlNGQxOWJkYjhmMzM5MjE2ZjQ0N2I2YzgwZjUzNTMwZDgwZWQzNjYwOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGRiMzYyZjJlN2QzZmU5ZTdiMGNkMDAyNDJjZWQ1MDNkYjkyNjZjNDgyYmE5OTEyOTU2Njg2NWVjNTVkNTkyZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTJhYWFiYTlmZDc3ZDNkODY5MDI0NTZiMDIxNDFhOWMwZDBjOTFhMTA1ZDhjNDBjMmUyOTI2MmE2ZjQwNWUzZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fc714cd41264404c9479d884d765f861",
+      "statement": "kis는 거래소 기준을 서버가 정하지 않고 market 인자(J=KRX, NX=NXT, UN=통합, 기본 J)로 호출하는 쪽이 고르게 한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L233-L247",
+          "version": "repo-lines-v1:sha256:aa0852b03c9b91ecb81fa8edfee57f0bd0318d182281cfc3193cf2d0692878ec:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlZjljZDYxYWIxOGU3NDk0Yjc2OGM3NjczZDdkMmVkOTAyODUzMjlhNDAzM2RhMjRjMzkyOWU2YWUxMGM0MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiNzNlZmI3Y2VhY2NjZWE4OGMwM2Q1YTVkYmNkMmFhNjM4NmYwNGQwMWRkZmJlNTg1ZGRhZDEwMTQ2MjQ2Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhmMmY0NzY3ZTM0MGJjMTc1ODE1MDk4YzczOWUyNWEwODFmZDk4ZWRiYmQwOWUzNTAxOWQyNDk2NjA5ZGQxN2YifQ"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L41-L42",
+          "version": "repo-lines-v1:sha256:1b070360ff63df12f857d074de7a15a64ef3a4e21c8cede18416f7b257ce618c:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTY3NjJiZjUxMmZmMDMyZDQ4NjcxYzU4ZjhiZGQ2ZjNkZWMwMjJkNjk1MDlkNWUzMzU4ZjAyM2Y4NDdjY2NjOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWNmNDI5NjVmNmJlMmE3Y2Q1OWUyMDM5ZTQ2ZmI0MzM3NjhjZGFiMWU1ODgyNWYyYzA0NmRiYzE3MjQyZTcwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA2ZDQ4ODgyYmExY2U3ZDg3NTlkNDQ3NDNjZjM5NDMzYjkzY2FjYTM3MDIyNjk4NjhlNDQ2OTc5YTFhZTRlYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGEzOGQ5ZmU3MGFmNjQ4MjVhODVhYmUxMTBjNDRlZjRiNTQyMGRjMmUxYjY1ZDlhN2RlMzgxMGFiNTk3NjJiYiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_799028e513a34962b4de12507e058e20",
+      "statement": "2026-11-24 조회에서 kis의 J 지난 영업일 일봉 종가는 다음 날 기준가와 일치했지만, 당일 행의 종가는 같은 날 15:30 분봉 값과 달라 정규장 종가가 아니었고 바뀌는 시각은 미확인으로 기록돼 있다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L78-L88",
+          "version": "repo-lines-v1:sha256:8a9408fdfc4bc3bce9d3a18694a9da8d4a9a97b2a7f1d0142cb987e4dee3b43e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZhMjM3NDlhZWU2YmM1Y2UwOTgzNmY0MTAzYWE4NTFiNmY4YjlkYzI3NTA3MDNjMDI0OGYzMzQ5NzBhYzcxMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ5YzVkNmIyNDg5YTlmZjI4ZGQ4OGYzNjZhOTY4YWNkMDgyOGM0ZjAxM2MwMmM5YTU0ZmY1NDY4ZDA5MTNlYzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQyYzRiOTIxNjg0ZTY1ZTJiZjRhOTAwMjY2OTYyMzgwZGNjYTk1N2I0ZTEzM2FkMDVlZGU1ZWMxNTk4ZTc4MTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAxM2FiYzIwMDc4ZjlhZTUxMzNmMDlkNjU4ZWNjMTBmYTZmZWY1ZDQ0N2NhZTAzYWY1NDc5OTYxMDE4ZDViZDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4eccc9ee92b0434cbffbb6fe8cd6986a",
+      "statement": "기록된 확정 시점은 toss 시장 수급이 당일 20:06경, toss 종목별 수급이 다음 날 06:10경, KRX 일별 자료가 다음 날 08:00경이다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L57-L58",
+          "version": "repo-lines-v1:sha256:2c0cda8dbe7cdbe08981693923b5b177c936f0df57cdc9fea44b3b0473296c45:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmUwMDg4YjI2ZDA0NmE2ZjlmMjUzZDRhNTI3ZWJkYzk3MjY5Mjc3Mjg1NDAyN2E2MzA1ZjhiMDM0NzI0ODVlYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTRhNzVkNDk2YmU5Y2JiMzZiN2RmNWRmMmZjMGY5YzFjYTExMzg2MTRmN2ViZWFlMjQ2MzlhMzVhNTE3YTEzMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWE3NmI0ZjU2OGE5MGYyNmIyMDE3YjM2OWQ1Y2FkNDE2NjQ4YjRiNTgyM2UwMmFhNmQ0YjQ2NWQyYWEzM2Y2YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGJhOTYyYzQzZTI1ZDUxMzdiNWFiZjZiYzFlNWNlNGYzYTNjMGM4MTY1YTVlNWUwNWJlOWQ2Mzg4MDEwNWRjNiJ9"
+        },
+        {
+          "resource": "repo://DATA_TIMING.md#L98-L103",
+          "version": "repo-lines-v1:sha256:a32810d39534e36a6768783eb4c06142b9dcff0e271098e227e8a9536df340d8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQxMGE5M2I5ZTcwMDczNzc4YmJkZmQ1Y2I4NDljODQzZTVhMGRhZjA4NzA3OTU3ZWU1OGUzNDllMjcwMTQ3OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2ZkZmEzZmU3MjkxMTIwNGMzZWI1YzA2NzM2Y2JjNjRiYTg1MGQ1NzIxZWY2ZWU0NTA1NWU4YzI5ZjJjNzkwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGYyMDZkZmE5ZjlhYTUzMGUyMmQ0NDVkN2RmYzdjM2MyMGUyMjRiMmQ3ODViM2VkZWMzMmM2ZTQwMWNiNWI2OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzMxM2ZmMTAyMzEwYjJhYzM2NTA1OTFiOGJjNjc0ODM4MjRiZTRjOTBjOGM5ZjU0MGI5ZmQ1YWVjNTVjNmVkNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_df0d18a4066043d291d0fe8b78ffcd20",
+      "statement": "krx는 날짜를 비우면 어제부터 거슬러 올라가며 자료가 있는 가장 최근 날을 돌려주므로 반영 전에 호출하면 오류 없이 하루 전 자료가 온다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L105-L105",
+          "version": "repo-lines-v1:sha256:e6c47a12eb61a7d228d440313580d9c270a2a0d3735634f36413bed7fce3c1b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTZjNDdhMTJlYjYxYTdkMjI4ZDQ0MDMxMzU4MGQ5YzI3MGEyYTBkMzczNTYzNGYzNjQxM2JlZDdmY2UzYzFiOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTZjNDdhMTJlYjYxYTdkMjI4ZDQ0MDMxMzU4MGQ5YzI3MGEyYTBkMzczNTYzNGYzNjQxM2JlZDdmY2UzYzFiOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzJkMDQ2ODhjNmY1NDFjYTdhM2RkZTJhM2ZjZTNlMmViNTkwZWQ1NDgyNGE3Y2ExY2ZiZDU5MzYwZDUzZTlkNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2JkYjNjNzg2OGM4MThlMTM2MmNkYzQyYTllOGM1OTYwYTQxYjI1MzEzOGI3MTk1OTkwZGEwZmM0Y2M2MDQ2MiJ9"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L167-L175",
+          "version": "repo-lines-v1:sha256:ae96d3c7e17282c690719f68106f900a1ae57b3e7073ea1394ac79d9967de6fd:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTk0MGE2MDJmM2ZkYzg4M2IzNjc4YzhkZTJhMTA0NGJjOWIwNzBmYjYwMDUzMTViMmJjMmE5MWJhMzUxMmQ3YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQwZjJkM2EzYWFkYTI3NTg2NDU3OGQwYTQzOTE1NjM4ZDU0M2ZlY2EyYzk0ODU4ZGI5NDEyMTFlODZjZWYyYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDMzYjA2YmM2ZDU0YTFhNzAwMjQwZDhjNmEzNjRlNzc4ZWRiOWM4NmQwZDYxNTBkOGRkODRkZTY2MzQ2YzA5YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_adf810f9a398454ba529f9c11a1c5db9",
+      "statement": "check_timing.js는 각 서버 파일을 자식 프로세스로 띄워 initialize와 tools/call을 표준 입력으로 보내 응답 날짜가 오늘인지 판정하며, 서버 경로와 인증 정보를 개인 설정 파일의 절대 경로에서 읽는다.",
+      "evidence": [
+        {
+          "resource": "repo://check_timing.js#L16-L64",
+          "version": "repo-lines-v1:sha256:39b047db3f24b533a77dbc3a2c821950ee9ea8bd3a11b985e833b2f3b3e33ce9:eyJzZWxlY3RlZExpbmVDb3VudCI6NDksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4OTFiOGJhNjEwZDI5ODI1ZTQ2ZDBhNjUyOTA0N2FiMzRiODQzMjMyNWYxNzdlYzcxODc4NzY3ZGVkOTU3ZGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjYmUxNWNlODA4ZWRjNzgxOTY5NWJkYzk2ZTU2NWIwOGM3ZjNjNDc1ZjRhZjdhYWM1ZTdiYzBiNDM3MjlmYjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwZDM0NGE2ZTY4N2U4NmY2MmNlNmVlYzA5MzAzODA3YTdmY2QxYjQ4YjdhZGI1ZGQyMzdmNzNiMTFjNWY3NDAifQ"
+        },
+        {
+          "resource": "repo://check_timing.js#L87-L108",
+          "version": "repo-lines-v1:sha256:9521758d1a4c444bf4bd1cfafdfc2969299b4d7b36156294b29c7bf63fdeeac1:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYzMGY1NjZlNjdkNjZlNjU4NWY2MTJhYjA4ZGMwZmY3Mzk2OGZhMTdhZDE4NjFhZmI1NDU2ZTkxMDRjZGZkODEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM4MzRjYWVjMTFhOWY5ZWE3OGVjMmI1Y2U3YmJlYmZlNGQyNTQzNmY0MTE3YTRjMDE1NWQ4M2VlZmViMTg5ZjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkxZTJhNmJhM2I1YWFkNWQ1ODhiZWY4OTQ0ZGI4MjM2YzJlZTE1MjIzNmVlMzkwYzcwZWUyMDc4N2IyNmRlYTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8bdba0e2ba9a4026ac03be8b48273920",
+      "statement": "check_timing.js는 오늘 날짜를 실행 환경의 현지 시각으로 계산한다.",
+      "evidence": [
+        {
+          "resource": "repo://check_timing.js#L66-L72",
+          "version": "repo-lines-v1:sha256:d156f444e6d7b40be9669a19bf60d4cdcb7e30fb6c37ba31649fdfb5b376632a:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTJkYjI0YzQ2MzUxNGExMTk3MjA4MmM2ZWZhMWRjZjBhMjUwNGM5MjM0NjA5ODc1ODk2NGFiZDZiMDkwZDMzMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQwZjJkM2EzYWFkYTI3NTg2NDU3OGQwYTQzOTE1NjM4ZDU0M2ZlY2EyYzk0ODU4ZGI5NDEyMTFlODZjZWYyYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjBjMzU2NzYzYjM1MmFjMTQwN2ZhNDQ4ZmE3Mzc5MmY0ZTEzNzRhMzZiOTc0NzkxYjAyODNiMjM3OTU4OGM1MyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_7272e873947c4ce7aeb135a10980246c",
+      "statement": "meritz 폴더는 서버 코드 없이 메리츠증권 공식 MCP의 설치 안내와 데이터 유의 사항만 담으며, 그 MCP는 설치 화면에서 조회 전용 옵션을 켜지 않으면 주문과 환전이 가능하다.",
+      "evidence": [
+        {
+          "resource": "repo://meritz/README.md#L1-L18",
+          "version": "repo-lines-v1:sha256:13c855c08744fa1e4c0a385067642ba8cdccbbec1bc2ec34cb2018d8d9fd3f82:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE0ZGRiMTFkMWMzY2NkODk4ZjZhZjAyNjczYjgyMWUxZjA3OWI5NWUwZDUyNjNjNWY1YzZlZjVmNzg2YjkxMjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNhNjFiMzgxYWViOTU0OTE5NjE4OGZhN2NjZTMxOGM5ZjE2MDU1MjVjMGI2OTE3YWZkMGQ4YTViM2Q2NmZkNDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRkOWJhMzQ5MDliN2Y5NGY5YWExMTczMTlkMjI5MmFjZTgzNDE1YzczMDAxNTdlYTJkOTY0Zjc3MzQwYzBjNTQifQ"
+        },
+        {
+          "resource": "repo://meritz/README.md#L32-L40",
+          "version": "repo-lines-v1:sha256:5b8d761bb01dfda18af9a189e9c68002c89ba379d754bc18fa27f74f8654df2c:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTc5NzRlOGE5YTc3MzkxODYxZjcxMTdmYTBhMWYzNGEzNGZlYjhhYTg0NDA5MDFhNDEwMGUyZTVhYzRiOGFjMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWIxNGNlNDA0NDI4NzIwOWVjOTU5MzU4NjUyNzIxNzhlOGI4OGYxZWY4YTc3MWQ4MzMyYjFiYWMzZDNlZGM3NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOWQxODUxZGZlMjNiYjI1NjVkMDZiZWI0ZjM5Nzk3NzkyNjhjODUyN2JjZjJiY2U0ZmQ2ZWQ4MGNlZWY0MmViMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzBhYmQzMzI1ZWIyMGYzZDhkNzJmYWM3YWYwMzFiZWU0YzJmNGRiMTdjMTZjMDJiMmFjMDNlYTI2MjI2NGM0OCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

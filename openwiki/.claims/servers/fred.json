@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:14da5e8b08510b60d3d76a7ae9c705ea53b7584b8ccaf75e87fc912d3d4034e1",
+  "claims": [
+    {
+      "id": "claim_3926a7ef54df4034876268e043f446b3",
+      "statement": "fredGet()은 ENDPOINTS에 등록된 v1 경로만 허용하고, 사용자가 넘긴 api_key와 file_type 인자는 무시한 채 서버가 직접 채운다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L46-L59",
+          "version": "repo-lines-v1:sha256:a121b6840abcb83acbed831b7b0dec8d8a3428d61a16ba0fd4e11ef5a278adff:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk2ZTNmZDkzY2U4ZTVhY2ZmZWQwNGE2OTdhM2ZmNDFjMmNlZGMyOGFhZjA1YzdhZGRmNDk4Zjk2MTk1N2U2ZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkYjZkMWU1ZmQ0Nzg5NDVmOTI3NTdkNzI2ODkzMjBiMWI1NTU4OTNhYjlhNWI5YmU5YzRkZWZjMzA1MzU0ZTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyYWMwOTNiYWQxMWM1NDNmZmU2MDUzNDc2ODVmMmZlY2RlNjljZmRkOGM5ZTE1Mzk4MGVmMjc0Yjc4NGFjNWQifQ"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L75-L85",
+          "version": "repo-lines-v1:sha256:d6a24af822b6d49fc6143e700d19341c2e3caea0b95860ad6785575203730ca4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0Zjg1YTU5Mjk2MGFkMzhmYjUyODc3NDEwYmE4ZWNjNDI1OTVkNDA1NWY0NzdkOTdlYjMyOWRlODg3ZDkxMzAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlZGMxMjA3NTAwYWQ3OGU0N2E2MTZmNDE5MzM5ZWMxNWViNmU4YzU1MjMxMzUwYjI2Yzg1NjRlMDYxZjlhY2EiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc0MjQ0NTg0MDEzY2E4ZmZjMjBiZWZhYWJjMzNmZTgyZDkxOTVkZDQyMjIxMjNiZTA0MDk2Mjk2YjVkZjY4ZDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5ODdlMDhjZTdmNDU4MjU2ZDg4ZTgwMTY4ZDE0NTRlYjU4OTg2ZmIzMjIwNjA5MzYyMzY3YTJjZGFlMjY0YjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8728d3b2951d43fc9e5fc60ae0724982",
+      "statement": "fred_get은 허용 경로 중 하나를 골라 인자를 그대로 넘기는 범용 도구이며, 인자 이름은 소문자와 밑줄만, 값은 객체가 아닌 것만 받는다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L339-L354",
+          "version": "repo-lines-v1:sha256:bcc6f755022930c8df88f2ef3cc1fb719c04e9ee9c09a020ebb1b5db2099c7da:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkxN2IzZGYyZDU5ZWU0N2E4OGVkYTU0NGJmNmQwNzg4Zjk1YjliOTdjMThhYjA4Y2E1YjlmNzczMmYxMGRiNzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNmOGUxYmI3N2IzYTI4MDUxMWRkYWVjZmNlZjBjODk3ZWI4OGUxY2RkOThhNTMxNGE2NGFlZDM4MjhjZGYwNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyNjJkMzlkZThlOTRhOTdmZjQ3MjFkNDNhM2MyODRiYWE4YWNkZmFiN2NmODJiMTYxMWY3MTkzMTZmZjVlM2QifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_68d449e1605e4038a7ccd417ee0262d5",
+      "statement": "BUNDLES는 rates, credit, liquidity, macro 네 묶음의 시리즈 코드를 정의하고, macro의 물가·생산 항목은 전년 대비 변화율(pc1), 고용은 변화량(chg) 단위로 조회한다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L153-L170",
+          "version": "repo-lines-v1:sha256:83237844136c3068d8c283c3279b4f34cb46e9551c0273d7af08cd77a9ac7e45:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2NDFkZjIxNzRhNjJlODZkYzJhZDNlMjE0NDNlYTU0MGJmMjJlOTNhNTAzMGFiNzBiMDdhODlmYTY0MTU4YWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYxMzViYjY0YjRlYmZkM2MwZTllNmYyODFiYjJhOTViOTIyOTRmZjY5MjZkZDZjZWI3ZTk2NDA0OWY5MDFiNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMyODZjYTA4YTRjMGZkMGUyYjMwYTk5ODFhYzkxYWYzZjkzMjc0MDVlNjQzODUzNTEyNWJhZTdjNTU5NmVjZjAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e387fc284e54419d9c7a0feef7c83546",
+      "statement": "bundleRows()는 시리즈마다 최근 60개 관측에서 값이 있는 최신값과 직전값의 변화를 구하고, 일간 시리즈에 한해 7일 이전 관측과의 변화를 함께 계산한다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L173-L199",
+          "version": "repo-lines-v1:sha256:d2e7332576d4eb8614e8fcc19a24cfec6da0489ccd0a7cc3baabfea760c4177f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlODAzNjI0MzllODMwZTcyM2I0MWU0ZjZkZjhhYzZjMThhOGI5MWY1Mzc1MjIzODcwYWM4NjFmNGRiYmRjMmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyYzExZjRlODliOWMzM2JhZjUwZDZjNDI2YTlmNjEyNWQzNDBlNzk4ODI2YjgwOTY1OWQ5M2Y0MDBhNmM0MDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdhNDIwNzBlMDUxYjUwZTEyODYzOWVjMDc4ZjU2ZTU1YTE2OTU1MTE0MDI4Nzk1ZTE2NmFiM2JmOTMwZDNkYzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVlMjRiYjM5ODc3MmQ3M2YwODI2MjI0MjA3YWIyMTZmNTk0OGRmOGM1YTVkNGUyZDJhZGQ3ZDUxYmRiZWEyZTQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fa6087a5ea1746919ec560074705d13c",
+      "statement": "가장 최근 관측이 결측이면 missing_latest에 날짜와 이유를 남기고, 변환 단위인 경우 그 날짜의 수준값을 추가로 조회해 함께 돌려준다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L184-L192",
+          "version": "repo-lines-v1:sha256:9a3e3d0af3ece98e1b620ddda27c57dcae666d1cd3207dc99790fe96d339821d:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTU1OGJkZmFkY2YyN2FhMjM5OTRlMDg0YWZmNjIyMGQ0NDM4NzJlMzUzNzI0NGNiMDAzZWYzN2FkZTRjMGNlZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOWI2MmY2MGQ4NTkwYTU3OWNmNDZmOGQ2NzM3OGM0YzU3MmI5NjJjZWNjZGI5MGM3YTVmN2I0MmI5NjA3ODJhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmU3MDM3MzFmZDRkNTU2NzUxOTkzODVhZGUxNWYwZmFlYmQwZTc1YjA1MjljY2NmNjU1MzFiNDk5ZmI1OWExOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjhlZDM5YjUxNmRlMzIzNjNmNDQxMTY3ZGY4YzliYzBhZTU2OTI0NDhlODZhMDY5NDcwNTk1MTMwNDZmOTE0OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_2439e2bdaadf4be8b469c932a4ec256e",
+      "statement": "netLiquidity()는 연준 총자산의 주간 날짜를 기준으로 같은 날의 TGA와 그날 또는 직전의 역레포 값을 빼 순유동성을 계산하며, 시리즈 단위 문자열을 백만 달러 배율로 해석하지 못하면 오류를 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L143-L150",
+          "version": "repo-lines-v1:sha256:47b3a3e9c4e723ef3f155773b4f3c9f799ef2492dcbf6b6b04d0cf580650631c:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWNhOWVhM2NiNTdhOWJjMDY4ZTQ5Y2RlZjBmMGM4ZTI4ZmVlODE3OTQxNTMyMTViOGQxY2FjMDVlYmI0MjljOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzI2OWZhZmNhZjU0NTg1ZGRiZGVlOTFlZWZmNDkzMTdlNDE5ZWI4YzliOTEzZmY3NDI0Zjg2NTcyMzRlMTQ2MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjM5YmQzYjE3OWQ2ZDY0MjBiYmRlNGZiYzQ0MzFlMjZmNDQxNDYxYjhlMjg1MWRkMjY4NWMwYjI3NTAyYWJmNCJ9"
+        },
+        {
+          "resource": "repo://fred/server/index.js#L202-L223",
+          "version": "repo-lines-v1:sha256:d220de23450f74196c09c2d00806ca57d66716b4fa8b47a6e847a9cb3380b043:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBhYzczMWIxOTc5NDlmZjMwY2E0YTRlNjU5MmJiY2ZlMjZmNWI4NmEwODA5ZGYyMDA5ZjM1YTY1MjgxZDhiMWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3MTY5YjI4ZGNjZWY1ZDc3ZWZhMzY3MDMzM2U3OTU2MjU0NzU5M2U3M2VkYjljMWZlZWYwOGQ3OGI5OThkOGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIxMzYzYjYzNGNhZTNkZDk1ZTVjNWQzZGNmN2VhYzBjODJhYzEzYmQ2MWM1NGE0MTBmZTU1ZDEyMzQwMTZmYWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_96b44cfc30ee4555aa47bddb6bc0c492",
+      "statement": "묶음 안의 한 시리즈 조회가 실패하면 전체를 실패시키지 않고 해당 행에만 error를 넣는다.",
+      "evidence": [
+        {
+          "resource": "repo://fred/server/index.js#L176-L198",
+          "version": "repo-lines-v1:sha256:846af5240c30e691fd4ffd8b47b486ea227ebc03e8851cdd78e25728ef63953a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4YmI1NWRlZDFkZGY3ZmYzNDlkN2YxMDVjZTA5ZjFlMmQ1MzhlMjgxMjU5NjU4MGI3ZGI4YjY3ZmI1M2E0YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5ZGMxMGI2ZWY4Y2NmNmUxNzMzMDAxN2RhMGQ1YWI0ZTZkZDlhN2E0ZTc0NThjYzZlMWMyYWY0MzQ2NTA2Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3MTY5YjI4ZGNjZWY1ZDc3ZWZhMzY3MDMzM2U3OTU2MjU0NzU5M2U3M2VkYjljMWZlZWYwOGQ3OGI5OThkOGMifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:fd9c3629adda223f868959d5c2b4110b76edd3977df974cb3cf15c7088946a2d",
+  "claims": [
+    {
+      "id": "claim_17f02ccc9bbd43808e0a13a8af0e2926",
+      "statement": "토스증권은 client당 유효 토큰이 하나라 재발급하면 이전 토큰이 무효가 되므로, 서버는 발급한 토큰을 파일에 저장해 만료 60초 전까지 재사용한다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L108-L112",
+          "version": "repo-lines-v1:sha256:eb8c5db0e6e97e4c3950df5d8f5620ff755df59c1e2370ce4f08943306cf8ac5:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmMxNmEzN2RkZTI4YjU1OTg3MDFkNjcwNTZkNThiZGJjYTFkZDRjYjE2Yjc0OWY1YjU5Y2Y3Njg3YjZlYWMwNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDgxOTMxNGE1NDlmOWI3Y2IzZGNiOGZhOTc4ZGU0YjEyNDYxNTY0ODFiNTc0MzhlYTg5MTZlYzVjZjJmNDJkNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTJlMmRiZTIxN2UxOWIzYjI3OTRhZDVjMTc2ZDE1YmZjNWU2ZjM1YmE1MDc1MmVmZDFiNjJhZjRkZGNhNTE0YiJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L51-L75",
+          "version": "repo-lines-v1:sha256:a30380705396fbb9439c631106bd9b87936599325aee83e96700a5fd771b3366:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhZWE2MTIzYzZiMzc4YWFiYjg1YzE5NGRiYjE4ODZmZmQxM2YyZjMzMDg5NGI1YTNkMmVjNGZhNDJmZmRiZGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRjY2YwYzA1NjgwNjY3Y2FhMmVjMWFlOGFiMDliMTkzZDM5NjgzMmNlMDc2OWUyMGM0MzQzMDMxM2U2OTNhYjIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b63e753c5fb54d0d87a3295dd375fd9d",
+      "statement": "조회에서 401을 받으면 토큰을 한 번만 재발급해 다시 시도하고, 403과 429에는 허용 IP와 호출 한도 안내를 요청 ID와 함께 오류 문구에 덧붙인다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L117-L140",
+          "version": "repo-lines-v1:sha256:af1163306bbf5d10bfbd771829bce1e3d8c97ffa5088334430c3d1a2d390f553:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwN2M3YmZlODRlN2Q2ZTVmNzYyYzZhMTIyMmI1MTg3NjUyOGVjYjE2ZWQ2M2IzZDA3MmFjMTBhMDliNTA4ZmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZhYzA3ODZiOWUzMDRlM2IxNzNkYzU3MjNkNTVlZjAxZDkwYWQzNGZjYWRlYjA3YzViYjc2YjMwNzhmNDA1NTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZjNTZlZDE0NzYwMDE1NzM0NDA5YTRkZmIwYzBlNjM3Mjg2Y2U0ZDdlNWEzYTY4YmUxZmMxOWUwMTdiNTBhNWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_47c1c65297b44b20ab52dbe9c7935aae",
+      "statement": "READ_ENDPOINTS는 조회 경로 13개를 만드는 함수의 모음이며, 경로에 들어가는 국내 종목코드는 영숫자 6자리 정규식으로 검증된다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L17-L37",
+          "version": "repo-lines-v1:sha256:fb08530b65e6a03cf0498b5aec891c4d8351e6d38182a3c40fef13a4f3682bb8:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkZWE0YTE2Zjk5ODI1ZjU1OWVhNjEyNWQ4YzUwZDlkNTA2NjEyZWMyODI0ZDhmZTFhZjJiNTgzZmM2MDQ0MmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVlYjQ2NDJhYWJhMWUzYzc4N2VjZTgwNWJlNTE2ZGU3MWJiOWZiNzk4YjdlNjkzYjlkZWRmNTkwMzA1NDBjNTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkzODRjMDc3MzNlN2Y4MWRmODcyN2Q3NDg0YzYxYTdmNmEzMGU1Y2E1MzU1YzViNjkxMjEwMGExZThkMGI5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFmNzAzMDI1NWZmMjc1MzhiYWI0ZDQ2NmRjZGM5OGQ4MzM5MTAyMmVmZTMzMDRkMDc4YTA4ZmNiYzAyOGU4YjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_33daed1ea7874a5283746e3f4422f7dd",
+      "statement": "등락률 순위(TOP_GAINERS·TOP_LOSERS)와 realtime 기간의 조합은 요청을 보내기 전에 거부된다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L289-L295",
+          "version": "repo-lines-v1:sha256:43fafd63b6003a9a768a9989cbb3e49a138e74c244127a0ec921e16ce474fef4:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzcyNDU3YTI0MDBjYmIwYmI0MzVlOGJmMzVlMjEyM2NlNWI3YTMxNWUxYzQwMDEzNGRhNTNhODcyMDFjNWRjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDg0MjAzZThjNjM4NDQ2YmZjOWUxZGI2ZDZmYjY5MjU3OWI0MzUzMTBiOTlkMDMyZmQ5MDVkMmE5OTVhM2IwMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_543be49a0b53440b83743af656c92db0",
+      "statement": "summarizeMarketRecord()는 개인·외국인·기관·기타법인과 기관 세부 7종의 순매수를 억원으로 구하고, 네 주체의 합을 함께 넣으며 주체 중 하나라도 값이 없으면 합계를 null로 둔다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L154-L164",
+          "version": "repo-lines-v1:sha256:5cd25007c632780872b02248281d52dd2a72262b996630e5770fc260f2fd4ebf:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEzMzcwMDVmYzc0OTgyZmYyZTUyMWY1ODY3MTJhMzFhMmFiY2YxMmI3M2M4ZmQzZWExM2ExY2M1ZDYzNjJlNzAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1ZTZiOGM2YjNjOTc5YTE4M2QwNzhmNjZjMDJmM2ZhYTUxNjY5ODdlYmFkNWM5YjdiNjNlMDQ4MWU4MDg0ZmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRhZDdkNjFjNDVhMjBiYjdmMjYwYTBiNjk2Y2YwZWNhN2I3NzIxZjU4YTVlYjQyMTdjMzQ3MDNlOTk1Y2RkZDAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7d5a47256ba04b398ca88fcea83d9861",
+      "statement": "순매수와 억원 변환은 BigInt 정수 연산으로 소수 첫째 자리까지 반올림한 뒤 마지막에만 일반 숫자로 바꾼다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L142-L152",
+          "version": "repo-lines-v1:sha256:bf223b6a9d6f47a3402d3dedaae1644b1476eb16024439a4e0f1b577b16d027e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhNzllMzBhZTA1OTA2OWUzMDI0ZGExOTZmYzQ1ZTg3N2I2YTMwZTRhMzQxYmNiYTYyODVlNjA5ZDllNDJkN2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhmOTM3OTkzNTgwYjMxMzkyYzNjMGZlMDMwYjdiZjc1YWJmZDNhYWUzZDRmYzk2NDY1ZDBlMTdlMmM1Y2E4YzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkZjlhNTYxNGQwM2U2MDE1Yzg5ZTRmYjYwNGM3YmJkZjVkMGMzZTFkYmZlYTY2NmFhYzAyODQ5YTViYzM5NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_797d751db0fe47a7b9d850dba84a75f5",
+      "statement": "국내 종목의 현재가와 일봉은 KRX+NXT 통합 기준이라 15:30 이후에는 NXT 애프터마켓 체결가가 나온다는 경고가 도구 설명에 적혀 있고, 프로그램매매는 KRX만 집계한다고 명시돼 있다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/server/index.js#L253-L255",
+          "version": "repo-lines-v1:sha256:dfc6f815a0ce579f93db1b65361055aa16c436c7548aaa8e8555ca90796802aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjExMWYyMzlhYzY1YzlmZWNkNGY3OTc1ZDRlZTBjNjc3YjU4YThlYTY3ODUyZWEyNWQyNzkyMzkyNTE4ZDJmOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTEzNWU5MmY3ZDRmODllY2I5ZGE0YzY0MjliNmNhMmI0NjdiZGJkMmFmOWZlNjUxMjI2NzY5OWRhOTg1MWQ5NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzJlMGFkNWM3MWU0MTg0YTBlN2ZmOGNkODE0NTRmZDBkZWIxMGVlZGZiYmJiNWI3NzgwYTBkMTUyMWM0ZWUyMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGE0MzNlYWY5ZTI5OWYxNTdmYTJlZmVkMzU2Njg0YzE0MjI1NzU4NDFkZjIzMTM2M2ExNzEyZDM3YzlhMWJkZCJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L297-L299",
+          "version": "repo-lines-v1:sha256:9387c35aa0e604c35bce378273eb729efa10742fb3029a4ef85b3a42b3dd16ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjExMWYyMzlhYzY1YzlmZWNkNGY3OTc1ZDRlZTBjNjc3YjU4YThlYTY3ODUyZWEyNWQyNzkyMzkyNTE4ZDJmOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTZmZTVlMDMwNzhkOTVlNzhlNGMwMjQ1MmM5MzlhYjllM2Y4MzZhODNkMWMyNWEyNDdhNjBiZDQ4OTZkMDYxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg5ODI2YTI2MDZjNTIzMTAzMjEyOGYxYzY4MjU4NzZkNzYxMDg0ODhjZjM1ODEyMDQ2N2UzNDNlYjQ0Nzc3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTUzYmRiZWNmNjhkNTIwYWYyNzVmNzNkYjRlNWY5M2RiODQwOWI1ZjU3ZDZkM2ExMWQ0MTEzNTAyYzg5NDQ4YyJ9"
+        },
+        {
+          "resource": "repo://toss/server/index.js#L310-L312",
+          "version": "repo-lines-v1:sha256:a37c09ce86aac2c0c98352beeb660f97e692105713ad0fa9a2fffe158b009cf1:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjExMWYyMzlhYzY1YzlmZWNkNGY3OTc1ZDRlZTBjNjc3YjU4YThlYTY3ODUyZWEyNWQyNzkyMzkyNTE4ZDJmOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMThhNDg5NzQ3YWU4YjE4Mjc5ZDU2ZTQwOTg0MzI0OTVhMzhmN2Q1ZDk5NTJmNWRhY2UyNzhmOTY5NGI3NmM4MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjdmYWRkZjg1OWMxOWI0NDUwMGUxZGZmZGZlMTZjZGQ5YTFlMTdlODU0OTdlNTc0MGUxYzA0M2QyODU5MTM1MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzM4MTBmZmNiMDc2YTE3NTE3OWI0ZWM3MzQyZmNlYjZkNzVhZTNmMWQwYThiZGM0YjAyNDlhZGI4YWQzYWQ0OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_16290ea0456940d6b1a620228423f6a8",
+      "statement": "토스증권 Open API 42개 중 13개가 도구로 제공되고 주문 6개와 계좌 9개는 제외되었다.",
+      "evidence": [
+        {
+          "resource": "repo://toss/API_CHECKLIST.md#L3-L5",
+          "version": "repo-lines-v1:sha256:aad37a95ada8037b5807b8cad6e77b32d3b5dd5f590b35b7c699e9fad531663b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjY0OWM1ZTM4NDc2ZjIxY2MzODQxOTdlYjYzNGZjZTM2ZjEyNDRjYTRkOWJhYjIwYzRjNWNiNDgwY2UzMmE2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM4MDIwZTc3NzUyNDIwMTc5MWI1Y2M0ZjBiMWYzMmJmZGFkYjZjM2IzNjcyNGQzOTU1ZGI4NTQ1ZjA0MzNhMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjRmZDk0NmY5MzBkNGM1MzY2ZjhkYWJhOTkzM2Y1ODgyMTY4ODlkZmU4Y2M3ZjhlNTlmZTRkZTU0ZTRlMjIzNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2MwYjU1ODZiZDhkYzBiM2QxZjgxMjU3Yjk5NzM0ZDA5NzA1NzgwM2YxYjcxZGI5OTE4NzU4NTg5MDcyMzcxYiJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

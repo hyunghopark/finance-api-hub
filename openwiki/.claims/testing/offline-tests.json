@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:c5bbeccdf6661fb7ef39fedac4439bc91da5fac088b7245391bc156d35ade802",
+  "claims": [
+    {
+      "id": "claim_ed2baf4cbdd844508fc949816673c636",
+      "statement": "toss와 kis의 테스트는 global.fetch를 가짜 함수로 바꾸며, 그 함수가 모든 호출에서 주소의 출처가 고정 호스트인지와 토큰 발급 외의 호출이 GET인지를 단언한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L18-L29",
+          "version": "repo-lines-v1:sha256:6a6866ff6935149c648ebbfc72f5b9458f5dc153f0e0d6aaf88a5ca3b9758224:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwNGNmMDE0N2E5YzQwZjVlYTAzNTU4YWY0NzE3MjNhMjBmMGI4MmI1MTAyMDE5ODZkZWY2NGI3Mzc5ZWM0YzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzZGU2NzE3NGZmYzk1MWU0OGVmMjllZDM0Zjg0MDgzNGI3NTNkM2Q4ZTlkMzcxYWFjODE2M2VmMWRjNDhiOTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk5ZDZmODQxNmE3ZDlhYjkwZDFhMmY2OTQ2YmYxYzM5YzA5NzkxMzlmMmVjYjdkOTRmYWU1MTBjYjgyYjRlMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE3YWMxODcwYmM0YTdiOTFkODY1N2NjZTMwYWZmZmMwZjRlNDJiMzhkYmY4ZjQzYTg3YzQzNzlmZDEyNTIyODQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1eb150431bb848d0a47dc8c55d3d5eda",
+      "statement": "krx, ecos, fred의 테스트는 127.0.0.1에 HTTP 서버를 띄우고 _setHost()로 호출 대상을 그 포트로 바꾼다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/test/offline.test.js#L27-L49",
+          "version": "repo-lines-v1:sha256:d9f80a1a47758db415c7bfd306bd9b37c1fe629e31b0f50bd090573e1d38d1d7:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3NTBhMzFmYmYxZmZhOTVhYmVlZDI5NDQzYmU2YTk0NzI5ZmJjMDhkYWZkMjg0Y2I2NTIwNjViNTkxZmExZTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3MzIzYjE2OWUxYWQ1ZmMwYTBiZDUxMzcxN2Q4ZTdkM2I1NGFlM2I4MDE2MTc1N2I2MjA3MDdhMWE0OWQ4MGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZWExYWNmYzU2ZWNlNTU3OTgxMjkxZGJkN2JhNjZmOTdhMGIzMTY1NjdkNzRkMjQ3MTAxYTJjY2NiZDdhMTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYzNmY0Y2EwZmE5YmM2YTdjMmJmOGM2MzJlNTI1MmQ3YTI3YjM3OTU5YWZmOGJkYjgxZjdjMzY0NjNjYTJmYjQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_59d3fcb36e7c4829826c624fb178dbe0",
+      "statement": "테스트는 서버 모듈을 불러오기 전에 테스트용 환경변수를 설정하고 HOME을 임시 디렉터리로 바꿔 실제 토큰 캐시를 건드리지 않는다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L7-L10",
+          "version": "repo-lines-v1:sha256:a7d30439608ddc828f0824b9308497217565e117ac14c3e1f312529374326ae5:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmEyZDA3ZTE3M2ZiNmJlZTAzYWU5ZGNlMWYzY2E2NWEzYThjZWU2ZDE4YjNhYWI5OGU3NTk2ZWYwNjAzM2FmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODJkMTA4NzEzMzgyNjNjOGIyMWY3MWFjZDE1ZTU2NTJhNGI4YzA1ZTJmM2IxMzA2MzM2ZjVmMjNkYTUzZWJlOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTQ5YTI0ZTA3NTFhMjM2NzRmZmQ4OTdhMWI1MzIyM2NlOTdlZTIwOGM4OGI1NjUzNTdiNzVhOTU3OTMwNDZiOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWNjZjVjYzczNDA4Nzc2YTE2YTUyNzI0MzAxMTdlNDY1MWVkNjYyNzRmMWYxZDg0MDIzZDdkMDdlZmE4OWE3MyJ9"
+        },
+        {
+          "resource": "repo://toss/test/test.js#L5-L6",
+          "version": "repo-lines-v1:sha256:35bb4e46edf5eff5f369cbe124febeb26017bc822a6cd2d6b879460663ff8498:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjkwNTU1YzdkZDExOTI3NDQ0ZTAwZmI3M2I5MzNlOWY0OWM1Y2E1ZDZkZDc1ZjIzODYzNmQ0NmYwNDAyZDc2YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjNhNjQzNTczNzZmZDAzNjM3ODNlOWUzYTNiMzM5NTJlMGYwYjc4YjgxZTJmZTNkZWY0NmFhNTkyMDQ0ZjgwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDY0MDc1NjE1OTRlNWQ3NzQ2M2I2ZmY0YWIyN2ZiMTNmODk3YmY5NTgxN2IwMDJhOWQ4ZDlkOGMwZWEzYWM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGNkYTU0ZjNiYjk1OTczZmY0MWUwZTBhMjVkODJkYTc4MzU4NGU1YjlmM2IxZTRjMzdlMTUwMjgxMmNhNDgzYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_92e2c17548264f97a63de2c113176b6c",
+      "statement": "kis 테스트는 도구별 기대 경로·거래 ID·쿼리를 표로 대조하며, 표에 없는 도구가 있으면 실패한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L139-L172",
+          "version": "repo-lines-v1:sha256:98136e7d2f0403b82e94a6a947c4f3d343dc81c87fc02bac200a3b36aeaf9865:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxYzM1OTlkMDljZTRjYzgzMWU4MDE3Yzk0OGFiMGQ1OWQ0MTAxNzRjZGViY2VjZGMxZGE0YTcwNDJlMGFjZWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlNTRmYWY1YTE1NTZmY2Q4YzQ5ZDI3MWE4M2FkNDcyMTk0ZDc2YjY5YTg3MWI0OTZkMGVkMjZhY2QwZjEwMzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAyYjNhNTRlZGVhNzFiMTZjNmYwOTBlOTQzZDVkN2RiMjIwZWE3OWY4YzJlODcyNTQ0YTBjYjI2OWNhNTkwYzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMzNDU4NWQ1ZjQyOWNmZDU4ZjM4OGUwYWUxYTIxNjMwYmMyZWU4OGQwODQ3ZWFjZTk0MmM0NDdhYzcyOTkzNmUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_46dc81e976944d5f9d286efad3e23acf",
+      "statement": "kis 테스트는 서버 소스 파일에 주문 경로 조각, 계좌 항목 이름, 모의투자 도메인 문자열이 없는지와 등록된 모든 경로가 시세 조회 경로 형식인지를 검사한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L209-L218",
+          "version": "repo-lines-v1:sha256:e03914d0d25a426978724d54fa22614c82be4adfad6f8f648b7ce83e1a0ec9ea:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3NTdkN2VmOTQ1OTFiMjYyMDQzNDY4Y2RiYjQ3N2UzYzY5NzQ5MjE2YTViYzAxYzExZTFlOGY1NGMzNTc1OWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZhYTkwNTIyYTU5YTllOTc2ZDg0ZGVhMThjM2VmNTk5MzQ1YTJjNWUzZjdiYjYxNDAwYmI4ZDljN2YwZGE3NWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY1NDMwM2FkYzU4YjdhNDBlZGYzNDdlZGMwZjJjYmY1MTFkY2MxZmQ4Y2U5MjY3MmI2ODkzZDI5OTkwZmUyNmEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d0b822532d2f446ba194493fe6763aa1",
+      "statement": "kis 테스트는 토큰 재사용, 캐시 파일 권한 600, 발급 직후 거부 시 재발급 안 함, 만료 시 1회 재발급, 동시 호출 시 발급 1회를 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L203-L207",
+          "version": "repo-lines-v1:sha256:e8d05b8ab354b84b712721763b1891b8b678f1bb39989c3b4461d75e5beb5541:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzJkNzcwY2Y0MmIxZjNlNDMwZmI2MmQ3ZTU5MDFjNjU3ZTRkNGMxMjQxMjlhOTRmNmFlMTI5YzZiOTRiODNjYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODljNGZmYWMzNWIwYzg2MzFjZTAzNzY3NTNiZmM3NDE0YzFjNmJhZjI4MzcxYThiMTRjZDU2YmYzNzQ0NTY0MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjM0N2U3NjhmMGQ2MDU4MmUwZDY5MjhjNjQ3NGE4NDMyMDZhYzIwMjA2NmU2NjI3ZTA5NzFiNWMzMjk0NjM2NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWUyZmQzMWU2YTNiNjJiZjU3MWU2OTNjNTQzNjVhMjE5MjE2Yjc2ZDdiMDdiMTg4ZWE2ZDdiMDQyNmVkN2JhZiJ9"
+        },
+        {
+          "resource": "repo://kis/test/offline.test.js#L75-L111",
+          "version": "repo-lines-v1:sha256:e74e0fe0f38ac69ee30d59985dda43336269e8d0a30f4b2a686b5db6629ce954:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhNDdiY2E5YzA3ZTg1YzRhODRhMGRmN2Y0YzU5MjZkZDI2M2ZhMjk4MGQzMGU0ODAzNjdhNGZlOWNkZWVjMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3MmRhMDE2MTliZDFlYmVhNDBjNjY2YjM3NzY4OTgyMWM1MTY0ZDhkMThjYTgyZWE4MWFiYWM3MWI4ZjdmNzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjllNDg1NjlhZjJjYjdlOTRkMGU0NDg1OGJiYzkxYjE5M2I3Mzc5YTI5ZThjNzk5NDk3YTAzMTRlNWU3YzMzOGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNiZTlhNjczYWZmOWIzNTkxYmFjNDY2MDRjZjg3NjkyN2ZkMTQ3OTI2Y2UwOWFjOWI0ZjFhYzA0NDdhNjIxZWIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5c33c431d7444afb996ee12256a36359",
+      "statement": "잘못된 입력 테스트는 오류 반환뿐 아니라 외부로 나간 요청 수가 늘지 않았는지를 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L187-L201",
+          "version": "repo-lines-v1:sha256:4b8066962f6cbfe439fe8109dc5b34443a37940ae335042bf2d61fbc0b517f3d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNkNGZlNDQ1MTJjNzE5MTAzNjQ2MjNmYzViMDY3MzI0NDNmZmUzMTM4MjgwNzIxMmZkZDRhNjE1OWJjZjdkYTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzNjA3NDBiMTk2ZTY2ZTE5M2ZhZDVjN2RhN2Y5N2NlM2IzMjZiMGE0YzI0ZTc2Nzk0ZWQ1MDQ1NTI1YTFjZGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3YjMwYjc3NTcyYWI4OTVkZTkwMTJlYmQ2MWQ0NGQ3OWEzMDBmNjVmODI5OWU0ZjZlMDkxZDBmMDRjNmEyMGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyMzgyMTM5ZTAyYTllMGQ1MTdmM2Q3YjM1OTNmNjNhZTBiNDJiMzQyMjk1ZTBhYTE0MzcxNDMzMmJkNWQyYWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5bfc8a345e4b4dc08e87722fee2ba6c4",
+      "statement": "kis 테스트는 서버 파일을 자식 프로세스로 띄워 치환되지 않은 자리표시자 인증 값으로 도구를 호출하고 설정 안내가 돌아오는지 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/test/offline.test.js#L219-L236",
+          "version": "repo-lines-v1:sha256:25b43eb11af921c8ea5361f8d8a3fb4e220e62d4bcbf27a0daa18a3ae795daa9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI5NWRiMmJmMDRmMDlkMjQwNjZlYTY2N2U5M2QxNDg3NWY2M2M4OGUyNTA0M2Q1M2VkMDA0MWI2MjE2ZmIyNjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI5ZWQxZGEwNzI3MDhhYjlmN2ZjZGJkOTk4ZjI3MzBiNjk2ZjkwMDU4NzBkZWU2MDFkOGEyMTg2Y2I1N2M1YzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3ODViMmRhNGE2NjA0ZTc3OGU1YjNiOTJjODg3YTc2MjhmZjMzOGY3OWNmZWNlNWZjNDdhMGI2NTFjOTU0ZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwZTNmZmRjMTNhZmFhYmU3NmI0YmUyMDk0ZTgzZjc1YzM5YjQ2MjFhM2Y0YThkNzdmYjI3MDM2MDRmZjMzNGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c3a6ac5fe448424ea66ce70ebef3188a",
+      "statement": "krx 테스트는 명세 표가 공식 31개이고 중복이 없는지 검사하며, 서버 파일을 다른 스크립트에서 불러온 상태로 띄워 MCP 통신을 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/test/offline.test.js#L154-L157",
+          "version": "repo-lines-v1:sha256:6f437146de25b7855ef1d40316fbc51fa298663c2021d90c9667b9785aa34e79:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZlMTAxMjAwMjNmZDI2MDcxMmQyM2M1ZmQwZjFiOTI1MjcxZmMxMzE2NjExMzIyNjk2MjYxMjBjYTUxYjMxNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjc2NDU3N2UyMWJiZmQyMTZjYjgwNzg3MmE4ODRjZjY5MzgyNDUyZWEwZTU0NDJhYjBjZDkyZDZhYTM4M2UyMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDY1ODIzYzc0OTAyZDcwOGNkOWVlNWJiMDZkNzcxNjhjYTk2MWVlM2VhNDRlZmU3MjFjNDE5NzM5MDFiZGI2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWZjMmRhNGUwNDNlYTBjYTlmMzQyZjE4YjhlMDVkYjMzOTgyZjA3Y2FkNzU1NGQxMzAxZDc2OGVhNTIwM2M1OCJ9"
+        },
+        {
+          "resource": "repo://krx/test/offline.test.js#L52-L67",
+          "version": "repo-lines-v1:sha256:e8cd9fd22ac084e57b029f6f0f6c29fc561482f5467ec605132d123aa31a4dd4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIxMjY5MjNiNDUzZDNkYjE1ZTc4OTBiZDI2MjIwZmJmMjNkYTE1YzQwZmExZmU1NjE5MWE1ZGQ2OGM4ZGVjMTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgzNWQ1MmJkZDdjMGU0NGQyMmEwMjRkNWI1NjQxZmRlZWQ3ZjIzOWQwOTNjNzhlYjRkYWY0OTljNWY4MWI0MzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUxNTMzODMxYjNlYTAyZDIwOWEyNDUzZjJkNzIxODY5MTBmZjA1MTM2MzMyYzkxYzEzMjA5NzZmMzk4MDdiNTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU5NDZjYTlmMDYzMThmYTc5MjE3Zjk5YzBiMDZiMTRhYWVkODEzNjg4MTZhZjVjMTNjMDcwNTdlNGE4NTg0MzUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

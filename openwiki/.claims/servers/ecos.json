@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:d217cd423df7f8d04c489b77769b13e67b2e4c9fb8695689ab5bc3ba28aa06eb",
+  "claims": [
+    {
+      "id": "claim_506acbe13357474ca531bfc26cc9fe8e",
+      "statement": "ecosGet()은 조건을 주소 경로의 순서로 넣으며, 뒤쪽의 빈 인자는 잘라 내고 중간의 빈 인자는 '?'로 채워 %3F로 인코딩해 보낸다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L54-L63",
+          "version": "repo-lines-v1:sha256:0e31ba07cbdc9bb1dc4b47ce8c703777cd96e5069bafbb84b1583ab1a1145034:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRhMzNlMTEwNjM1OGE2YzFiMjkwOWIyZTI1ZDNkMjZmYmQyZWZmMGRkNzJhMWU4Y2IwNmQ5ZTE5ZThiNzZkNWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEyZTI2NTYxMjgwZmEzODgxMzRjMzEzZmYwYjE4NmY4YWY4Y2MyM2FjMDM4Y2E4MGFlYjgxYmUxOGViY2Q1YmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkODE3OWRiNGY4N2IzMjVkYjc1M2Q1MDMxZjdhMzE3ZTUxNTgxZjYyZmZjYTBkMWQ0MWUzYzY3ZDZkYWJiNTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlMzc5MTg4MjQzMmQyZDQ3N2Y5YzUzZWRmMGY0ZjU1NzMzZWVlNDY4YmYzMGMzMGU0ZTFjOGZiNDU1MGI4NzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_93ad32b2cf464baab1a633c2734147ab",
+      "statement": "ECOS 응답의 RESULT 코드가 INFO-200이면 오류가 아닌 빈 결과로 처리하고, 그 밖의 RESULT 코드는 오류로 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L75-L82",
+          "version": "repo-lines-v1:sha256:47b48a46ddfa3983231ec57f4d5ef20ab07639b4e7d0a0d5f95eca9e04a7dc7a:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjFiNjc5YzY2MjYyMzM0N2M3ODk1NzcwODQ4ZjFlY2NiZjQyYTNmM2Q5MDczZGI1OThhN2VhMjRlYzNiMGEyMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGMyMGQxMzYxODE1OTcxZTFjYTMwNmRiMjQ0ZjNiMGI4ZDc3YTA1NjllZDJmZDU0NmZiODg0ODA5NTU4MmZiNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmU2OTg3ODRlYzc3YzYyYTU1NmJiNDAwOGMwZmZlZjQ0M2FjZmIyMTQ2NjdjYzFjNTIwMjc2Yjc0YmQxY2FjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTA2ODA2Yzk1Y2ZhNmE4ZDEwMTE2N2VlNDA0MmU3NzcyYTczZTFiOGM0YTY3NzVjYWIxYTc4ZmYwNzdkY2RhZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_cfe10ff77d18491bb7dfa573c3fea07a",
+      "statement": "ecos_market_rates는 요청한 항목과 무관하게 국고채 3년·10년과 회사채 AA-를 항상 함께 조회해 날짜별 한 행으로 합치고, 신용 스프레드와 국고 10년−3년 금리차를 bp로 계산해 붙인다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L167-L168",
+          "version": "repo-lines-v1:sha256:3ac2d89bce36dd82ba5fc87cfec528a9586a77031dffda75288c8b51fdb68176:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmY2ODliMWVjNGNlZDNiOTZlY2JiN2I3MDQxMTQzMmMzMWI3MWIwYmQ5NzBiZTQ1NzFlNzIwZjIxZGE5NmMwYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmRkYzY0YTg5N2Y0ODEwMTgxMjRhY2QzYTlkN2QyMzljODk3MjM5ZjAzOTkxNmQ1MTNlNmRmZTk0YTQ4MDdhNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDM0NWVjNTkwZjY1ZTNiZmIyZjk4MGQ2ODhkYTlmY2RkODZmYTA1NGQ0Y2RjYzRmNTU2NGQ5MTBiNmJiNDZiYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjEzNjNiNjM0Y2FlM2RkOTVlNWM1ZDNkY2Y3ZWFjMGM4MmFjMTNiZDYxYzU0YTQxMGZlNTVkMTIzNDAxNmZhZCJ9"
+        },
+        {
+          "resource": "repo://ecos/server/index.js#L181-L203",
+          "version": "repo-lines-v1:sha256:8911cb437e279f562691c3bd9b9c06f073436806b8044610bec185ef38b8848e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU3NTlmMjBhMjdlYzM0YTkyNDJjMzEyN2ZhMmM5ODU2MGM4M2FmZDlmNGE2YmNjNGJiNzYyZDRjZmMzZWI2OWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcyZmYwZTBiNDBjNmUxMmRhODgzY2E1MWMwNTk1OTY5ZGUxYmJiZjZkNWJkNzg1Zjg2ZGQ2ZGExOTZlODEyMjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d06f9be3e8ec47ae9b2ef93c76a0f43b",
+      "statement": "시장금리 묶음은 통계표 817Y002의 27개 항목 코드를 키로 정의해 두고, 기본으로 CD 91일·국고채 2·3·5·10·30년·회사채 AA-·BBB- 8개를 조회한다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L137-L167",
+          "version": "repo-lines-v1:sha256:447b91f63ad5cb364d8528d961293ade46a8cf25507d609f9ca0a20f42403ee1:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRjZWU5MGM2NzRkMzhhNzlhODdhNjMzZDZlYzNmYzI3MmM1YjlhZDFmMWQxMzk1MWYyMDY0MzE2ZDBmZGRiYjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJmNjg5YjFlYzRjZWQzYjk2ZWNiYjdiNzA0MTE0MzJjMzFiNzFiMGJkOTcwYmU0NTcxZTcyMGYyMWRhOTZjMGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQwYzc3MWVjZmY0MWMzYjZiYzZkYzU0NGE2M2NiMzIxZGM1YTRkY2ZmMDJhYzJiMTE1MWU0M2Q3YjhlOTU3YmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM5YzZhZTlkZGRkYTVhMGYwMTIwMjI0MzlkZjA1MDgzOTM3OTZkZjU3NjQzZjlkYmZhYjdjYTM3YzQxNjE5MjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_84ba67e60838414f80c6bfedca0f54f5",
+      "statement": "checkDate()는 주기(A, S, Q, M, SM, D)별 날짜 형식을 요청 전에 검사하고, 맞지 않으면 주기별 예시를 담은 오류를 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L106-L113",
+          "version": "repo-lines-v1:sha256:07e15fd437fb76168a55a7b437a1c289342f1206e8031cba48ed5fea954f9e7b:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTJmOTI3NjMyNWU5ODNkOTY0ZjliODAwNWNiMDUwOTIwZjZjY2U4ZWZkYmVlNWZkMjZhMzliNDQ3MjUzYzNkYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGQ2MTlhZmM1NTNjNWU0NWExNGI3NzEwNjlmNTEwODM5MGYzYTU4OGIzODJhZWU4NGViYWRkMDg3OTdhZTE1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2U0YWY0MmU4OTNiYzkxOGQ0NjlhMWYxYTQzOGRmZTg4NTBjODgwY2VjNjA1ZjJjOGViYWU2MGI4YmFiMzFlZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a39c28d23ca443469b5272ebd79b486d",
+      "statement": "ecos_find_table은 캐시된 전체 통계표 목록에서 이름·코드·상위 코드로 거르며, 기본으로 조회 가능한 통계표만 돌려준다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L252-L259",
+          "version": "repo-lines-v1:sha256:33d13648bfa8a9a7d06c6d8e34935e9a3c27867e6ae1ce8896ddfbb93a48dd76:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGFiMTAyYzdmZmVkZmIyM2VhOTc3N2ViY2IwNDA5Zjk5YWMzOTY3ZmUyMjU1NzEwZDg1N2JjY2VmYWNhN2NmMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWI4NmNkODQ4OGQ4Zjc0ZWNlYWM2MzNkNDdlOTkzYWEyM2Q0Njg0ODU4NTg0YThjZjQ3ZjJhY2M2N2Q0OGRiYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2U4MGU4ZGMzNWI0YWY1MTU2YmRmOTBmYjQ2YWE2OTBhNGIzYzVhNTg0M2E3NTNkMzkwZTg0MTc2MzI0NWU1MyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e90737b2472e48a29db5531eb2087ac9",
+      "statement": "테스트용 환경변수가 켜져 있을 때만 ecos의 캐시 디렉터리를 다른 위치로 바꿀 수 있다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L17-L20",
+          "version": "repo-lines-v1:sha256:4f57c61fc6cd0ed091d7a9c047919446cc642144f51c5aca561b3d2f3abcb180:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWI0NDcxYTY2ZTJmYWQwYmFlZmNlZjhhOTcwMzg5Njk0YzY0ZWZjNjUzMmY1NThlY2Y2MGY1Zjc2OWEzYjBhNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzdmYzhjMjVkMWJhMzc4NjJjOGExMDk1OGEwMmZhNWY1N2ZhODZhZWFlNGUzNGRkMzUwNjM4OTdmNWM1NzhkNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2IzNGUxM2ZlZjg1YTE3Y2I5N2M0NGMxODc3YThiMDBhOWIxM2Y2NGVhZDM0OGJmMDZjYjY2ZDg0ZjM0OWJhOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGRmOWM2MTQ0Zjk4ZmZiYjE2YjFlOWM1MTdmZjk5NWVkYzFlOTNjNWE0MDk4YTY0ZDExMTY2ZGViODYyZjBjZiJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

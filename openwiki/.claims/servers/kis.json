@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3a572bbc2abf5cc3aae040c3f2987af2fbc7ea9c759dbd86eb2c91210e629b3f",
+  "claims": [
+    {
+      "id": "claim_2fb1648bedbd4ae98f9b33ddb7ee08d8",
+      "statement": "kis 서버는 실전 도메인 하나를 상수로 고정하고, READ_ENDPOINTS에 등록된 경로·거래 ID 쌍 10개만 GET으로 호출한다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L15-L15",
+          "version": "repo-lines-v1:sha256:1090e0366ec3b4c62f5877d5cda133b163c201ad0515442b21328b553f494324:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTA5MGUwMzY2ZWMzYjRjNjJmNTg3N2Q1Y2RhMTMzYjE2M2MyMDFhZDA1MTU0NDJiMjEzMjhiNTUzZjQ5NDMyNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTA5MGUwMzY2ZWMzYjRjNjJmNTg3N2Q1Y2RhMTMzYjE2M2MyMDFhZDA1MTU0NDJiMjEzMjhiNTUzZjQ5NDMyNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2FiNjBiMjc5NzMzNGM2NWFkZmYwMzgzYmRlNTAwY2Y0MjliYzQ3MjJhMjE5MmYwMGMyZWQ4MzkzNWRiNjQwMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDU0ZDJjNGFkYTIyMDU1NDJjNjhmODI3ZDFiMjdhMmQ5NTk3MTM0NmFjNzJkYjc1N2JhMzU5YTc5ZDgxYjAyNyJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L196-L197",
+          "version": "repo-lines-v1:sha256:a2d7b8c5a17e48ad7a1287da0ced525fccf32542cf4f5494f9cb7ae6ae854f0d:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTYwZGVhMDJlMDYyZjM5NWU4NjAwNTNkNzUyMDg0OThmZmVhODZmOTBlNjI0NDMxOGJiNmMzMTRmZjZmY2VlZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzIzZTk1YzQyYmQwZjFjMWU1Mjc5ODJiMzhiZDQ0MjVkNGU5N2UzZmFiZGJjYWE4YmUwZTFiYjhkMzE0MzFhMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmQ5MDYyMjA3OWFhOTEyZThlZWE5ZmU3OTI1YzQ2NmVlNDgxMDQxYTIxYzRjYzA3MzhkMDkxNjJjNTdiYmQwYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDcxNGRkMWY4Mjg3ZjlkOTg5YmY5OGJlMjQyYWY2MzQ2NTg2M2VkNDQyZDMxYzlmMzJkMGNhMzViYWI1YmMwNCJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L25-L36",
+          "version": "repo-lines-v1:sha256:7824886ce12f43965adf4ad96fb88835743d0f48319c4b470857147bf3acf37d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJkZGZlN2U3MDcwMzhmZjJiMzA4ZjM0YjYxNTU3NzNhMjJlNzFmZjQ3ZDNlMjkzMDgxZGNkMGM4ODA1NzBiMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg3MmY5MDUyNDFkYThjODI2ZTJlOWVjOWU1N2M0NjRhMzhhMjZjOWNiYjYyN2YwZTUwNDlkNzU4ODE0ZjUyMDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAxYTU3ZDJhNWZiODA2MTViNzJjYWIxZWU1YWM3ODFjMzI3N2I5OGJhMjllMmQxMzhlOTlhMTI5NjE0MzRhNDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fb026be648fe4405af436994ad773b79",
+      "statement": "조회 요청마다 접근토큰과 함께 appkey, appsecret, tr_id, custtype 헤더를 보내며, 요청 전에 토큰을 확보하고 호출 간격 차례를 기다린다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L202-L213",
+          "version": "repo-lines-v1:sha256:48b74ebe4afdda9ed6154f5fb7c2c5258507bb91e688351ec12e8aad783b0a01:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk5MTFlMGZlNzZhNTI4NTAxZTUwN2RjYjc4NDg4OWZhNTU3M2E5Y2YyZThjMWM5YjY2Y2MzZDQ2NzM4MGQyNDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDExY2FmNDNlOTdlZjM2OWU2YmVlZDFhMjY4YmQwNTgzOGYyOWI5ZGQyNTRiZjY5YmE2NDg4NDE0NzIzNGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU0MGZlMDI4NjEwNWFkZjhhYjQzNjkzOWNhMmUxOTY1NTZiYjEyOGFkMDNhNDg2Y2NhMjEzYTdlM2FjODlkZjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVhYTgwNjRmZTJhNTEzZDdmNWNjOGI3ODJjN2E5ODYwMjRmYmExOGQ5NjJhMGY2ZDQxMjcyY2U0MDcwZGI4OTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bfb8c491f4de47b6874a572126d4fedf",
+      "statement": "apiGet()은 응답 본문의 msg_cd로 분기해 EGW00123과 401은 토큰 재발급 후 1회, EGW00201은 1초 대기 후 1회 재시도하고, HTTP가 200이 아니거나 rt_cd가 \"0\"이 아니면 msg_cd·msg1·tr_id를 담은 오류를 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L214-L226",
+          "version": "repo-lines-v1:sha256:89f4b25139c3bf24c6909e4365f00aeb371d7b9b8b1af087b7fbac6883603c38:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMzQyZjg0NWRkNTI5MTc4YTIzMmIwODMzNjE2ZDNmYmNlMzk3ZDFkZDVhMTVmYmZmZjAzYTQ3YTUyMDI0NjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVkMTcwOGVhY2YwYjIxNzAzZWE0NWRlMTYyNTRkMjljNWJiYWI0NWQzZmEwMWNmMDJkNmZlZjY4OTJmNGMwZGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM2YWNhYmVmYWM5MjQ4ZDg0M2NkODNhODY3ZTA1NTEzZGUzMWI3NWUxZGY5MDUzMzM4ODFjZmRhMmQ1MzE0ZjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5347b7aed6104c768416139635dacb22",
+      "statement": "kis_stock_price는 현재가와 상장주식수가 모두 0인 정상 응답을 종목이 없다는 오류로 바꾼다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L239-L246",
+          "version": "repo-lines-v1:sha256:a8dd13c0b582b84a69a399f8d03d8836190b2428a216294a07f0e088df68a392:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzY0YjcyZWYzNzU5YWFjNjE2ZDU1OTI5ZWQ0MmRhMjQ0YjI4ZGUyMTU2ZGRhNDdjZDQ2OTA3YmEyYThhZmNhOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTNmZmVkNTU3ZTU2YzU1NDM2YjljM2JhNDM3M2U4ZjQxNTk0MzgxMzkyZWViMTI2NGEwMzY0OTdlNzgwYzFkMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f6268ce880df421ab60d02a3b51ed570",
+      "statement": "국내 종목 도구는 market 인자로 J(KRX), NX(NXT), UN(통합)을 받고 기본값은 J이며, 응답에 거래소 이름을 한글로 다시 적는다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L233-L247",
+          "version": "repo-lines-v1:sha256:aa0852b03c9b91ecb81fa8edfee57f0bd0318d182281cfc3193cf2d0692878ec:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlZjljZDYxYWIxOGU3NDk0Yjc2OGM3NjczZDdkMmVkOTAyODUzMjlhNDAzM2RhMjRjMzkyOWU2YWUxMGM0MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiNzNlZmI3Y2VhY2NjZWE4OGMwM2Q1YTVkYmNkMmFhNjM4NmYwNGQwMWRkZmJlNTg1ZGRhZDEwMTQ2MjQ2Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhmMmY0NzY3ZTM0MGJjMTc1ODE1MDk4YzczOWUyNWEwODFmZDk4ZWRiYmQwOWUzNTAxOWQyNDk2NjA5ZGQxN2YifQ"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L41-L42",
+          "version": "repo-lines-v1:sha256:1b070360ff63df12f857d074de7a15a64ef3a4e21c8cede18416f7b257ce618c:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTY3NjJiZjUxMmZmMDMyZDQ4NjcxYzU4ZjhiZGQ2ZjNkZWMwMjJkNjk1MDlkNWUzMzU4ZjAyM2Y4NDdjY2NjOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWNmNDI5NjVmNmJlMmE3Y2Q1OWUyMDM5ZTQ2ZmI0MzM3NjhjZGFiMWU1ODgyNWYyYzA0NmRiYzE3MjQyZTcwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA2ZDQ4ODgyYmExY2U3ZDg3NTlkNDQ3NDNjZjM5NDMzYjkzY2FjYTM3MDIyNjk4NjhlNDQ2OTc5YTFhZTRlYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGEzOGQ5ZmU3MGFmNjQ4MjVhODVhYmUxMTBjNDRlZjRiNTQyMGRjMmUxYjY1ZDlhN2RlMzgxMGFiNTk3NjJiYiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1d00099e54fd40f4a7751746649f5be6",
+      "statement": "날짜 인자는 YYYY-MM-DD와 YYYYMMDD를 모두 받아 YYYYMMDD로 바꾸고 존재하지 않는 날짜를 거부하며, 시작일을 비우면 봉 종류별 기본 일수(일봉 60일 등)만큼 거슬러 올라간다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L48-L49",
+          "version": "repo-lines-v1:sha256:29f7a11b95ed93aa9b01fe3a81ae10523d96853acac7690fd17e95eedb84c673:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTYyMjc0ZDA2NjA1ZmE5Yzk2YWJmYmI0NWY2YmY2OTc2NDZkNzcyYjI4Mjg4YjAyNjdhOGZjOGE1YmM1YzUxYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDdjYjYwZDkwNmE4N2NkZDc0OTRhNjNlNjU2YjQyMjE5NDY2MTkxNjVlYjQ0ZTZjN2JhMmFlMTQ4Y2UyMjlkNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGM3YzVlZjM2YzZkYTBlMWU4YTAyNWUyZGIwOGU4MjlmOTYxZGZmYmNlODg4MDhlZjQ4YmYyZjNkMzIyMmM2ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTc4Mzc3MTU2ZDQ1ODlkZTY4ODRlYzkzNDA3OTRiY2ViMzY3MjBmYjliZDhiYjIxMDBlODk4M2E2YzcyNWJkNCJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L56-L75",
+          "version": "repo-lines-v1:sha256:8ae8fd4d2a9a7ef96a2c45bdc6f210174a0d675ad5d883f498dab6b15bad2af9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2YjRmY2ZiYTljOGM0OWY1YjMyMjEyYzI0MjFkOWQwMWNhYmU4MTQ5NWY3NDc2YjRiY2FkOTA2Njc4ODU1NzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwYjM4ZmZhNTljNzRhNjVjNjNmM2YzZDI3MDQ1ZDI0YzYwYWY3NGE0NzUwZjYxMzdlMmRlZjUwY2Y3MzY5MWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwMjdmZDkxNzA5NzUzODU2OWNlZmNiNGNjMDdjNGExYzljMzFmOGVmZjNlZGY3MWVhZmM3Yjg5ODM2ZjE4ZDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_aa452623cc1d41579e761b2e936445c8",
+      "statement": "시장별 투자자, 종목별 투자자, 신용잔고 도구는 count 인자(최대 300·30·30)만큼 최신 행부터 잘라 돌려주고, 투자자 도구 두 개는 응답에 수량·금액 단위를 함께 넣는다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L326-L334",
+          "version": "repo-lines-v1:sha256:c778530038b1a08f92f7649c5c2e170e62bae9097cb29957902990b11c1bb9c3:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzdiOGFlNzdlY2ZhZjJlMjA3MTMxYjc2MDU1MjExZjY1M2RiYjRjMjRlZTEzMTU0NTExYzRiYjAwMmY3MjEyYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzU4MDE0MGMxODI2ODk2M2ZkMjVhNzU4NjdhOGE5MWIxY2M4NDVlODc0YjM0ZjI4N2U4NTIxYjdhY2U1MDhlOCJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L345-L353",
+          "version": "repo-lines-v1:sha256:8dc6c792dbe7942994781d20b677e3a0e6913aebda0ccf7ca52442c50b5542f1:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGYzNmVjMTMyZjcwODliZmMxOWRmNDY2ZTM0OTljMDlhNTVjNGQ4MTMyYjZiYTY3MDA5ZDE0M2JmYzc0YmMwNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmNkNDBhMjNhOGYzODFjY2E5NjkyZWFiNjUxMGYxNjAzMDcwZWMxZGUwMDhkODhjODdkNWNkNmJiNDc4Y2VhNiJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L363-L369",
+          "version": "repo-lines-v1:sha256:e9199c6d9073caab9e535eee81d32d9211226a360dcc230faab77bb320dc2ca3:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTg3ZTljY2JjYTZlMzk5NDUxY2M4ZjkyYjlhZTM1Y2JiNGU1MDgwZDZlMjAyODRiZDFjNjJlNDBkZjk1NDhiYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzZhMzk1ZGI5MmZjYWZkZWIwM2Q2YmI4ZTg3ZTY5ZDJkYmZmNDIxNzY3MmJlMmU0NDliNDEzNGMzNDRhZWM4MSJ9"
+        },
+        {
+          "resource": "repo://kis/server/index.js#L45-L46",
+          "version": "repo-lines-v1:sha256:f554de36cb10fe554d4dcc1f3936b3496d3d0ff3b934f017f4733527b5f91b02:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjlhOTQwMDg1N2QzZmJjN2MyZTQzMGM5MzRiYjNjNGY2YTRlOTFkMDljMDI1NTc0Yjg4ZjQ4MjZiMjkzY2RkOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjUxZDI4MTY4N2NlYThlN2NhYzVhYTM4ZTJiNDJiN2ZiMDJlMWFmNjdkN2ZhNzdiMWJmYjRkZmQ0NzljNmU1YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjhhNDdkMGYwNzVkY2MxMmRhYzU1ZTRlZjRjNjhhYzJhMjA2NjUxYjcwMDdhYTE5MWRmOWNjNDliOWE1MDkwNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzlkNTk3ZDQ2OTU1YWE0OTY3OWQ3YjQwZjdkOTQxODkzNWYxOGI1MTQ1NThlZDRlZDA2ZGM1NjRhYzQ5YmY1MiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f319390c7826457bb533283acb4d5cbf",
+      "statement": "kis_market_investor_daily는 KOSPI/KOSDAQ 인자를 업종코드 0001/1001과 시장 코드 KSP/KSQ로 바꾸어 보낸다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/server/index.js#L326-L334",
+          "version": "repo-lines-v1:sha256:c778530038b1a08f92f7649c5c2e170e62bae9097cb29957902990b11c1bb9c3:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODMwZmZmY2Q1MTY4ZjA1ODJmYWM1MzczNmRmZTBhYTI2YzJkZWZmNzJhMGExZDIzYmE1NmM2OGRhYWM3ZmIxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzdiOGFlNzdlY2ZhZjJlMjA3MTMxYjc2MDU1MjExZjY1M2RiYjRjMjRlZTEzMTU0NTExYzRiYjAwMmY3MjEyYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzU4MDE0MGMxODI2ODk2M2ZkMjVhNzU4NjdhOGE5MWIxY2M4NDVlODc0YjM0ZjI4N2U4NTIxYjdhY2U1MDhlOCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_26df81a5819d4e05a2fd978baca9ade7",
+      "statement": "2026-11-24 실제 조회에서 지난 영업일의 J 일봉 종가는 KRX 정규장 공식 종가였고, 당일 값은 J도 15:30 이후 바뀌었으며, J와 NX의 거래량 합이 UN과 같았다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L78-L94",
+          "version": "repo-lines-v1:sha256:58b98ae46c9ccf17f51b9dd05e2ebaa4bceba97d77734536cf946ce4a5421a7a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZhMjM3NDlhZWU2YmM1Y2UwOTgzNmY0MTAzYWE4NTFiNmY4YjlkYzI3NTA3MDNjMDI0OGYzMzQ5NzBhYzcxMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmNzQ2Y2RlNjczOWJmYzM4MzBlNGI3ODAxYjRhMTM4ZTU3OWFhOGZlNmNlYzBjYWQxNjAxZjQxZGM4NDE0YjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQyYzRiOTIxNjg0ZTY1ZTJiZjRhOTAwMjY2OTYyMzgwZGNjYTk1N2I0ZTEzM2FkMDVlZGU1ZWMxNTk4ZTc4MTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmMjA2ZGZhOWY5YWE1MzBlMjJkNDQ1ZDdkZmM3YzNjMjBlMjI0YjJkNzg1YjNlZGVjMzJjNmU0MDFjYjViNjkifQ"
+        },
+        {
+          "resource": "repo://kis/README.md#L72-L84",
+          "version": "repo-lines-v1:sha256:9324947f395356f65b568970b04216c11610adbb1a166c7d21d73915cfcf5869:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3OTc0ZThhOWE3NzM5MTg2MWY3MTE3ZmEwYTFmMzRhMzRmZWI4YWE4NDQwOTAxYTQxMDBlMmU1YWM0YjhhYzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkzZDhiYzNiYWJlN2ExOWUxNzU3YjA2YjQ1OGQ1M2M3OTczYTEzNjZlNGUyZjYwYzQwMTkwMTYwZjM1ODE1MTIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZhODllNmExNzk2MTk0ZDZjZmFiZTE3NDRmNDMxNWYzNjM2M2NhMWUxMmU0ZjRiYWQ0YWYyN2NhZWVlMjUyMmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1MTYxOTY3NTFjMTVlNmUxOGNmNDBmM2M5ODhkNjU2MzZmNGU4NWI5ZDgwM2FlMjIyYjIwODllYmZmMjdkNjIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9260580bff054cc8ad70be4ed886425f",
+      "statement": "KIS Open API 334개 중 주문·계좌 73개와 웹소켓 실시간시세 60개는 제외되었고, 체크리스트의 경로와 거래 ID는 공식 샘플에서 기계적으로 뽑은 값으로 설치한 10개 외에는 호출해 보지 않았다.",
+      "evidence": [
+        {
+          "resource": "repo://kis/API_CHECKLIST.md#L3-L5",
+          "version": "repo-lines-v1:sha256:f7a2f698039b801e8ea3279411f80b9a5b180c1ff8ee0877fa2d4b1a06841ec2:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzEzMjdkMThkN2NlMzg3OGU5NzMwMWE0MjM3NWQ5NmMwNmIzMTExZDU5OTA5YTIzMzQxZTA2NjdhNmFkZTZlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODExMjAxZjg5ODNmNTgwNDYzMGZkMmYzZTY2NGI5OTlmMzY5NTc1YmY0ZjJlMTk0MzRjNDViMjE2MzZkM2MyNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWIxMjk3MjE0Y2QwNDVkMjkwNDEwOTQzMmQ0OTEwYmNjZWI3OTc2NTc2OTE4NDk3NWIyOGE3ZTMwYzY4OWVkZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmVhNzM1Y2IyZmM2NjdlZjhiMDJkNTc0OTQ5NDNmNWM1ODE2YWIyZjgxZjczN2YyM2M0YjZjODkyNzZjYjA5YyJ9"
+        },
+        {
+          "resource": "repo://kis/API_CHECKLIST.md#L38-L40",
+          "version": "repo-lines-v1:sha256:7cce75f690d8b277cd2ff4c2516a5a857d60b4e14bd930487a166c5116b6fa1b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWI3YzIzYThkMDJmNTEzZGFmMDRjOTNlMzNjMDEyOThhZWQ2YzUyNTliZTQ3MTk1OTc2YmI4YzY5M2M1NGZkMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2NkODIwZWY1MmUzMDIxYzNlMTk2YTM0ZGRiZDEyNDAwY2Q4MDY4YTgwNmI2ZmM4ZWM5MzZiZjVjY2M3M2EwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTA5NjcxNGZjMTZlYWRiM2ZmOTk2ZjQxN2U2NTExOGZlZmU3MzJlNzAyODU1MGQzYzJmODBhOTYxMGRmZjc5YiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDIzYjQ2MmViYWE1YWE4Mzk1MjgxM2IwMGY2ZDE2NzQwOWE1YzFjMzhjZGU1NjUzNDljYTYyNDRiYWY1M2NiOCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

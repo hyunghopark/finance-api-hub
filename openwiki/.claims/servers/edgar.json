@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:0f6edbce389932a07f980d2cf3c0c4e274bb6984f4bcd2ac9e8936098a0909a2",
+  "claims": [
+    {
+      "id": "claim_77f2408b51a548cb951daf09218c4b14",
+      "statement": "edgar 서버는 API 키 대신 이메일이 든 User-Agent 문자열을 환경변수나 키체인에서 읽어 모든 요청 헤더에 붙이며, '@'가 없는 값은 거부한다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L31-L49",
+          "version": "repo-lines-v1:sha256:68b09d001216506c254b33458f363fb9e809ed5d400217e035fd6f18bb5ec610:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4ODdiNmExZDY2ZDlhYzk2MWFmYmE1OGZlOTQ0NzlhN2NkMDNjMWFlYTBlNTYwYzZjNTAyZThjOThmNzM1ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUzM2U5YWVlYjdhODg0NTFmZGM3NmFmYmQzYzYyYTA0NWI1YjcwMDIwZmIyN2MzZDA3YTUyMGYxNzFjM2ZiZjQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY3NWIwNzAxNDY2ZGJkNjlmMDM1NGI1NDE1OTE2M2Q5YTFhNjljYWRjYmE4YjI2MmM1ZGI4MDUxMzdmNGFjYWMifQ"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L80-L85",
+          "version": "repo-lines-v1:sha256:fb041d67ac6408aa02d2318013293c51f2520ee1b7065191ab80b809036aa6bd:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzFmYjdkNzFmNmFmZDgzNGYwOTVlOGZhM2YxNTUwN2MwMTM3NTJkZWY1MmNlYzE3NDAwZmI2NWQwZTQ3MWJmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTIzYjYwZWRhMjExY2YyZWRiZDM3OGE4MWI1MWI2YTUyZjg0YzA3YjM5YmRjYWZhMGQ1YWQzMjdmZTJlNDIxNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDMyYTUzYjhlOGM5MGJlZWU4Y2Q1ZWYxOTRhYmJlOTQ2NDU4NTE4MWZiMGI2ZjgzNmUxMWRjZTgyZjM5ODE2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjliOGVlNGQ1NzgxNWE0N2Q3N2E3NTBmNTQ1YzI1MzA4ZmI5OTQ4YmZlOTViN2E1ZmYwMmMxZDA3YzlkZTk2NyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_eb6e8315d12a441782c7d23d7af77549",
+      "statement": "resolveCompany()는 숫자를 CIK로, '.'을 '-'로 바꾼 입력을 티커로 먼저 맞춰 보고, 아니면 모든 단어가 회사명에 들어 있는 회사를 찾아 CIK 기준으로 하나일 때만 선택하며 여럿이면 후보 최대 8개를 담은 오류를 던진다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L171-L187",
+          "version": "repo-lines-v1:sha256:c2ca41a1eeb37a08370368aef23e62e3044e8ad4552c3d1250e60e3759c9e3bf:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIzNTM4MzNiMGJhZGFhZWE0NWU0MDE3OGE5ZDRiZGM4OTNiMzZmMTcwNTAyOTRjMzcwYTExYjJlZTVjZmIzMGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjMjdlNmQ3MzUzNGQzOTZkYjA4OWY1MDIxYTIwNTA0MTk1NGEyZTliMDEzMTRhYjFjMThhOGY0MDM2Mzc4NzMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE3ZGI3ZjgxMjIzNzQ1Y2I5YWZiZmViODRmMTFhMTFmNzU3OWJmMTdiYjVkZmMyODE0NmNiNzgwYjVlYTY3NDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2b056fc5851049d684aa7139f19be1cc",
+      "statement": "dedupe()는 XBRL 사실 값을 기간의 시작일과 종료일로 묶어 가장 늦게 공시된 값 하나만 남긴다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L205-L216",
+          "version": "repo-lines-v1:sha256:b2df81aabc7e9d7409e994fb9ba91deb3c4ba63f33e8ef7f4a4e5e293f37f75a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1NWFiNTZmZThmMjUzZGE3MGU5MGU1NDU2OTU3NzY3OGRjZmJmY2RhOGJjNzBlYjkwYzg1MGI3NDU0MDlmYzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM0MTVmZTdjZGE3MGY1MTZiOWVkY2ZiYjU0N2ZiY2U5MTEwOTI1ZDAyNTI0OGRmYjZlZTgxY2M4MzdmOGM0MTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5ODAwZWYxZDEyMzJhNGMwMjI2MjdjMzQ1ZjY2YWIxZGYyNDhhNGU3OTU0MjNjZGFhNjIwZDYxZWJkNjc4MzAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_82da33fadfb9481e80bb299e7150f2b3",
+      "statement": "buildSeries()는 기간 길이로 연간(340~380일)과 분기(80~100일)를 구분하고, 분기 모드에서 4분기는 시작일이 같은 연간 값에서 9개월 누적 값을 뺀 뒤 derived 표시를 붙여 추가한다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L217-L252",
+          "version": "repo-lines-v1:sha256:5977bfa37558260703e29a3fc53950fe6a6543cb488e824d7bc730acadf408bc:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1Njc1YWVkMDhkYTllOWI5YzYxZDljOWYyMTIwNmQwMWMzMzNiMzViNDllNDYzNzNlODQ5MWIwMjc1YzVjODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwMWU5YjdjMmI1YjY1OGYwNDIzYWQ0NTc5ZWQ2Yzg3ZTdkNWU3NGMwMGVhMjVjOGEwZDU1NGY2NDU5ZjZkOTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5YjFlY2FmNDY2ZWM5NDFmYmYzYWIwYmJjMDE5YjA0YzVlNTkzYTM2MzI3NGI3ZmQxZTdmODYxNTRjZDdlYTgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1583cccf5a3e4a748518ec6b31484dd1",
+      "statement": "시점 값 항목의 연간 시계열은 10-K·20-F·40-F 양식의 회계연도 말 값만 고른다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L217-L217",
+          "version": "repo-lines-v1:sha256:95675aed08da9e9b9c61d9c9f21206d01c333b35b49e46373e8491b0275c5c87:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTU2NzVhZWQwOGRhOWU5YjljNjFkOWM5ZjIxMjA2ZDAxYzMzM2IzNWI0OWU0NjM3M2U4NDkxYjAyNzVjNWM4NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTU2NzVhZWQwOGRhOWU5YjljNjFkOWM5ZjIxMjA2ZDAxYzMzM2IzNWI0OWU0NjM3M2U4NDkxYjAyNzVjNWM4NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjAxZTliN2MyYjViNjU4ZjA0MjNhZDQ1NzllZDZjODdlN2Q1ZTc0YzAwZWEyNWM4YTBkNTU0ZjY0NTlmNmQ5MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzZmMWFkNDZjZDQzYTRhOWZjODAzOTRiMWFhOTZhNjhlM2ZiYzBmNjE2MGYxYzE2NTE0MzZhZGRiYzAyOTZlYSJ9"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L230-L232",
+          "version": "repo-lines-v1:sha256:53b1c50f8a629f72173d933d3f6a7c95f6095a05702f1df586d3150d2c4475cb:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzIzNmUxMDg0NTQ0ZWQ1MWIyNjIyYzRmZmZlYzhkOTliNWI1NWM3ZjQ5MDU2ZjVmNmE1NTRjMDc1Mzc5ZGE3NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2YyYjViYjJhMzA0M2RlNTc5ZGNhMDczZWRjODNmMmZlZGRlM2Q2MmY0NmY3MTk5YmM4YmQzYjA5OWIzYzg0NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGI5NmY1ZWM4YjNmMzUxZTE2N2U4YzNkNzYwZTY4OTNlZDljODZiMWY3NGFhMjQ2YWI3NzBkOWU2NWQwYzFhMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGRiMzdhODdjNzZjZTIwYTNkMDM5ODk0M2VkYWUxOWJlM2JmMDhlYWM2Y2QwNGU2OGJiZmE0OGM2NDY1MTM2MCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5d44f9c785f346bea43f8840482fb257",
+      "statement": "METRICS는 재무 항목마다 XBRL 태그 후보를 순서대로 두며, getConcept()은 SEC의 404 응답을 오류가 아닌 null로 바꾼다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L254-L268",
+          "version": "repo-lines-v1:sha256:5434a21eae76306304a0ee7df7bf87e1f6bf1b3bd41ae015f35bcf96ac1272df:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwNzU3YWQ2ODcxNDY2YzZlMjYzODliNmNiNTU2ZDM0ODMxNTdmZDU2MjdmMDI3NWZjMjVlNWI5MjNiNTExNDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1MmM2MzkwMDg4YTkyYTVjMTYyNmM1MzhiMDhiOWQ5ZGVjMmZiYzYxZDg4OTA0OGI1MGE1NDdiZDY2ZTE5OWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhNzM0NTI3OTg0NmZiYTc3OGNhN2MyMzgzMzYxNGEwYTc5NDNmOTg3NWY4YmMzZDFkNWYxYzUzMmNhYjBkOWQifQ"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L275-L279",
+          "version": "repo-lines-v1:sha256:651a85027b910dadbc322f4599ecc13714c591f76ac92d6543f8910058a91001:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWU3ODBlM2I5NGZlOTg4YTRkMzI3NDE0MWE3NGI5OWM3YTZmOTI4ZTJlZmVlMmI0NTNhNzU1ZDYyNDg2N2EwZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTM3MzM5ZjhhOWE1MmU2NGM2MDFkMGY0NzIxNjQwNTk5NjNlZDBhNzI0MGRkZjI2YTA1ZDU4MmQ3MjhkZGU1YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDcwYjRjYzk3ZGIyOWI2N2U3MTE4NDNmMjdlZGE2MmZjOTk1NDY2NDlkNWYxYjJmN2IyMjg2NWI2ZTAxNzlkMyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ffa2448b417b4181bcfbea7d078b3db9",
+      "statement": "validArchiveUrl()은 www.sec.gov의 /Archives/edgar/data/ 아래이고 '..'이 없는 https 주소만 원문 읽기에 허용한다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L317-L324",
+          "version": "repo-lines-v1:sha256:78a93e0cf4191422556b9d51a1584b5ff5e87c8bad2430a4a27fec00d2371999:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTZlZjhjYTNkZWYxOTk0YjdiYjNlMjlmNjY1ZDZhMjQ1NTUxZDZiNTNhZTUzODQxYmJjYWE4NzQ2NmU5YTJlMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTkzZDQyMzllODI5MDdlNTg5MzY3M2ZkZGYwOTc1Zjg1NDUxMjk5M2YzYTg1MDM3YTdkYmJjZGVmNGQ1YTMzMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzA0MmFkNTM2N2FhMmVlODQ5NDg4MGE5ZTE0MWQ2MzliNjQxMjNmMmZlMGRhNGJiNzBhZWQyODc4YjAzZWFjOCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6fc8cfb780f34927a82c9ef3df516519",
+      "statement": "원문 변환은 인라인 XBRL의 ix:header 블록을 지우고, PDF는 앞 4바이트로 감지해 변환하지 않으며, 변환한 텍스트를 최근 3건까지 메모리에 둔다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L292-L316",
+          "version": "repo-lines-v1:sha256:06ab6117816a92e85b17a02a76bdef7bb81b0b070c0c5da14c12d22899e1feb5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzZThmY2MwZTZiYWFhYmY5YWVhZGYwZmE0YTdlODI4NjE5MzI5YjY5MWUxYjU5OGMzMTk0NzcyMDE2NGQ1YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2MjA2YjNiYzdiZGFjZmYzNDdmNWE1MjM1Y2Y3MjYzNTEzNDBiZGI3MGM2NDY4YTUxZDY3NzI1Mzg3ZjlkZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY2NDliZWM1ZWFmMDI4M2JlMWMzZWY2MjUzZWQ0M2NkMTQ2NzI3YTcxZDQ1MTkxOWQ0ZjVhNGIxOTE0ZjJmMTkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}

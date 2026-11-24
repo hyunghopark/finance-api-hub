@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:2b5ae5d05c13e8f004336c0f160a5b7b673a7ec339f26532390ed5f753b1766e",
+  "claims": [
+    {
+      "id": "claim_2ed215690aa748f39734da366eec7241",
+      "statement": "krx 서버는 출력 항목 표 F, API 명세 표 APIS, 분야 표 GROUPS에서 도구 7개와 그 설명·입력 스키마를 생성하며, 분야에 속한 API가 type 인자의 선택지가 된다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L105-L115",
+          "version": "repo-lines-v1:sha256:b198798d0f17a54d177376060fdf7eb71cb7540c6836018d606bf178e35824b2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIxYzg2MjI3NTE0NzA2NzNmZGNmYzZlNzRmYTVmZjgxNWJlNDNkMThlOTMzZDk3YjMwMTI0MDcyYWVlNzQxZTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIwMmQyYzBkNmRjNWU3NGQ5MmZhMTRiOTFkYmVhMjY0MDkwYmViMzVmZGI5MTg4ZDliMzQxMTgxZGNlOWY0Y2UiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1NWFlMTUzOTAxNWEzOTZmMjdlMGMyMWMzYWZlNWZkNGFhMmFkZDdmMjRlZjlmNDFjNjVlMzAyOTQ0MTRmZmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjExMWM0ZDNjZWM2YTk0NTgzZGEyZTRiYThmY2RhMTk5MjQzNTQwMzBiN2QyNTVjYWFmMTRkNDNkMDEyODc0YzIifQ"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L256-L275",
+          "version": "repo-lines-v1:sha256:9e8754b053c8e4d234cf3decb07d46ba04c390c07b9f138dfab7608261b6c8a5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNjU4ZGI0ZWJhYTkxMjM1M2ViMjE2MjM5MWQ2YTVjMTU3NjgyNGZlYmFkZmQwNzAxYzhjNGNjOGYzNzYxZmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2ZjViNDBiMTU4NDU3ZDE3ODY0ZjIxNzkwNzg2ZGQ1YTJlY2RiNjRiNjZhNjUxZjc4OGQ0ZTI1Y2QzMzAzZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA4ZGZmODU1NmVkZjNjYzU4NjM1ZTkyOTMxMzk0N2U2ZWEzNjM5NmRkNzE1ZDBmZjMzZTM3NTE2NWJmYmZiNGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlNmVjZjU0NDY5MmQ3MWY3NjMxMjc0ZDdlZWRmZGM0YTU5NDNlZmRmYmUzMjEwNTQ2MWE1MzcxZjY2OTE4M2QifQ"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L47-L49",
+          "version": "repo-lines-v1:sha256:7c5c4a84be0d3201f9f2753e38dd555d0928e82c8789559ad67433d63074d153:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmMxMWU0NzM1ZGFlYjRhODJkYzEwMjU0M2ZhMTgwZDg0YTJjODdlZjY4YzliMGFiOWQyODk4YzkyYzI3NDQyOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzQ5NWEwOThmNGI1NDViNDAzZWU1YmExZGRjZGJjZTg3ZDg3MDFjNDNiZmMzODYyN2QwYzY2YTdlNWQ2ZTc1YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODQ5MTE4MTMyZjllNTc4MmI1ZWJjZGFhNjU4ZTMyZDYzMzJjNTE1NWIwOTk0N2Q3MDc3NzAxNTdjZGVmMzAyNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODk2MGU3ZjU3MDU1YmFhOTdmMWRiYjJjYjY0ZTY4Y2E0NTU0ZjY5MDg5ZGIzMmY0YzZiMWIyOTY4NTEyYjhlMSJ9"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L70-L78",
+          "version": "repo-lines-v1:sha256:9ce358bb0b17d52734067d5ffc739d4decfe9d07a940d8efc6e31ac65c6a98b4:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmE5ZjFlZDRhZWNlMDAyOWI2ZDFiZTNiNDljYmViYjQ1MjkxMzRjZmY4YjRiZjYyNTEwZTEwMjUwZGFlYzlkOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGUwZjM5MGRmNzUwNTllOTM1MTQxYzg4MzgxNDYzZjllM2IxOGRkZDA4MmE5NjA1ZjkzNjQzZDA0YzY4NjJlNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGNjNWQzY2M1MGQ0MWE3ZTE4MmQ2YjM3N2ZjNTQwOTg1MzRkYWEwMDQ0ZjdkNWJhNjhhZWY1NGQwYzBmYzc0OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjc5NTllMWM2MzlkZWU5MzJiM2E0MGI1NjU4MTNhZWQ5ODhjNTUzODgwNTAzZjIxNmVhM2NkMWQyZTFlNzc3MyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_bbd19b7f60cc48feb68c84e5df9ea6ab",
+      "statement": "query()는 sort_by와 fields가 해당 API의 출력 항목 이름인지 KRX를 호출하기 전에 검사한다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L199-L210",
+          "version": "repo-lines-v1:sha256:d0734047602523d56959b29db7dd7de95f33a0060bf9201930ac833c261a110e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2ODM1ZGNlNDI0OGNmNWMxYzc5NWRjZWVhZmM2ZDg3OWI2MmNjZjQwOTMxNGRmZGU0ODA5ZGE1NDU4ZmExZmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxOWY3Yjg5NjExMjU0MDU5ZDYzZmUzNDU4OGJiZDdiM2I2ZjczYTIxYThkMjQ1ZTBlNDIyZDI3NmFjYjI5MDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFkNGNjNGE2ZTIyZmFjNzE2MDAyZWY1NDk2OTg1NGY2YTAyOGQ2NmIzMzQwN2U5MGVjN2UwMWVlM2FlZDA4YzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_421a80873070485c8b0606c9d2cf7d0c",
+      "statement": "checkDate()는 실제 존재하는 YYYYMMDD 날짜인지, API의 제공 시작일 이후인지, 미래가 아닌지를 확인한다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L121-L125",
+          "version": "repo-lines-v1:sha256:511ff318d46fb5679d08198e0cfa457015c47af0950ce3b76963da38300ede5c:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2UyMWRhMjM0ODllZGYwM2E2OGNmZDIwYmIxMzExOWQ2Njk2MzZkY2JhZTVmOWNlMGNlMzM0NzE5M2E5NTQ3NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDcwY2NmMWUyMDNmYjY5Y2EzNmJiOGEyODMzZjlmMTY1MDVkMjMxNzY2NzkyNTY4Zjk5MDljMmY5YTZmOTUzMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODJjN2Q4NmZhZDJkYjJlZjMzMDBmZTJiYTljM2JlZGRmMmE4YjNkOThlZDU1YWM0N2FkOTdmNTE3YTUwYTRjZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3d7d54a4afbf4664820c19cd527ca7d7",
+      "statement": "날짜를 비우면 latest()가 한국 시각 어제부터 최대 10일을 거슬러 올라가며 행이 있는 첫 날의 자료를 돌려준다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L167-L175",
+          "version": "repo-lines-v1:sha256:ae96d3c7e17282c690719f68106f900a1ae57b3e7073ea1394ac79d9967de6fd:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTk0MGE2MDJmM2ZkYzg4M2IzNjc4YzhkZTJhMTA0NGJjOWIwNzBmYjYwMDUzMTViMmJjMmE5MWJhMzUxMmQ3YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQwZjJkM2EzYWFkYTI3NTg2NDU3OGQwYTQzOTE1NjM4ZDU0M2ZlY2EyYzk0ODU4ZGI5NDEyMTFlODZjZWYyYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDMzYjA2YmM2ZDU0YTFhNzAwMjQwZDhjNmEzNjRlNzc4ZWRiOWM4NmQwZDYxNTBkOGRkODRkZTY2MzQ2YzA5YiJ9"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L21-L21",
+          "version": "repo-lines-v1:sha256:73cc0571d9e6bef4c384970a0a78dcf7b4121778a3df1cd8e6f64938cb9c5786:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzNjYzA1NzFkOWU2YmVmNGMzODQ5NzBhMGE3OGRjZjdiNDEyMTc3OGEzZGYxY2Q4ZTZmNjQ5MzhjYjljNTc4NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzNjYzA1NzFkOWU2YmVmNGMzODQ5NzBhMGE3OGRjZjdiNDEyMTc3OGEzZGYxY2Q4ZTZmNjQ5MzhjYjljNTc4NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmQzNDI1N2E5YzQ0NTY1NDI1MWE1YjBlZWM4NWUwYmYxMDEzNjE0YWJlMzcyZWNlZmVmYjZjNmQwNzRmOWIwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDU4MDVjYjQwY2NiZDY0MzkyNDAyMjc2MmExMGVkYjhmZTEzZGFmYTkwN2NiMjIwNDFmMGNmMTE5ZTVmMDI4OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_734146b7deff4b03b9a04244666b13ea",
+      "statement": "conv()는 코드·이름·날짜 항목을 문자열로 두고 그 밖의 값은 쉼표를 떼어 숫자로 바꾸며 빈 값과 '-'를 null로 만들고, shape()는 명세에 없는 항목도 원래 코드 이름으로 남긴다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L177-L192",
+          "version": "repo-lines-v1:sha256:81e6d04938ba55b7c876144b54952f80f59735eb4801feea146448de9a74dd48:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJhMjc2NjdhOGY5ODA2NDA2YzE0YjgwOWFkYjVhOGZhODk3MDVlZDJhODM4YjQyMTJkZjA5MTljOWNlZDc3OTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFhYTU0MDk3ODIwZGJmZDAxNjQ0ZTM3ZTBmODNkYThhOWQ0MzkyYWRhYzQ4NDQyZGI3YTJlNjFkM2ZiMWZlNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVhOTJkZDg4Y2M5YWE2NDhmMGNjNjdiNWZlOTNkZjNkMmRiYmFkN2JiZjhhNDQ4ZDExODA1NDQ4NjI5NjA5NDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ef0a975f205c480ea316bc3050dc7fac",
+      "statement": "유가증권·코스닥·코넥스 일별 매매 API의 응답에는 거르기 전 전체 행으로 계산한 상승·하락·보합 종목 수와 거래대금·시가총액 합계가 market_summary로 붙는다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L195-L195",
+          "version": "repo-lines-v1:sha256:3e98b3d3c028a55c1fde4b74d6556d563fad245dc279a471e359c35c73f94ab9:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2U5OGIzZDNjMDI4YTU1YzFmZGU0Yjc0ZDY1NTZkNTYzZmFkMjQ1ZGMyNzlhNDcxZTM1OWMzNWM3M2Y5NGFiOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2U5OGIzZDNjMDI4YTU1YzFmZGU0Yjc0ZDY1NTZkNTYzZmFkMjQ1ZGMyNzlhNDcxZTM1OWMzNWM3M2Y5NGFiOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjM2MDRkYTkxZGMyZDYyMzhjODAwNmI4Nzg4MjE5MWYwNGFkNDk1NTY4OTFmMzVmOTA1NGVjMDJmNjliMjVkMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDE5ZjdiODk2MTEyNTQwNTlkNjNmZTM0NTg4YmJkN2IzYjZmNzNhMjFhOGQyNDVlMGU0MjJkMjc2YWNiMjkwMiJ9"
+        },
+        {
+          "resource": "repo://krx/server/index.js#L214-L226",
+          "version": "repo-lines-v1:sha256:6f0050685ba3a71370c949abb7b2956e4d78df84e5ac685eaaed930f4d562440:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJlZTQzNDM3YjI1Zjg0NjExNTQ1OTk4ODJlNDA2ZGRlMGI1M2NmZjdiYTBiMDEzMjU5NWJlMzVhMjI4Nzk5MTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQwMzY3YjYzNjQyODg0YjcwMTE4MTJlODNlYzJiODVlNjU5NGU5NjI5ZDk4NzFiODA3YTNmMzQ0MTNhOTZiZmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFkNGNjNGE2ZTIyZmFjNzE2MDAyZWY1NDk2OTg1NGY2YTAyOGQ2NmIzMzQwN2U5MGVjN2UwMWVlM2FlZDA4YzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyMzkzZjZhYzk4NzE2ZjMzNjE2N2ZhZmRhZGNkZTM1YWMxMDA4YzFkNmJmNzA5NjAyMTU3ZjhmNzE2NzFiNjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bfdecdb32aa3489a8e66b1d2a64505dd",
+      "statement": "정렬에서 빈 값은 방향과 무관하게 뒤로 가고, 응답에 전체·조건 일치·표시 건수가 함께 들어간다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L236-L252",
+          "version": "repo-lines-v1:sha256:addf85498a4844ed675202e943b6094c8cb036ed8e30e5985d50b12c61998d77:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhlMzQ0ODIyMWY2OTFhMjkyZjBkMTVlMzFjNWYwZjM2MzY4ZTFiMDQ2ODlmYzRlMGRkNmE1ZWYwNWU0MGRlZWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyYzc3ZGRjMzcyNGM2OWFjNTZiNzJkMjQ5NjIxMzc3Y2ExZmIyZWQ1OTgxOWY5OGQxNTcwNmU4ODA5NTkzNWYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNlMmFmNTFmNzY3MjljNjk2M2NkM2Y0MTJkYTVhNWYyYTJmMWFjYjRmZjQ4ZWEyYTRmYWZmYTYxMWNmMGRjNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA4ZGZmODU1NmVkZjNjYzU4NjM1ZTkyOTMxMzk0N2U2ZWEzNjM5NmRkNzE1ZDBmZjMzZTM3NTE2NWJmYmZiNGMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4cd8ff1aac2e45d4b94a5d5738e8e11c",
+      "statement": "krxGet()은 401·403 또는 unauthorized 응답을 받으면 인증키 오류와 API 이용신청 미승인을 함께 알리고 해당 분야와 API 이름을 넣어 신청 위치를 안내한다.",
+      "evidence": [
+        {
+          "resource": "repo://krx/server/index.js#L145-L150",
+          "version": "repo-lines-v1:sha256:000a0a83a8f647e68fa53db9c68a09ce508687abdc6dba2de1f7cbce82b9c5f1:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTM2YzdiZTM5YzA0NjNjYmQ1ZWJiYTVhM2UxOGIwZTE2ZWZiMjFhOGZhZmRjNTY1NWJhMGJkZTc1ZjI1NDZkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmYxZjUzOGU3NmEwYjBkNDI3ODJkNDY2NDM3NTk3ZWM5ZTdiNDQ5MjkwN2UxNTZiODM2ZjQxMjJhODQzNmVkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmFhOWY2Y2Q3YTAzNmJjODVjYTJhMTc5ZGZkODIzYmQ1YWI4MTkwMzRkNjQwZTM2ZGMzZDc3ZDhiZjg5OGRlNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzJjMmQ4YzVkZWI3MmRlMWM0ODAwN2YyNjcyODc2YjY0YTZhYmRhZmZkZTFjMjA0MzIwYmQxYTU2ZjU4NjkyOCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-11-24T12:24:57.291Z"
+  }
+}
