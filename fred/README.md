@@ -4,14 +4,14 @@
 
 | 항목 | 내용 |
 |---|---|
-| 버전 | 0.1.1 |
+| 버전 | 0.1.2 |
 | 대상 API | [FRED API](https://fred.stlouisfed.org/docs/api/fred/) v1 경로 31개 전부 |
 | 호출 대상 | `api.stlouisfed.org` 고정, GET만 사용, 허용 경로 목록 적용 |
 | 인증 | `FRED_API_KEY` 환경변수, 없으면 macOS 키체인(서비스 `fred-api`, 계정 `fred`) |
 | 호출 한도 | 분당 120회. 이 서버는 요청 간격을 0.55초로 두고 직렬 호출하며, 429 응답은 20초 뒤 한 번 재시도 |
 | 런타임 | Node.js 18 이상, 외부 패키지 없음 |
 
-응답 형식은 항상 JSON(`file_type=json`)이며, 오류 메시지에서는 인증키 문자열을 가립니다.
+응답 형식은 항상 JSON(`file_type=json`)이며, 오류 메시지에서는 인증키 문자열을 가립니다. 한 번의 응답은 6만 자까지이고, 넘으면 행 수를 줄여 유효한 JSON으로 돌려줍니다([출력 한도](#출력-한도)).
 
 ## 공식 FRED MCP 커넥터와의 관계
 
@@ -65,10 +65,10 @@ security add-generic-password -s fred-api -a fred -w
 | 도구 | FRED API | 용도 |
 |---|---|---|
 | fred_bundle | series, series/observations | 지표 묶음 4종. 항목마다 최신값·관측일·직전 대비·1주 전 대비(일간)·FRED 갱신 시각. liquidity는 순유동성 표 추가 |
-| fred_observations | series/observations | 여러 시리즈(최대 10개) 날짜별 표. units 변환, frequency 집계 |
+| fred_observations | series/observations | 여러 시리즈(최대 10개) 날짜별 표. units 변환, frequency 집계. 출력 한도를 넘으면 최근 쪽을 남김 |
 | fred_search | series/search | 시리즈 검색 (전문 검색 / ID 패턴) |
 | fred_series_info | series, series/release, release/dates | 시리즈 설명·소속 릴리스·다음 발표일 |
-| fred_release_calendar | releases/dates | 경제지표 발표 일정(미래 포함). 이름 글자로 거름 |
+| fred_release_calendar | releases/dates, releases, release/dates | 경제지표 발표 일정(미래 포함). 이름 글자(`name_contains`)를 주면 맞는 릴리스를 찾아 릴리스별 발표일로 조회 |
 | fred_get | v1 경로 31개 | 위에 없는 것 (카테고리 트리, 릴리스 표, 태그, 수정 이력 등) |
 
 ### 묶음 시리즈 (35개)
@@ -133,9 +133,32 @@ security add-generic-password -s fred-api -a fred -w
 
 순유동성 어림값 = 연준 총자산(WALCL) − TGA(WTREGEN) − 역레포(RRPONTSYD). 시장에서 쓰는 어림식이며 공식 지표가 아닙니다. 세 시리즈의 단위가 달라(백만·십억 달러) FRED가 알려 주는 단위를 읽어 맞춘 뒤 십억 달러로 표시합니다. WALCL·TGA는 수요일 기준 주간, 역레포는 그 수요일 또는 직전 영업일 값입니다.
 
+### 발표 일정 조회 방식
+
+- `name_contains`가 있으면 릴리스 목록(`releases`)에서 이름이 맞는 릴리스를 찾고, 릴리스마다 발표일(`release/dates`)을 조회합니다. 전체 일정을 훑지 않으므로 긴 과거 기간도 빠짐없이 옵니다(예: 2026-01-01~2026-11-24의 `Employment Situation` 11건을 약 1초에).
+- `name_contains`가 없거나 맞는 릴리스가 15개를 넘으면 전체 일정(`releases/dates`)을 `start`부터 1,000건씩 최대 5쪽(5,000건) 읽습니다. `end`까지 읽지 못했으면 응답에 `truncated: true`가 붙고 `note`에 읽은 마지막 날짜가 적힙니다. 그 날짜를 `start`로 옮겨 이어서 조회하거나 `name_contains`로 좁히세요.
+- 전체 일정은 하루 30~50건이어서 5,000건은 대략 넉 달 치입니다. 과거 쪽 전체 일정은 FRED 응답이 느려 5쪽에 1분 넘게 걸릴 수 있습니다.
+
+### 출력 한도
+
+한 번의 응답 글자 수는 6만 자까지입니다. 넘으면 글자를 자르지 않고 행 수를 줄이므로 응답은 항상 유효한 JSON입니다. 줄였을 때의 표시는 다음과 같습니다.
+
+- `truncated: true`
+- `note`: "출력 한도 6만 자 때문에 M건 중 N건만 표시"와 그 도구에서 좁히는 방법
+- `shown`: 실제로 돌려준 행 수. 전체 건수를 뜻하는 `count`는 그대로 둡니다.
+
+| 도구 | 줄이는 목록 | 남기는 쪽 | 좁히는 방법 |
+|---|---|---|---|
+| fred_observations | `rows` | 최근 쪽(`limit`과 같음) | `start`를 늦추거나 `limit`·`series_ids`를 줄이거나 `frequency`로 주기를 낮춤 |
+| fred_search | `results` | 앞(정렬 순서의 위쪽) | `limit`, `frequency`, `tag_names`, 검색어 |
+| fred_release_calendar | `rows` | 이른 날짜 | `start`·`end`, `name_contains` |
+| fred_get | 응답에서 가장 큰 목록 | 앞 | `params`의 `limit`·`offset`(다음 `offset`을 `note`에 적음), `release/tables`는 하위 `element_id` |
+
+`fred_get`은 FRED 응답을 그대로 넘기므로 목록 이름이 경로마다 다릅니다(`seriess`, `observations`, `release_dates` 등). 가장 큰 배열을 줄이고, `release/tables`의 `elements`처럼 배열이 아니라 객체 안에 항목이 들어 있으면 그 객체의 항목 수를 줄입니다. 한 건만 남겨도 넘으면 그 안의 다음으로 큰 목록을 줄이며, 이때 `note`에 `elements.34484.children`처럼 줄인 위치가 적히고 `shown`은 붙지 않습니다. 줄일 목록이 없으면 `{ truncated, total_chars, note, preview }` 형태로 앞부분만 문자열로 돌려줍니다. FRED가 준 `limit`·`offset` 값은 바꾸지 않습니다.
+
 ## FRED API 전체 목록
 
-2026-11-10 공식 문서 기준. **v1 경로 31개는 모두 `fred_get`으로 조회 가능**하고, 그중 6개는 전용 도구가 씁니다.
+2026-11-10 공식 문서 기준. **v1 경로 31개는 모두 `fred_get`으로 조회 가능**하고, 그중 7개는 전용 도구가 씁니다.
 
 ### Categories (6)
 
@@ -152,10 +175,10 @@ security add-generic-password -s fred-api -a fred -w
 
 | 경로 | 용도 | 이 서버 |
 |---|---|---|
-| `fred/releases` | 전체 릴리스(발표 자료) 목록 | fred_get |
+| `fred/releases` | 전체 릴리스(발표 자료) 목록 | fred_release_calendar (이름으로 릴리스 찾기) · fred_get |
 | `fred/releases/dates` | 전체 릴리스 발표일 | fred_release_calendar · fred_get |
 | `fred/release` | 릴리스 정보 | fred_get |
-| `fred/release/dates` | 릴리스 발표일 | fred_series_info (다음 발표일) · fred_get |
+| `fred/release/dates` | 릴리스 발표일 | fred_series_info (다음 발표일), fred_release_calendar (`name_contains`가 있을 때) · fred_get |
 | `fred/release/series` | 릴리스의 시리즈 | fred_get |
 | `fred/release/sources` | 릴리스의 출처 | fred_get |
 | `fred/release/tags` | 릴리스의 태그 | fred_get |
@@ -211,13 +234,13 @@ security add-generic-password -s fred-api -a fred -w
 
 ## 알려진 제약
 
-- **발표 일정**: 날짜는 원 기관이 정한 발표일이며 FRED에 실제로 반영되는 시각과 다를 수 있습니다. 발표 시각과 시장 예상치는 FRED에서 제공하지 않습니다.
+- **발표 일정**: 날짜는 원 기관이 정한 발표일이며 FRED에 실제로 반영되는 시각과 다를 수 있습니다. 발표 시각과 시장 예상치는 FRED에서 제공하지 않습니다. 긴 기간은 `name_contains`와 함께 조회하세요. 이름 없이 조회하면 5,000건까지만 읽고 `truncated`로 알립니다.
 - **ICE BofA 계열** (하이일드·BBB·투자등급 스프레드): 2026년 4월부터 최근 3년치만 제공됩니다.
 - **갱신 시각**: 일간 지표도 관측일보다 하루 늦게 올라오는 경우가 있으므로 응답의 관측일(`date`)을 확인하세요. 확인된 시각은 아래 검증 내역과 [DATA_TIMING.md](../DATA_TIMING.md)에 있습니다.
 
 ## 테스트
 
-`node test/offline.test.js` — 로컬 모의 서버로 다음을 검증합니다: 공식 v1 경로 31개 대조와 그 밖 경로 차단, 묶음 시리즈 35개를 존재 확인 목록과 대조, 결측(".")·단위 배율, 여러 시리즈 표, 묶음 최신·직전·1주 변화, 전년비 변환 전달, 순유동성 단위 맞춤, 발표 일정·다음 발표일, 오류·키 가림·429 재시도, api_key·file_type 덮어쓰기 금지, 동시 요청 간격, 래퍼로 불러온 MCP 통신(6개 도구), 키 없음 안내
+`node test/offline.test.js` — 로컬 모의 서버로 다음을 검증합니다: 공식 v1 경로 31개 대조와 그 밖 경로 차단, 묶음 시리즈 35개를 존재 확인 목록과 대조, 결측(".")·단위 배율, 여러 시리즈 표, 묶음 최신·직전·1주 변화, 전년비 변환 전달, 순유동성 단위 맞춤, 발표 일정·다음 발표일, 오류·키 가림·429 재시도, api_key·file_type 덮어쓰기 금지, 발표 일정의 릴리스별 조회와 쪽 한도 알림, 출력 한도(유효한 JSON·6만 자 이하·`truncated`·`shown`이 실제 행 수·한도 이하는 변화 없음), 동시 요청 간격, 래퍼로 불러온 MCP 통신(6개 도구), 키 없음 안내
 
 ## 검증 내역
 
@@ -232,5 +255,6 @@ security add-generic-password -s fred-api -a fred -w
 
 ## 변경 이력
 
+- v0.1.2 (2026-11-25): `fred_release_calendar`가 `name_contains`를 릴리스별로 조회해 긴 과거 기간에서 결과가 빠지던 문제 수정, 쪽 한도에 걸리면 `truncated`로 알림. 응답이 6만 자를 넘으면 글자 대신 행 수를 줄여 유효한 JSON 유지(`truncated`, `shown`, `note`)
 - v0.1.1 (2026-11-11): 묶음에서 가장 최근 관측이 결측이면 `missing_latest`(날짜, 사유, 변환값이면 원 수준값)로 알림
 - v0.1.0 (2026-11-10): 최초 릴리스

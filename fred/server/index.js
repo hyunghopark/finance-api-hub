@@ -10,13 +10,15 @@
 const https = require('https');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.1';
+const VERSION = '0.1.2';
 const HOST = 'api.stlouisfed.org';
 let testHost = null; // 시험 전용 (FRED_MCP_NO_STDIO=1일 때만 설정 가능)
 const KEYCHAIN_SERVICE = 'fred-api';
 const KEYCHAIN_ACCOUNT = 'fred';
 const MAX_OUTPUT_CHARS = 60000;
 const MIN_GAP_MS = 550;
+const CAL_MAX_PAGES = 5;      // 발표 일정 전체 훑기: 1,000건씩 최대 5쪽
+const CAL_MAX_RELEASES = 15;  // name_contains에 맞는 릴리스가 이보다 많으면 전체 훑기로 돌아감
 
 const log = (...a) => process.stderr.write('[fred-mcp] ' + a.join(' ') + '\n');
 
@@ -222,6 +224,80 @@ async function netLiquidity(weeks) {
   return { units_used: { WALCL: mW.units, WTREGEN: mT.units, RRPONTSYD: mR.units }, rows: rows.slice(-weeks) };
 }
 
+// ───────────────────────── 출력 한도 ─────────────────────────
+// 응답 글자 수가 MAX_OUTPUT_CHARS를 넘으면 글자가 아니라 행 수를 줄여 유효한 JSON으로 맞춤.
+// 도구의 trim = { key: 행 배열 이름, keep: 'head'|'tail'(남기는 쪽), hint: 좁히는 방법 }. 없으면 가장 큰 배열(또는 항목 묶음 객체)을 줄임.
+const isMap = (v) => v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length >= 2 && Object.values(v).every((x) => x && typeof x === 'object');
+function largestCollection(root) {
+  let best = null;
+  const walk = (node, path) => {
+    if (!node || typeof node !== 'object') return;
+    for (const k of Object.keys(node)) {
+      const v = node[k];
+      if (!v || typeof v !== 'object') continue;
+      const p = path ? `${path}.${k}` : k;
+      if ((Array.isArray(v) && v.length >= 2) || isMap(v)) {
+        const size = JSON.stringify(v).length;
+        if (!best || size > best.size) best = { parent: node, key: k, path: p, size };
+      }
+      walk(v, p);
+    }
+  };
+  walk(root, '');
+  return best;
+}
+function fitOutput(out, tool) {
+  const full = JSON.stringify(out, null, 1);
+  if (full === undefined || full.length <= MAX_OUTPUT_CHARS) return full;
+  const trim = (tool && tool.trim) || {};
+  if (out && typeof out === 'object' && !Array.isArray(out)) {
+    const work = JSON.parse(JSON.stringify(out));
+    const cuts = [];
+    const render = () => {
+      const parts = cuts.map((c) => `${c.path} ${c.total}건 중 ${c.keep === 'tail' ? '최근 ' : ''}${c.shown}건만 표시`);
+      const top = cuts.find((c) => !c.path.includes('.'));
+      const hint = typeof trim.hint === 'function' ? trim.hint(work, top) : trim.hint;
+      const msg = `출력 한도 6만 자 때문에 ${parts.join(', ')}. ${hint || '조건을 좁혀 다시 조회하세요'}`;
+      const res = { truncated: true };
+      if (typeof work.note !== 'string') res.note = msg;
+      for (const [k, v] of Object.entries(work)) if (k !== 'truncated') res[k] = k === 'note' && typeof v === 'string' ? `${v}. ${msg}` : v;
+      if (top) res.shown = top.shown;
+      return JSON.stringify(res, null, 1);
+    };
+    for (let pass = 0; pass < 12; pass++) {
+      const own = pass === 0 && trim.key && Array.isArray(work[trim.key]) && work[trim.key].length >= 2;
+      const t = own ? { parent: work, key: trim.key, path: trim.key } : largestCollection(work);
+      if (!t) break;
+      const orig = t.parent[t.key];
+      const entries = Array.isArray(orig) ? orig : Object.entries(orig);
+      const keep = t.path === trim.key && trim.keep === 'tail' ? 'tail' : 'head';
+      const cut = { path: t.path, total: entries.length, shown: entries.length, keep };
+      cuts.push(cut);
+      const set = (n) => {
+        const part = keep === 'tail' ? entries.slice(entries.length - n) : entries.slice(0, n);
+        t.parent[t.key] = Array.isArray(orig) ? part : Object.fromEntries(part);
+        cut.shown = n;
+      };
+      set(1);
+      if (render().length > MAX_OUTPUT_CHARS) continue; // 한 건만 남겨도 넘으면 그 안(또는 다른 곳)의 다음으로 큰 묶음을 줄임
+      let lo = 1, hi = entries.length - 1;
+      while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); set(mid); if (render().length <= MAX_OUTPUT_CHARS) lo = mid; else hi = mid - 1; }
+      set(lo);
+      return render();
+    }
+  }
+  // 줄일 묶음이 없거나 줄여도 넘는 경우: 앞부분만 문자열로 담아 유효한 JSON 유지
+  const flat = JSON.stringify(out);
+  const res = { truncated: true, total_chars: full.length, note: `출력 한도 6만 자를 넘어 앞부분만 preview에 담았습니다(전체 ${full.length}자, preview는 JSON이 아닌 문자열 조각). 조건을 좁혀 다시 조회하세요`, preview: '' };
+  for (let n = MAX_OUTPUT_CHARS - 1000; n > 0; n -= 2000) {
+    res.preview = flat.slice(0, n);
+    const text = JSON.stringify(res, null, 1);
+    if (text.length <= MAX_OUTPUT_CHARS) return text;
+  }
+  res.preview = '';
+  return JSON.stringify(res, null, 1);
+}
+
 // ───────────────────────── 도구 ─────────────────────────
 const TOOLS = [
   {
@@ -244,7 +320,8 @@ const TOOLS = [
   },
   {
     name: 'fred_observations',
-    description: '시리즈 관측값(series/observations). 여러 시리즈(최대 10개)를 날짜별 표로 합칩니다. units로 변환(chg 변화량, ch1 전년 대비 변화량, pch 변화율, pc1 전년 대비 %, pca 연율, cch·cca 연속복리, log), frequency로 낮은 주기 집계(d,w,bw,m,q,sa,a 및 wef 등 요일 지정 주간), aggregation(avg,sum,eop). 결측(".")은 null.',
+    description: '시리즈 관측값(series/observations). 여러 시리즈(최대 10개)를 날짜별 표로 합칩니다. units로 변환(chg 변화량, ch1 전년 대비 변화량, pch 변화율, pc1 전년 대비 %, pca 연율, cch·cca 연속복리, log), frequency로 낮은 주기 집계(d,w,bw,m,q,sa,a 및 wef 등 요일 지정 주간), aggregation(avg,sum,eop). 결측(".")은 null. 출력이 6만 자를 넘으면 최근 쪽 행만 남기고 truncated·shown·note로 알림(count는 전체 행 수).',
+    trim: { key: 'rows', keep: 'tail', hint: '최근 쪽을 남겼습니다. start를 늦추거나 limit·series_ids를 줄이거나 frequency로 주기를 낮추세요' },
     inputSchema: { type: 'object', properties: {
       series_ids: { type: 'array', items: { type: 'string' }, description: '예: ["DGS2","DGS10"]' },
       start: { type: 'string', description: 'YYYY-MM-DD (기본: 90일 전)' }, end: { type: 'string', description: 'YYYY-MM-DD' },
@@ -270,7 +347,8 @@ const TOOLS = [
   },
   {
     name: 'fred_search',
-    description: '시리즈 검색(series/search). 제목·단위·주기·태그 전문 검색 또는 시리즈 ID 패턴(search_type=series_id, *와일드카드). 인기순 정렬 기본.',
+    description: '시리즈 검색(series/search). 제목·단위·주기·태그 전문 검색 또는 시리즈 ID 패턴(search_type=series_id, *와일드카드). 인기순 정렬 기본. count는 전체 건수, shown은 돌려준 건수.',
+    trim: { key: 'results', keep: 'head', hint: 'limit을 줄이거나 frequency·tag_names·검색어로 좁히세요' },
     inputSchema: { type: 'object', properties: {
       text: { type: 'string', description: '검색어 (예: "korea exchange rate", "breakeven inflation")' },
       search_type: { type: 'string', enum: ['full_text', 'series_id'], default: 'full_text' },
@@ -313,34 +391,62 @@ const TOOLS = [
   },
   {
     name: 'fred_release_calendar',
-    description: '경제지표 발표 일정(releases/dates, 미래 일정 포함). 기간과 이름 글자로 거름. 예: 다음 주 CPI·고용·GDP·PCE 발표일. 발표 "시각"과 예상치는 없음.',
+    description: '경제지표 발표 일정(미래 일정 포함). 기간과 이름 글자로 거름. 예: 다음 주 CPI·고용·GDP·PCE 발표일. name_contains를 주면 이름이 맞는 릴리스를 찾아(releases) 릴리스별 발표일(release/dates)로 조회하므로 긴 과거 기간도 빠짐없이 옴. name_contains가 없거나 맞는 릴리스가 ' + CAL_MAX_RELEASES + '개를 넘으면 전체 일정(releases/dates)을 start부터 ' + (CAL_MAX_PAGES * 1000) + '건까지만 읽고, end까지 못 읽었으면 truncated: true와 note(읽은 마지막 날짜)로 알림. 발표 "시각"과 예상치는 없음.',
     inputSchema: { type: 'object', properties: {
       start: { type: 'string', description: 'YYYY-MM-DD (기본: 오늘)' }, end: { type: 'string', description: 'YYYY-MM-DD (기본: 14일 뒤)' },
-      name_contains: { type: 'array', items: { type: 'string' }, description: '릴리스 이름에 들어간 글자(영문, 대소문자 무시). 예: ["Consumer Price","Employment Situation","Gross Domestic","Personal Income"]' },
+      name_contains: { type: 'array', items: { type: 'string' }, description: '릴리스 이름에 들어간 글자(영문, 대소문자 무시). 예: ["Consumer Price","Employment Situation","Gross Domestic","Personal Income"]. 긴 기간(특히 과거)은 이것을 함께 줄 것' },
     } },
+    trim: { key: 'rows', keep: 'head', hint: (o) => { const last = o.rows[o.rows.length - 1].date; return `이른 날짜부터 ${last}까지 남겼습니다(${last} 당일은 일부만 있을 수 있음). start를 ${last}로 옮겨 이어서 조회하거나 end를 당기거나 name_contains로 거르세요`; } },
     run: async (a) => {
       checkDate(a.start, 'start'); checkDate(a.end, 'end');
       const start = a.start || new Date().toISOString().slice(0, 10);
       const end = a.end || new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
-      const rows = [];
-      for (let offset = 0; offset < 5000; offset += 1000) {
-        const j = await fredGet('releases/dates', { realtime_start: start, realtime_end: '9999-12-31', include_release_dates_with_no_data: 'true', order_by: 'release_date', sort_order: 'asc', limit: 1000, offset });
-        const list = j.release_dates || [];
-        rows.push(...list);
-        if (list.length < 1000 || (list.length && list[list.length - 1].date > end)) break;
-      }
       const keys = (a.name_contains || []).map((s) => s.toLowerCase());
-      const hits = rows.filter((x) => x.date >= start && x.date <= end && (!keys.length || keys.some((k) => String(x.release_name).toLowerCase().includes(k))));
-      return { period: `${start}~${end}`, count: hits.length, note: '날짜는 미국 기준. 발표 시각·예상치는 FRED에 없음',
-        rows: hits.map((x) => ({ date: x.date, release_id: x.release_id, release: x.release_name })) };
+      const nameHit = (name) => !keys.length || keys.some((k) => String(name).toLowerCase().includes(k));
+      let hits = null; let cut = null;
+      if (keys.length) {
+        // 이름이 맞는 릴리스를 먼저 찾아 릴리스별 발표일로 조회 (전체 일정을 훑지 않음)
+        const all = (await fredGet('releases', { limit: 1000 })).releases || [];
+        const matched = all.filter((r) => nameHit(r.name));
+        if (all.length < 1000 && matched.length <= CAL_MAX_RELEASES) {
+          hits = [];
+          for (const r of matched) {
+            for (let offset = 0; ; offset += 10000) {
+              const j = await fredGet('release/dates', { release_id: r.id, realtime_start: start, realtime_end: '9999-12-31', include_release_dates_with_no_data: 'true', sort_order: 'asc', limit: 10000, offset });
+              const list = j.release_dates || [];
+              for (const x of list) if (x.date >= start && x.date <= end) hits.push({ date: x.date, release_id: r.id, release_name: r.name });
+              if (list.length < 10000 || list[list.length - 1].date > end) break;
+            }
+          }
+          const lower = (x) => String(x.release_name).toLowerCase();
+          hits.sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : lower(x) < lower(y) ? -1 : lower(x) > lower(y) ? 1 : 0));
+        }
+      }
+      if (!hits) {
+        const rows = []; let complete = false;
+        for (let page = 0; page < CAL_MAX_PAGES; page++) {
+          const j = await fredGet('releases/dates', { realtime_start: start, realtime_end: '9999-12-31', include_release_dates_with_no_data: 'true', order_by: 'release_date', sort_order: 'asc', limit: 1000, offset: page * 1000 });
+          const list = j.release_dates || [];
+          rows.push(...list);
+          if (list.length < 1000 || (list.length && list[list.length - 1].date > end)) { complete = true; break; }
+        }
+        if (!complete) cut = { read: rows.length, last: rows[rows.length - 1].date };
+        hits = rows.filter((x) => x.date >= start && x.date <= end && nameHit(x.release_name));
+      }
+      const out = { period: `${start}~${end}`, count: hits.length };
+      if (cut) out.truncated = true;
+      out.note = '날짜는 미국 기준. 발표 시각·예상치는 FRED에 없음' + (cut ? `. 일정이 많아 앞에서 ${cut.read}건(${cut.last}까지)만 읽었고 그 뒤 ~${end}는 빠져 있습니다(${cut.last} 당일도 일부만 있을 수 있음). start를 ${cut.last}로 옮겨 이어서 조회하거나 name_contains로 좁히세요` : '');
+      out.rows = hits.map((x) => ({ date: x.date, release_id: x.release_id, release: x.release_name }));
+      return out;
     },
   },
   {
     name: 'fred_get',
-    description: 'FRED v1 API 아무 경로나 조회(허용 목록 31개, 조회 전용): ' + Object.entries(ENDPOINTS).map(([k, v]) => `${k}(${v})`).join(', ') + '. params에 공식 문서의 인자를 그대로 넣음 (api_key·file_type은 자동).',
+    description: 'FRED v1 API 아무 경로나 조회(허용 목록 31개, 조회 전용): ' + Object.entries(ENDPOINTS).map(([k, v]) => `${k}(${v})`).join(', ') + '. params에 공식 문서의 인자를 그대로 넣음 (api_key·file_type은 자동). 출력이 6만 자를 넘으면 가장 큰 목록을 앞에서부터 남기고 truncated·note(목록이 맨 위에 있으면 shown도)로 알림.',
+    trim: { hint: (o, top) => (top && typeof o.offset === 'number' ? `params의 limit을 줄이거나 offset으로 나눠 조회하세요(이어서 보려면 offset=${o.offset + top.shown})` : 'params로 범위를 좁히세요(release/tables는 element_id를 하위 항목으로 지정)') },
     inputSchema: { type: 'object', properties: {
       endpoint: { type: 'string', enum: Object.keys(ENDPOINTS) },
-      params: { type: 'object', description: '예: {"category_id":32991} 또는 {"release_id":10,"element_id":34483}' },
+      params: { type: 'object', description: '예: {"category_id":32991} 또는 {"release_id":10,"element_id":34483}. 목록 경로는 limit·offset으로 나눠 조회' },
     }, required: ['endpoint'] },
     run: async (a) => {
       const p = {};
@@ -377,9 +483,7 @@ async function handle(msg) {
       const tool = TOOLS.find((t) => t.name === params.name);
       if (!tool) return send({ jsonrpc: '2.0', id, error: { code: -32602, message: '알 수 없는 도구: ' + params.name } });
       try {
-        const out = await tool.run(params.arguments || {});
-        let text = JSON.stringify(out, null, 1);
-        if (text.length > MAX_OUTPUT_CHARS) text = text.slice(0, MAX_OUTPUT_CHARS) + `\n…(잘림: 전체 ${text.length}자. 기간이나 시리즈 수를 줄이세요)`;
+        const text = fitOutput(await tool.run(params.arguments || {}), tool);
         return send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } });
       } catch (e) {
         return send({ jsonrpc: '2.0', id, result: { isError: true, content: [{ type: 'text', text: mask(e.message || String(e)) }] } });
@@ -409,7 +513,7 @@ if (process.env.FRED_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { TOOLS, ENDPOINTS, BUNDLES, BUNDLE_SERIES, UNITS, FREQS, toMillions, num, mask,
+module.exports = { TOOLS, ENDPOINTS, BUNDLES, BUNDLE_SERIES, UNITS, FREQS, toMillions, num, mask, fitOutput, MAX_OUTPUT_CHARS,
   _setKey: (k) => { cachedKey = k; },
   _setHost: (h) => { if (process.env.FRED_MCP_NO_STDIO === '1') testHost = h; },
   _setGap: (ms) => { if (process.env.FRED_MCP_NO_STDIO === '1') minGap = ms; } };

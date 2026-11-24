@@ -35,11 +35,28 @@ const srv = http.createServer((req, res) => {
     else if (id === 'RRPONTSYD') obs = [['2026-10-27', '120'], ['2026-11-03', '100'], ['2026-11-05', '95']];
     else if (id === 'CPIAUCSL' && u.searchParams.get('units') === 'pc1') obs = [['2026-08-01', '3.35'], ['2026-09-01', '3.72'], ['2026-10-01', '.']];
     else if (id === 'CPIAUCSL') obs = [['2026-10-01', '337.476']];
+    else if (id === 'BIG') obs = Array.from({ length: 20000 }, (_, i) => [new Date(Date.UTC(1962, 0, 2) + i * 86400000).toISOString().slice(0, 10), (4 + (i % 100) / 100).toFixed(2)]);
     else obs = [['2026-10-27', '4.40'], ['2026-11-03', '4.45'], ['2026-11-05', '.'], ['2026-11-06', '4.46']];
     if (u.searchParams.get('sort_order') === 'desc') obs = [...obs].reverse();
     return send(200, { count: obs.length, observations: obs.map(([date, value]) => ({ date, value })) });
   }
   if (ep === 'series/release') return send(200, { releases: [{ id: 18, name: 'H.15 Selected Interest Rates', link: 'http://x' }] });
+  if (ep === 'releases' && u.searchParams.get('limit') === '1000') return send(200, { releases: [
+    { id: 10, name: 'Consumer Price Index' }, { id: 50, name: 'Employment Situation' }, { id: 99, name: 'Other' },
+    ...Array.from({ length: 20 }, (_, i) => ({ id: 200 + i, name: 'Regional Survey ' + i }))] });
+  if (ep === 'release/dates' && u.searchParams.get('release_id') === '10') return send(200, { release_dates: [{ release_id: 10, date: '2026-10-13' }, { release_id: 10, date: '2026-11-12' }, { release_id: 10, date: '2026-12-10' }] });
+  if (ep === 'release/dates' && u.searchParams.get('release_id') === '50') return send(200, { release_dates: ['01-09', '02-06', '03-06', '04-03', '05-08', '06-05', '07-02', '08-07', '09-04', '10-02', '11-06', '11-20'].map((d) => ({ release_id: 50, date: '2026-' + d })) });
+  if (ep === 'releases/dates' && u.searchParams.get('realtime_start') === '2020-01-01') { // 쪽마다 1,000건이 꽉 차고 end에 닿지 못하는 경우
+    const off = Number(u.searchParams.get('offset'));
+    return send(200, { release_dates: Array.from({ length: 1000 }, (_, i) => ({ release_id: 200, release_name: 'Regional Survey 0', date: `2020-0${1 + off / 1000}-${String(1 + (i % 28)).padStart(2, '0')}` })).sort((x, y) => (x.date < y.date ? -1 : 1)) });
+  }
+  if (ep === 'series/search' && u.searchParams.get('search_text') === 'big') return send(200, { count: 5000, seriess: Array.from({ length: 1000 }, (_, i) => ({ id: 'S' + i, title: 'Long title of a series number ' + i + ' '.padEnd(60, 'x'), frequency_short: 'D', units_short: '%', seasonal_adjustment_short: 'NSA', observation_start: '1981-04-13', observation_end: '2026-10-30', last_updated: '2026-11-06 16:05:00-06', popularity: 1000 - i })) });
+  if (ep === 'series/updates') return send(200, { count: 124674, offset: 2000, limit: 1000, seriess: Array.from({ length: 1000 }, (_, i) => ({ id: 'U' + i, title: 'Updated series ' + i, notes: 'n'.repeat(120) })) });
+  if (ep === 'release/tables') { // 배열이 아니라 객체 안에 항목이 겹겹이 든 응답
+    const el = (id, depth) => ({ element_id: id, release_id: 10, series_id: 'X' + id, type: 'series', name: 'Element ' + id, level: String(depth), children: depth < 4 ? Array.from({ length: 12 }, (_, i) => el(id * 20 + i, depth + 1)) : [] });
+    return send(200, { name: 'Monthly', element_id: 34483, release_id: '10', elements: { 34484: el(1, 1) } });
+  }
+  if (ep === 'sources') return send(200, { blob: 'x'.repeat(70000) });
   if (ep === 'release/dates') return send(200, { release_dates: [{ release_id: 18, date: '2099-01-02' }, { release_id: 18, date: '2026-01-02' }, { release_id: 18, date: '2099-01-01' }] });
   if (ep === 'releases/dates') return send(200, { release_dates: [
     { release_id: 10, release_name: 'Consumer Price Index', date: '2026-11-12' },
@@ -96,10 +113,34 @@ const srv = http.createServer((req, res) => {
   assert.strictEqual(nl.net_liquidity_bil, 5748.1);
 
   // 7) 발표 일정·시리즈 정보(미래 발표일만, 오름차순)
+  //    이름을 주면 릴리스를 먼저 찾아 릴리스별 발표일로 조회(전체 일정을 훑지 않음)
+  let n0 = seen.length;
   const cal = await tool('fred_release_calendar').run({ start: '2026-11-10', end: '2026-11-25', name_contains: ['consumer price', 'employment'] });
-  assert.deepStrictEqual(cal.rows.map((x) => x.release), ['Consumer Price Index', 'Employment Situation']);
+  assert.deepStrictEqual(cal.rows, [{ date: '2026-11-12', release_id: 10, release: 'Consumer Price Index' }, { date: '2026-11-20', release_id: 50, release: 'Employment Situation' }]);
+  assert.deepStrictEqual(Object.keys(cal), ['period', 'count', 'note', 'rows']);
+  assert.deepStrictEqual(seen.slice(n0).map((u) => u.pathname.replace('/fred/', '')), ['releases', 'release/dates', 'release/dates']);
+  const rdd = seen[seen.length - 1];
+  assert.strictEqual(rdd.searchParams.get('include_release_dates_with_no_data'), 'true'); assert.strictEqual(rdd.searchParams.get('realtime_start'), '2026-11-10');
+  //    긴 과거 기간도 빠짐없이 (2026년 1~11월 고용보고서 12건, 11-06 포함)
+  const calPast = await tool('fred_release_calendar').run({ start: '2026-01-01', end: '2026-11-24', name_contains: ['Employment Situation'] });
+  assert.strictEqual(calPast.count, 12); assert.ok(calPast.rows.some((x) => x.date === '2026-11-06')); assert.strictEqual(calPast.truncated, undefined);
+  //    이름이 없으면 전체 일정(releases/dates)
+  n0 = seen.length;
+  const calAll = await tool('fred_release_calendar').run({ start: '2026-11-10', end: '2026-11-25' });
+  assert.deepStrictEqual(calAll.rows.map((x) => x.release), ['Consumer Price Index', 'Employment Situation', 'Other']);
+  assert.strictEqual(calAll.truncated, undefined);
   const rd = seen.filter((u) => u.pathname === '/fred/releases/dates').pop();
   assert.strictEqual(rd.searchParams.get('include_release_dates_with_no_data'), 'true');
+  //    쪽 한도(5쪽)에 걸려 end까지 못 읽으면 truncated와 읽은 마지막 날짜를 알림
+  n0 = seen.length;
+  const calCut = await tool('fred_release_calendar').run({ start: '2020-01-01', end: '2020-12-31' });
+  assert.strictEqual(seen.length - n0, 5);
+  assert.strictEqual(calCut.truncated, true); assert.ok(calCut.note.includes('5000건(2020-05-28까지)'), calCut.note);
+  //    맞는 릴리스가 상한(15개)을 넘으면 전체 훑기로 돌아가고 같은 표시가 붙음
+  n0 = seen.length;
+  const calMany = await tool('fred_release_calendar').run({ start: '2020-01-01', end: '2020-12-31', name_contains: ['regional survey'] });
+  assert.deepStrictEqual([...new Set(seen.slice(n0).map((u) => u.pathname.replace('/fred/', '')))], ['releases', 'releases/dates']);
+  assert.strictEqual(calMany.truncated, true); assert.strictEqual(calMany.count, 5000);
   const info = await tool('fred_series_info').run({ series_id: 'DGS2' });
   assert.deepStrictEqual(info.upcoming_release_dates, ['2099-01-01', '2099-01-02']);
 
@@ -115,6 +156,42 @@ const srv = http.createServer((req, res) => {
   // 9) 일반 경로: 인자 전달, file_type·api_key 덮어쓰기 금지
   const g = await tool('fred_get').run({ endpoint: 'category/children', params: { category_id: 32991, file_type: 'xml', api_key: 'evil' } });
   assert.strictEqual(g.params.category_id, '32991'); assert.strictEqual(g.params.file_type, 'json'); assert.strictEqual(g.params.api_key, KEY);
+
+  // 9-1) 출력 한도 6만 자: 글자가 아니라 행 수를 줄여 유효한 JSON 유지
+  const callText = async (name, args) => S.fitOutput(await tool(name).run(args), tool(name));
+  const parsed = (text) => { assert.ok(text.length <= S.MAX_OUTPUT_CHARS, '길이 ' + text.length); return JSON.parse(text); };
+  //    한도 이하는 한 글자도 달라지지 않음
+  for (const [name, args] of [['fred_observations', { series_ids: ['DGS2'], start: '2026-10-01' }], ['fred_search', { text: 'x' }], ['fred_release_calendar', { start: '2026-11-10', end: '2026-11-25' }], ['fred_get', { endpoint: 'category', params: { category_id: 1 } }], ['fred_bundle', { bundle: 'liquidity' }]]) {
+    const raw = await tool(name).run(args);
+    assert.strictEqual(S.fitOutput(raw, tool(name)), JSON.stringify(raw, null, 1), name);
+    assert.strictEqual(raw.truncated, undefined, name);
+  }
+  //    관측값: 최근 쪽을 남김, count는 전체, shown은 실제 행 수
+  const bigObs = parsed(await callText('fred_observations', { series_ids: ['BIG'], start: '1962-01-01', limit: 100000 }));
+  assert.strictEqual(bigObs.truncated, true); assert.strictEqual(bigObs.count, 20000);
+  assert.strictEqual(bigObs.shown, bigObs.rows.length); assert.ok(bigObs.shown > 500 && bigObs.shown < 20000);
+  assert.strictEqual(bigObs.rows[bigObs.rows.length - 1].date, '2016-10-04', '가장 최근 관측이 남음');
+  assert.ok(/20000건 중 최근 \d+건만 표시/.test(bigObs.note) && bigObs.note.includes('limit'), bigObs.note);
+  //    검색: 앞(순위 높은 쪽)을 남김, shown 맞춤, 전체 건수 count 유지
+  const bigSearch = parsed(await callText('fred_search', { text: 'big', limit: 1000 }));
+  assert.strictEqual(bigSearch.truncated, true); assert.strictEqual(bigSearch.count, 5000);
+  assert.strictEqual(bigSearch.shown, bigSearch.results.length); assert.ok(bigSearch.shown < 1000); assert.strictEqual(bigSearch.results[0].id, 'S0');
+  //    발표 일정: 쪽 한도 알림과 출력 한도 알림이 함께 note에 남음
+  const bigCal = parsed(await callText('fred_release_calendar', { start: '2020-01-01', end: '2020-12-31' }));
+  assert.strictEqual(bigCal.truncated, true); assert.strictEqual(bigCal.count, 5000); assert.strictEqual(bigCal.shown, bigCal.rows.length);
+  assert.ok(bigCal.note.includes('2020-05-28까지') && bigCal.note.includes('출력 한도 6만 자'), bigCal.note);
+  //    일반 경로: 가장 큰 배열을 줄이고 다음 offset을 알림
+  const bigGet = parsed(await callText('fred_get', { endpoint: 'series/updates' }));
+  assert.strictEqual(bigGet.truncated, true); assert.strictEqual(bigGet.count, 124674); assert.strictEqual(bigGet.shown, bigGet.seriess.length);
+  assert.ok(bigGet.note.includes('offset=' + (2000 + bigGet.shown)), bigGet.note);
+  //    일반 경로: 객체 안에 항목이 겹겹이 든 응답(release/tables)도 유효한 JSON
+  const bigTab = parsed(await callText('fred_get', { endpoint: 'release/tables', params: { release_id: 10, element_id: 34483 } }));
+  assert.strictEqual(bigTab.truncated, true); assert.strictEqual(bigTab.name, 'Monthly');
+  assert.ok(/elements\.34484\.children 12건 중 \d+건만 표시/.test(bigTab.note), bigTab.note);
+  assert.ok(bigTab.elements['34484'].children.length >= 1 && bigTab.elements['34484'].children.length < 12);
+  //    줄일 묶음이 없으면 preview 형태
+  const bigBlob = parsed(await callText('fred_get', { endpoint: 'sources' }));
+  assert.deepStrictEqual(Object.keys(bigBlob), ['truncated', 'total_chars', 'note', 'preview']); assert.ok(bigBlob.total_chars > 70000);
 
   // 10) 요청 간격: 동시 요청도 줄 세움
   S._setGap(80);
@@ -146,5 +223,5 @@ const srv = http.createServer((req, res) => {
   assert.ok(resp[2].result.isError && /키가 없습니다/.test(resp[2].result.content[0].text));
 
   srv.close();
-  console.log('통과: 공식 v1 경로 31개 대조·차단, 묶음 시리즈 35개 존재 목록 대조, 결측·단위, 여러 시리즈 표, 묶음 최신·직전·1주 변화, 전년비 변환·최신 결측 알림, 순유동성 단위 맞춤, 발표 일정·다음 발표일, 오류·키 가림·429 재시도, 인자 덮어쓰기 금지, 동시 요청 간격, 래퍼 실행 MCP 통신(6개 도구)');
+  console.log('통과: 공식 v1 경로 31개 대조·차단, 묶음 시리즈 35개 존재 목록 대조, 결측·단위, 여러 시리즈 표, 묶음 최신·직전·1주 변화, 전년비 변환·최신 결측 알림, 순유동성 단위 맞춤, 발표 일정·다음 발표일, 오류·키 가림·429 재시도, 인자 덮어쓰기 금지, 발표 일정 릴리스별 조회·쪽 한도 알림, 출력 한도 6만 자(유효한 JSON·행 수 줄임·shown), 동시 요청 간격, 래퍼 실행 MCP 통신(6개 도구)');
 })().catch((e) => { console.error('실패:', e); srv.close(); process.exit(1); });
