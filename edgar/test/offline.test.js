@@ -288,6 +288,28 @@ S._setFetcher(async (url) => {
   const jD = JSON.parse(tD);
   assert.ok(tD.length <= LIM && jD.truncated === true && jD.total_chars > LIM && typeof jD.preview === 'string' && /max_chars/.test(jD.note));
 
+  // 19) 계산된 분기 값의 부동소수 오차 정리: 피연산자의 소수 자릿수에 맞춤, 정수와 직접 공시된 값은 그대로
+  assert.notStrictEqual(8.98 - 6.88, 2.1, '이 시험이 뜻이 있으려면 그냥 빼면 오차가 나야 함');
+  assert.strictEqual(S.subtractExact(6.08, 3.98), 2.1);
+  assert.strictEqual(S.subtractExact(8.98, 6.88), 2.1);
+  assert.strictEqual(S.subtractExact(7.46, 5.62), 1.84);
+  assert.strictEqual(S.subtractExact(0.3, 0.1), 0.2);
+  assert.strictEqual(S.subtractExact(1.5, 2.75), -1.25);
+  assert.strictEqual(S.subtractExact(3, 0.1), 2.9);
+  assert.strictEqual(S.subtractExact(1e-7, 3e-8), 7e-8);
+  assert.strictEqual(S.subtractExact(132175000000, 101464000000), 30711000000);
+  assert.strictEqual(S.subtractExact(9007199254740000, 123456789), 9007199254740000 - 123456789, '정수는 그냥 뺀 값과 같음');
+  const EPS = [
+    f('2025-09-28', '2025-12-27', 2.84, 'Q1', '10-Q', '2026-01-30', 'e1'),
+    f('2025-12-28', '2026-03-28', 2.01, 'Q2', '10-Q', '2026-05-01', 'e2'),
+    f('2026-03-29', '2026-06-27', 2.0199999999999996, 'Q3', '10-Q', '2026-07-31', 'e3'), // 직접 공시된 값은 손대지 않음
+    f('2025-09-28', '2026-06-27', 6.88, 'Q3', '10-Q', '2026-07-31', 'e3'),
+    f('2025-09-28', '2026-09-26', 8.98, 'FY', '10-K', '2026-11-03', 'e4'),
+  ];
+  const eq = S.buildSeries(EPS, 'duration', 'quarterly', 10);
+  assert.deepStrictEqual(eq.map((r) => [r.period_end, r.value, !!r.derived]),
+    [['2026-09-26', 2.1, true], ['2026-06-27', 2.0199999999999996, false], ['2026-03-28', 2.01, false], ['2025-12-27', 2.84, false]]);
+
   // 14) 접수번호·오류 가림
   assert.strictEqual(S.normAccession('000032019326000026'), '0000320193-26-000026');
   assert.strictEqual(S.mask('failed for tester@example.com here'), 'failed for ***@*** here');
@@ -314,6 +336,6 @@ S._setFetcher(async (url) => {
   assert.ok(byId(3).result.isError && /User-Agent/.test(byId(3).result.content[0].text), JSON.stringify(byId(3)));
   assert.strictEqual(byId(4).error.code, -32602);
 
-  console.log('통과: 정정값 우선, 연간/분기/4분기 계산, 시점값, 회사 지정, 항목 이어 붙이기, 공시 목록(옛 공시·xsl), frames 정렬, 전문검색 주소, 원문 변환·찾기·주소 제한, 허용 호스트·GET 고정, MCP 프로토콜(7개 도구), User-Agent 없음 안내, 양식 필터 순서, 누적값 분기 계산·빠진 분기 알림, 출력 한도(유효한 JSON)');
+  console.log('통과: 정정값 우선, 연간/분기/4분기 계산, 시점값, 회사 지정, 항목 이어 붙이기, 공시 목록(옛 공시·xsl), frames 정렬, 전문검색 주소, 원문 변환·찾기·주소 제한, 허용 호스트·GET 고정, MCP 프로토콜(7개 도구), User-Agent 없음 안내, 양식 필터 순서, 누적값 분기 계산·빠진 분기 알림, 출력 한도(유효한 JSON), 계산값 소수 자릿수 정리');
   process.exit(0);
 })().catch((e) => { console.error(e); process.exit(1); });
