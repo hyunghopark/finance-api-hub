@@ -144,6 +144,11 @@ assert.ok(S.decodeText(euc).endsWith('배당'), 'EUC-KR 디코딩');
   assert.strictEqual(last.next_offset, undefined);
   assert.strictEqual(checkFit(last, tool('dart_report'), 'rows').next_offset, JSON.parse(S.fitOutput(last, tool('dart_report'))).shown, '잘리면 next_offset이 생김');
 
+  // 10) 기업 개황: 없는 고유번호(013)는 오류, 있는 회사는 status·message만 뺀 그대로
+  assert.throws(() => S.companyResult({ status: '013', message: '조회된 데이터 없음', list: [] }, '99999999'), /고유번호 99999999를 DART에서 찾지 못함 \(dart_find_corp로 확인\)/);
+  assert.deepStrictEqual(S.companyResult({ status: '000', message: '정상', corp_code: '00126380', corp_name: '삼성전자(주)', acc_mt: '12' }, '00126380'),
+    { corp_code: '00126380', corp_name: '삼성전자(주)', acc_mt: '12' });
+
   // 5) MCP 프로토콜 (키 없는 상태에서 도구 호출 시 isError로 안내)
   const p = spawn(process.execPath, [path.join(__dirname, '../server/index.js')], { env: { ...process.env, DART_MCP_NO_STDIO: '0', DART_API_KEY: '${user_config.api_key}', HOME: '/tmp/dart-mcp-test-home' } });
   let out = '';
@@ -165,5 +170,5 @@ assert.ok(S.decodeText(euc).endsWith('배당'), 'EUC-KR 디코딩');
   assert.strictEqual(res[1].result.tools.length, 8);
   assert.ok(res[2].result.isError && /키가 없습니다/.test(res[2].result.content[0].text), JSON.stringify(res[2]));
   assert.ok(res[3].result.isError && /허용 목록/.test(res[3].result.content[0].text));
-  console.log('통과: zip, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개+재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 쪽 넘김·지분공시 최신순');
+  console.log('통과: zip, 고유번호 해석, EUC-KR, 회사 지정, 원문 변환, MCP 프로토콜(8개 도구), 키 없음 안내, 허용 목록 차단, 공식 목록 대조(허용 48개+재무 API), 여러 회사 지정, 출력 한도(행 수로 줄임), dart_report 쪽 넘김·지분공시 최신순, 기업 개황 없는 고유번호 안내');
 })().catch((e) => { console.error('실패:', e); process.exit(1); });
