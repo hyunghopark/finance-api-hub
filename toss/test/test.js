@@ -83,6 +83,52 @@ const { handle, TOOLS, READ_ENDPOINTS } = require('../server/index.js');
     ['toss_stock_candles', { symbol: '../../oauth2' }],
   ]) { const r3 = await call(name, args); assert(r3.isError, name + ' 잘못된 입력이 통과함'); }
   console.log('새 도구 6개 경로·입력 검증 통과');
+  // 5-2) 입력 검사: 제공처를 부르기 전에 거절하고(호출 수 불변), 올바른 값·생략은 그대로 나감
+  const rejected = async (name, args, want) => {
+    const n = calls.length; const r4 = await call(name, args);
+    assert(r4.isError, name + ' ' + JSON.stringify(args) + ' 가 통과함');
+    assert.strictEqual(calls.length, n, name + ' ' + JSON.stringify(args) + ' 가 제공처를 호출함');
+    assert(r4.content[0].text.includes(want), name + ' 오류 문구: ' + r4.content[0].text);
+  };
+  const passed = async (name, args, wantQ) => {
+    const n = calls.length; const r5 = await call(name, args);
+    assert(!r5.isError, name + ' ' + JSON.stringify(args) + ': ' + r5.content[0].text);
+    assert.strictEqual(calls.length, n + 1, name + ' 호출 수');
+    for (const q of [].concat(wantQ)) assert(last().query.includes(q), name + ' query ' + last().query);
+  };
+  // 지표 현재가: 모르는 심볼이 하나라도 있으면 거절, 허용 목록 안내
+  await rejected('toss_market_indicator_prices', { symbols: ['KOSPI', 'NASDAQ'] }, '허용되지 않는 심볼: NASDAQ');
+  await rejected('toss_market_indicator_prices', { symbols: ['NASDAQ'] }, 'KR_BOND_30Y 중 하나여야 합니다');
+  await rejected('toss_market_indicator_prices', { symbols: 'KOSPI' }, 'symbols 는 배열');
+  await passed('toss_market_indicator_prices', {}, 'symbols=KOSPI%2CKOSDAQ%2CKR_BOND_3Y%2CKR_BOND_10Y');
+  await passed('toss_market_indicator_prices', { symbols: [] }, 'symbols=KOSPI%2CKOSDAQ%2CKR_BOND_3Y%2CKR_BOND_10Y');
+  await passed('toss_market_indicator_prices', { symbols: ['KOSDAQ', 'KR_BOND_2Y'] }, 'symbols=KOSDAQ%2CKR_BOND_2Y');
+  // count: 도구 9개의 스키마 범위·기본값과 서버 검사가 같은지
+  const base = { toss_market_investor_trading: { market: 'KOSPI' }, toss_market_indicator_candles: { symbol: 'KOSPI' }, toss_investor_trading_rankings: {},
+    toss_stock_investor_trading: { symbol: '005930' }, toss_stock_short_selling: { symbol: '005930' }, toss_stock_program_trades: { symbol: '005930' },
+    toss_stock_rankings: {}, toss_stock_candles: { symbol: '005930' } };
+  const countTools = TOOLS.filter((t) => t.inputSchema.properties.count);
+  assert.deepStrictEqual(countTools.map((t) => t.name).sort(), Object.keys(base).sort(), 'count 를 받는 도구 목록이 바뀜');
+  for (const t of countTools) {
+    const { minimum: min, maximum: max, default: dflt } = t.inputSchema.properties.count; const b = base[t.name];
+    const want = `count 는 ${min}~${max} 사이의 정수여야 합니다`;
+    for (const bad of [0, -1, max + 1, 1.5, 'abc', '', true]) await rejected(t.name, { ...b, count: bad }, want);
+    await passed(t.name, b, 'count=' + dflt);
+    await passed(t.name, { ...b, count: null }, 'count=' + dflt);
+    await passed(t.name, { ...b, count: min }, 'count=' + min);
+    await passed(t.name, { ...b, count: max }, 'count=' + max);
+    await passed(t.name, { ...b, count: '7' }, 'count=7');
+  }
+  // 환율 dateTime: 시간대가 붙은 ISO 8601 만 통과
+  for (const bad of ['yesterday', '2026-11-20', '2026-11-20T15:30:00', '2026-11-20 15:30:00+09:00', '2026-13-45T15:30:00+09:00', 20261120])
+    await rejected('toss_exchange_rate', { dateTime: bad }, 'dateTime 은 시간대가 붙은 ISO 8601');
+  await passed('toss_exchange_rate', { dateTime: '2026-11-20T15:30:00+09:00' }, 'dateTime=2026-11-20T15%3A30%3A00%2B09%3A00');
+  await passed('toss_exchange_rate', { dateTime: '2026-11-21T03:00:00Z' }, 'dateTime=2026-11-21T03%3A00%3A00Z');
+  await passed('toss_exchange_rate', { dateTime: '2026-11-20T15:30:00.000+09:00' }, 'dateTime=');
+  { const n = calls.length; const r6 = await call('toss_exchange_rate', {}); assert(!r6.isError); assert.strictEqual(calls.length, n + 1); assert(!last().query.includes('dateTime'), last().query); }
+  // 이번에 바꾸지 않은 날짜 인자(until, before)는 그대로 전달
+  await passed('toss_market_investor_trading', { market: 'KOSPI', until: '2026-11-20' }, ['until=2026-11-20', 'count=5']);
+  console.log('입력 검사(지표 심볼·count·dateTime) 통과');
   // 6) 실제로 나간 호출 목록
   const nonGet = calls.filter((c) => c.method !== 'GET' && c.path !== '/oauth2/token');
   assert.strictEqual(nonGet.length, 0);

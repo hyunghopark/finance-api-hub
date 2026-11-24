@@ -11,7 +11,7 @@ const crypto = require('crypto');
 const readline = require('readline');
 
 const BASE_URL = 'https://openapi.tossinvest.com'; // 고정. 다른 주소로 키가 나가지 않게 바꾸지 않습니다.
-const SERVER_INFO = { name: 'toss-readonly', version: '0.2.1' };
+const SERVER_INFO = { name: 'toss-readonly', version: '0.2.2' };
 const TOKEN_DIR = path.join(os.homedir(), '.toss-mcp');
 
 // ---------- 허용된 조회 주소 (GET 전용) ----------
@@ -35,6 +35,20 @@ const KR_CODE = /^[A-Za-z0-9]{6}$/;           // KRX 6자리 (예: 005930, 0101N
 const ANY_SYMBOL = /^[A-Za-z0-9.\-]{1,20}$/; // KRX 코드 또는 미국 티커 (예: AAPL, BRK.B)
 function krCode(sym) { if (!KR_CODE.test(String(sym || ''))) throw new UserError('symbol 은 6자리 종목코드여야 합니다 (예: 005930)'); return sym; }
 function oneOf(v, list, name, dflt) { const x = v === undefined || v === null || v === '' ? dflt : v; if (!list.includes(x)) throw new UserError(`${name} 은 ${list.join(', ')} 중 하나여야 합니다`); return x; }
+// count: 생략(undefined·null)하면 기본값, 준 값은 스키마와 같은 범위의 정수여야 함 (0·음수·소수·범위 밖은 제공처를 부르기 전에 거절)
+function countArg(v, min, max, dflt) {
+  if (v === undefined || v === null) return dflt;
+  const n = typeof v === 'string' && /^\d+$/.test(v.trim()) ? Number(v.trim()) : v;
+  if (typeof n !== 'number' || !Number.isInteger(n) || n < min || n > max) throw new UserError(`count 는 ${min}~${max} 사이의 정수여야 합니다 (생략하면 ${dflt})`);
+  return n;
+}
+// dateTime: 날짜·시각·시간대가 모두 있는 ISO 8601 (예: 2026-11-20T15:30:00+09:00). 생략(undefined·null·빈 문자열)하면 현재
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,9})?)?(Z|[+-]\d{2}:\d{2})$/;
+function isoDateTime(v, name) {
+  if (v === undefined || v === null || v === '') return undefined;
+  if (typeof v !== 'string' || !ISO_DATETIME.test(v) || Number.isNaN(Date.parse(v))) throw new UserError(`${name} 은 시간대가 붙은 ISO 8601 시각이어야 합니다 (예: 2026-11-20T15:30:00+09:00)`);
+  return v;
+}
 
 const INDICATOR_SYMBOLS = ['KOSPI', 'KOSDAQ', 'KR_BOND_2Y', 'KR_BOND_3Y', 'KR_BOND_5Y', 'KR_BOND_10Y', 'KR_BOND_20Y', 'KR_BOND_30Y'];
 
@@ -177,7 +191,8 @@ const TOOLS = [
     }, required: ['market'] },
     async run(a) {
       if (!['KOSPI', 'KOSDAQ'].includes(a.market)) throw new UserError('market 은 KOSPI 또는 KOSDAQ 이어야 합니다');
-      const r = await apiGet(READ_ENDPOINTS.marketInvestorTrading(a.market), { interval: a.interval || '1d', count: a.count || 5, until: a.until });
+      const count = countArg(a.count, 1, 100, 5);
+      const r = await apiGet(READ_ENDPOINTS.marketInvestorTrading(a.market), { interval: a.interval || '1d', count, until: a.until });
       const records = (r && r.records) || [];
       const res = { market: a.market, interval: a.interval || '1d', nextUntil: r && r.nextUntil, 요약: records.map(summarizeMarketRecord) };
       if (a.include_raw) res.원본 = records;
@@ -186,12 +201,15 @@ const TOOLS = [
   },
   {
     name: 'toss_market_indicator_prices',
-    description: '국내 지수(KOSPI, KOSDAQ)와 국고채 금리(KR_BOND_2Y·3Y·5Y·10Y·20Y·30Y) 현재가.',
+    description: '국내 지수(KOSPI, KOSDAQ)와 국고채 금리(KR_BOND_2Y·3Y·5Y·10Y·20Y·30Y) 현재가. 목록에 없는 심볼이 하나라도 있으면 조회하지 않고 오류.',
     inputSchema: { type: 'object', properties: {
       symbols: { type: 'array', items: { type: 'string', enum: INDICATOR_SYMBOLS }, default: ['KOSPI', 'KOSDAQ', 'KR_BOND_3Y', 'KR_BOND_10Y'] },
     } },
     async run(a) {
-      const syms = (a.symbols && a.symbols.length ? a.symbols : ['KOSPI', 'KOSDAQ', 'KR_BOND_3Y', 'KR_BOND_10Y']).filter((s) => INDICATOR_SYMBOLS.includes(s));
+      if (a.symbols !== undefined && a.symbols !== null && !Array.isArray(a.symbols)) throw new UserError('symbols 는 배열이어야 합니다 (예: ["KOSPI","KR_BOND_3Y"])');
+      const syms = a.symbols && a.symbols.length ? a.symbols : ['KOSPI', 'KOSDAQ', 'KR_BOND_3Y', 'KR_BOND_10Y'];
+      const bad = syms.filter((s) => !INDICATOR_SYMBOLS.includes(s));
+      if (bad.length) throw new UserError('허용되지 않는 심볼: ' + bad.join(', ') + '. symbols 는 ' + INDICATOR_SYMBOLS.join(', ') + ' 중 하나여야 합니다');
       return apiGet(READ_ENDPOINTS.marketIndicatorPrices(), { symbols: syms.join(',') });
     },
   },
@@ -206,14 +224,14 @@ const TOOLS = [
     }, required: ['symbol'] },
     async run(a) {
       if (!INDICATOR_SYMBOLS.includes(a.symbol)) throw new UserError('symbol 은 ' + INDICATOR_SYMBOLS.join(', ') + ' 중 하나여야 합니다');
-      return apiGet(READ_ENDPOINTS.marketIndicatorCandles(a.symbol), { interval: a.interval || '1d', count: a.count || 20, before: a.before });
+      return apiGet(READ_ENDPOINTS.marketIndicatorCandles(a.symbol), { interval: a.interval || '1d', count: countArg(a.count, 1, 200, 20), before: a.before });
     },
   },
   {
     name: 'toss_investor_trading_rankings',
     description: '외국인·기관·개인 순매수/순매도 상위 국내 종목(KRX·NXT 통합, 최근 영업일). 개인은 정규장 종료 후 제공, 저녁 20시경까지 바뀔 수 있음. rankedAt 확인.',
     inputSchema: { type: 'object', properties: { count: { type: 'integer', minimum: 1, maximum: 100, default: 10 } } },
-    async run(a) { return apiGet(READ_ENDPOINTS.investorTradingRankings(), { count: a.count || 10 }); },
+    async run(a) { return apiGet(READ_ENDPOINTS.investorTradingRankings(), { count: countArg(a.count, 1, 100, 10) }); },
   },
   {
     name: 'toss_stock_investor_trading',
@@ -225,14 +243,14 @@ const TOOLS = [
     }, required: ['symbol'] },
     async run(a) {
       if (!/^[A-Za-z0-9]{6}$/.test(String(a.symbol || ''))) throw new UserError('symbol 은 6자리 종목코드여야 합니다 (예: 005930)');
-      return apiGet(READ_ENDPOINTS.stockInvestorTrading(a.symbol), { count: a.count || 5, until: a.until });
+      return apiGet(READ_ENDPOINTS.stockInvestorTrading(a.symbol), { count: countArg(a.count, 1, 100, 5), until: a.until });
     },
   },
   {
     name: 'toss_exchange_rate',
     description: '토스증권 표시 원/달러 환율(1분 갱신 참고용, 매매기준율 midRate 포함). 서울 외환시장 공식 종가가 아님.',
-    inputSchema: { type: 'object', properties: { dateTime: { type: 'string', description: 'ISO 8601 시각. 생략하면 현재' } } },
-    async run(a) { return apiGet(READ_ENDPOINTS.exchangeRate(), { baseCurrency: 'USD', quoteCurrency: 'KRW', dateTime: a.dateTime }); },
+    inputSchema: { type: 'object', properties: { dateTime: { type: 'string', description: '시간대가 붙은 ISO 8601 시각 (예: 2026-11-20T15:30:00+09:00). 날짜만 주거나 시간대가 없으면 오류. 생략하면 현재' } } },
+    async run(a) { return apiGet(READ_ENDPOINTS.exchangeRate(), { baseCurrency: 'USD', quoteCurrency: 'KRW', dateTime: isoDateTime(a.dateTime, 'dateTime') }); },
   },
   {
     name: 'toss_kr_market_calendar',
@@ -248,7 +266,7 @@ const TOOLS = [
       count: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
       until: { type: 'string', description: 'YYYY-MM-DD (포함)' },
     }, required: ['symbol'] },
-    async run(a) { return apiGet(READ_ENDPOINTS.stockShortSelling(krCode(a.symbol)), { count: a.count || 10, until: a.until }); },
+    async run(a) { return apiGet(READ_ENDPOINTS.stockShortSelling(krCode(a.symbol)), { count: countArg(a.count, 1, 100, 10), until: a.until }); },
   },
   {
     name: 'toss_stock_program_trades',
@@ -258,7 +276,7 @@ const TOOLS = [
       count: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
       until: { type: 'string', description: 'YYYY-MM-DD (포함)' },
     }, required: ['symbol'] },
-    async run(a) { return apiGet(READ_ENDPOINTS.stockProgramTrades(krCode(a.symbol)), { count: a.count || 10, until: a.until }); },
+    async run(a) { return apiGet(READ_ENDPOINTS.stockProgramTrades(krCode(a.symbol)), { count: countArg(a.count, 1, 100, 10), until: a.until }); },
   },
   {
     name: 'toss_sector_rankings',
@@ -290,8 +308,9 @@ const TOOLS = [
       const type = oneOf(a.type, ['MARKET_TRADING_AMOUNT', 'MARKET_TRADING_VOLUME', 'TOP_GAINERS', 'TOP_LOSERS', 'TOSS_SECURITIES_TRADING_AMOUNT', 'TOSS_SECURITIES_TRADING_VOLUME'], 'type', 'MARKET_TRADING_AMOUNT');
       const duration = oneOf(a.duration, ['realtime', '1d', '1w', '1mo', '3mo', '6mo', '1y'], 'duration', '1d');
       if ((type === 'TOP_GAINERS' || type === 'TOP_LOSERS') && duration === 'realtime') throw new UserError('TOP_GAINERS·TOP_LOSERS 는 realtime 을 지원하지 않습니다. 1d 등을 쓰세요');
+      const count = countArg(a.count, 1, 100, 20);
       return apiGet(READ_ENDPOINTS.stockRankings(), { type, duration, marketCountry: oneOf(a.marketCountry, ['KR', 'US'], 'marketCountry', 'KR'),
-        excludeInvestmentCaution: a.excludeInvestmentCaution === true ? 'true' : undefined, count: a.count || 20 });
+        excludeInvestmentCaution: a.excludeInvestmentCaution === true ? 'true' : undefined, count });
     },
   },
   {
@@ -319,7 +338,8 @@ const TOOLS = [
     }, required: ['symbol'] },
     async run(a) {
       if (!ANY_SYMBOL.test(String(a.symbol || ''))) throw new UserError('허용되지 않는 심볼: ' + a.symbol);
-      return apiGet(READ_ENDPOINTS.stockCandles(), { symbol: a.symbol, interval: oneOf(a.interval, ['1m', '1d'], 'interval', '1d'), count: a.count || 20,
+      const count = countArg(a.count, 1, 200, 20);
+      return apiGet(READ_ENDPOINTS.stockCandles(), { symbol: a.symbol, interval: oneOf(a.interval, ['1m', '1d'], 'interval', '1d'), count,
         before: a.before, adjusted: a.adjusted === false ? 'false' : undefined });
     },
   },

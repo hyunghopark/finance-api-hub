@@ -1,6 +1,6 @@
 # 토스증권 Open API 체크리스트 (명세 v1.2.28)
 
-- 기준: `openapi.json` (info.version = 1.2.28), 도구: toss-readonly v0.2.0
+- 기준: `openapi.json` (info.version = 1.2.28), 도구: toss-readonly v0.2.2
 - 전체 42개: ✅ 설치 13 · ⚙️ 내부 사용 1 · ⬜ 미설치 13 · ⛔ 제외 (주문) 6 · ⛔ 제외 (계좌) 9
 - 계좌 헤더 = `X-Tossinvest-Account` 필요 여부 (필요하면 계좌 API)
 
