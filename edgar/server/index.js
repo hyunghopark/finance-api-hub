@@ -13,7 +13,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.1';
+const VERSION = '0.1.2';
 const ALLOWED_HOSTS = new Set(['data.sec.gov', 'www.sec.gov', 'efts.sec.gov']);
 const CACHE_DIR = path.join(os.homedir(), '.edgar-mcp');
 const TICKER_CACHE = path.join(CACHE_DIR, 'company_tickers.json');
@@ -225,6 +225,13 @@ const shapeFact = (f, extra) => {
 };
 const byEndDesc = (a, b) => String(b.period_end).localeCompare(String(a.period_end)) || String(b.period_start || '').localeCompare(String(a.period_start || ''));
 
+// 누적값끼리 뺄 때 생기는 부동소수 오차(8.98 − 6.88 = 2.1000000000000005)를 피연산자의 소수 자릿수에 맞춰 정리. 정수끼리는 그대로
+const decimalsOf = (x) => { const m = String(x).match(/^-?\d*(?:\.(\d+))?(?:e([+-]\d+))?$/i); return m ? Math.max(0, (m[1] || '').length - (+m[2] || 0)) : 0; };
+function subtractExact(a, b) {
+  const d = Math.min(20, Math.max(decimalsOf(a), decimalsOf(b)));
+  return d ? Number((a - b).toFixed(d)) : a - b;
+}
+
 function buildSeries(facts, kind, period, limit) {
   const items = dedupe(facts);
   let rows = [];
@@ -241,7 +248,7 @@ function buildSeries(facts, kind, period, limit) {
       rows = quarters.map((x) => shapeFact(x.f));
       const hasQuarter = (end) => quarters.some((q) => Math.abs(dayDiff(q.f.end, end)) <= 3);
       // 누적값끼리 빼서 만든 분기: 기간은 앞 누적의 다음 날부터, 공시 정보는 뒤 누적의 것
-      const derive = (cum, prev) => rows.push({ period_start: addDays(prev.f.end, 1), period_end: cum.f.end, value: cum.f.val - prev.f.val,
+      const derive = (cum, prev) => rows.push({ period_start: addDays(prev.f.end, 1), period_end: cum.f.end, value: subtractExact(cum.f.val, prev.f.val),
         filed: String(cum.f.filed) > String(prev.f.filed) ? cum.f.filed : prev.f.filed, form: cum.f.form, accession: cum.f.accn, derived: true });
       // 현금흐름표처럼 10-Q에 누적값만 실리는 항목 → 2분기 = 6개월 누적 − 1분기, 3분기 = 9개월 누적 − 6개월 누적 (같은 시작일)
       for (const h of dur.filter((x) => isHalfYearDur(x.d))) {
@@ -735,7 +742,7 @@ if (process.env.EDGAR_MCP_NO_STDIO !== '1') {
 }
 
 module.exports = {
-  TOOLS, METRICS, dedupe, buildSeries, fitOutput, MAX_OUTPUT_CHARS, rowsFromColumnar, htmlToText, normAccession, docUrl, resolveCompany, validArchiveUrl, secGet, mask,
+  TOOLS, METRICS, dedupe, buildSeries, subtractExact, fitOutput, MAX_OUTPUT_CHARS, rowsFromColumnar, htmlToText, normAccession, docUrl, resolveCompany, validArchiveUrl, secGet, mask,
   _setFetcher: (f) => { fetcher = f; respCache.clear(); textCache.clear(); },
   _setTickers: (l) => { tickerList = l; },
 };
