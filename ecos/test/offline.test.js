@@ -102,6 +102,44 @@ const srv = http.createServer((req, res) => {
   assert.strictEqual(tq.results[0].parent_code, '0000000009');
   assert.ok(fs.existsSync(path.join(process.env.ECOS_MCP_CACHE_DIR, 'tables.json')), '시험 캐시는 임시 폴더에');
 
+  // 10) 출력 한도: 넘으면 글자가 아니라 행 수를 줄여 유효한 JSON으로, 한도 이하는 그대로
+  const MAX = S.MAX_OUTPUT_CHARS;
+  assert.strictEqual(MAX, 60000);
+  const small = await tool('ecos_search').run({ stat_code: '817Y002', cycle: 'D', start: '20261101', end: '20261109' });
+  assert.strictEqual(S.fitOutput(small, tool('ecos_search').narrow), JSON.stringify(small, null, 1), '한도 이하는 한 글자도 바뀌지 않음');
+  const mkRows = (n) => Array.from({ length: n }, (_, i) => ({ time: String(20260101 + i), value: '3.' + i, item: '국고채(3년)', codes: '010200000', unit: '연%' }));
+  const bigSearch = { stat_code: '817Y002', stat_name: '시장금리(일별)', cycle: '일', total: 5906, shown: 2500, rows: mkRows(2500) };
+  assert.ok(JSON.stringify(bigSearch, null, 1).length > MAX);
+  const ft = S.fitOutput(bigSearch, tool('ecos_search').narrow);
+  assert.ok(ft.length <= MAX, '길이 한도 이하');
+  const fj = JSON.parse(ft);
+  assert.strictEqual(fj.truncated, true);
+  assert.strictEqual(fj.shown, fj.rows.length, 'shown은 실제 행 수');
+  assert.ok(fj.rows.length > 0 && fj.rows.length < 2500);
+  assert.strictEqual(fj.total, 5906, '전체 건수는 그대로');
+  assert.deepStrictEqual(fj.rows[0], bigSearch.rows[0], '앞쪽(max_rows가 남기는 쪽)을 남김');
+  assert.ok(new RegExp(`2500건 중 ${fj.rows.length}건만 표시`).test(fj.note) && /start, end/.test(fj.note), fj.note);
+  assert.strictEqual(bigSearch.shown, 2500, '원본 객체는 건드리지 않음');
+  // 한 건만 더 넣으면 한도를 넘는 지점까지 채웠는지
+  assert.ok(JSON.stringify({ ...fj, shown: fj.shown + 1, rows: bigSearch.rows.slice(0, fj.shown + 1) }, null, 1).length > MAX, '들어가는 만큼 채움');
+  // results 배열(ecos_find_table), shown이 없던 도구에는 shown을 추가
+  const bigFind = { total: 844, results: Array.from({ length: 500 }, (_, i) => ({ stat_code: 'T' + i, parent_code: '0000000001', stat_name: '통계표 이름 '.repeat(8) + i, cycle: 'M', searchable: true, org: null, cycle_name: '월' })) };
+  const gj = JSON.parse(S.fitOutput(bigFind, tool('ecos_find_table').narrow));
+  assert.ok(gj.truncated && gj.shown === gj.results.length && gj.total === 844 && /limit/.test(gj.note));
+  // 기존 note가 있으면(ecos_market_rates) 뒤에 덧붙임
+  const bigRates = { stat: '817Y002 시장금리(일별)', unit: '연%', period: 'x', count: 3000, note: '휴일은 행이 없음.', rows: mkRows(3000) };
+  const rj = JSON.parse(S.fitOutput(bigRates, tool('ecos_market_rates').narrow));
+  assert.ok(rj.note.startsWith('휴일은 행이 없음. 출력 한도') && rj.count === 3000 && rj.shown === rj.rows.length && rj.truncated === true);
+  // rows·results가 아니면 가장 큰 배열을 줄임
+  const odd = { a: [1, 2, 3], list: mkRows(2000) };
+  const oj = JSON.parse(S.fitOutput(odd));
+  assert.ok(oj.truncated && oj.a.length === 3 && oj.shown === oj.list.length && oj.list.length < 2000);
+  // 줄일 배열이 없으면 미리보기 형태의 유효한 JSON
+  const blob = S.fitOutput({ text: '가"\n'.repeat(40000) });
+  const bj = JSON.parse(blob);
+  assert.ok(blob.length <= MAX && bj.truncated === true && bj.total_chars > MAX && typeof bj.preview === 'string' && bj.preview.length > 0 && /앞부분만/.test(bj.note));
+  for (const t of S.TOOLS) assert.ok(t.narrow && /truncated/.test(t.description), t.name + ': 좁히는 방법과 설명');
+
   // 6) Desktop처럼 다른 스크립트에서 불러온 상태로 MCP 통신 (키 없음 안내 포함)
   const wrap = path.join(os.tmpdir(), 'ecos-wrap-' + process.pid + '.js');
   fs.writeFileSync(wrap, `require(${JSON.stringify(path.join(__dirname, '../server/index.js'))});`);
@@ -125,5 +163,5 @@ const srv = http.createServer((req, res) => {
   assert.ok(res[2].result.isError && /키가 없습니다/.test(res[2].result.content[0].text));
 
   srv.close();
-  console.log('통과: 날짜 형식, 시장금리 표·스프레드 계산, 빈 값 처리, 주소 형식(%3F·생략), 자료 없음, 오류·키 가림, 한글 인코딩, 래퍼 실행 MCP 통신(7개 도구), 키 없음 안내, 시장금리 27개 공식 목록 대조, 가중치·상위 코드 보존, 분류 트리 찾기');
+  console.log('통과: 날짜 형식, 시장금리 표·스프레드 계산, 빈 값 처리, 주소 형식(%3F·생략), 자료 없음, 오류·키 가림, 한글 인코딩, 래퍼 실행 MCP 통신(7개 도구), 키 없음 안내, 시장금리 27개 공식 목록 대조, 가중치·상위 코드 보존, 분류 트리 찾기, 출력 한도(행 수 줄임·유효한 JSON)');
 })().catch((e) => { console.error('실패:', e); srv.close(); process.exit(1); });
