@@ -1,0 +1,92 @@
+{
+  "manifest_version": "0.2",
+  "name": "kis-readonly",
+  "display_name": "한국투자증권 (조회 전용)",
+  "version": "0.1.0",
+  "description": "한국투자증권 Open API 조회 전용 MCP. 국내 종목 현재가·기간별 시세·분봉(KRX 단독/NXT/통합 선택), 업종지수, 시장·종목별 투자자 매매동향, 신용잔고, 해외 종목 현재가, 해외지수·환율 시세. 주문·계좌 기능 없음.",
+  "author": {
+    "name": "hyunghopark"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "KIS_APP_KEY": "${user_config.app_key}",
+        "KIS_APP_SECRET": "${user_config.app_secret}",
+        "KIS_MCP_LOG_FILE": "${HOME}/.kis-mcp/server.log"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "kis_stock_price",
+      "description": "국내 종목 현재가 (KRX·NXT·통합 선택)"
+    },
+    {
+      "name": "kis_stock_daily_chart",
+      "description": "국내 종목 일·주·월·년봉"
+    },
+    {
+      "name": "kis_stock_minute_chart",
+      "description": "국내 종목 당일 분봉"
+    },
+    {
+      "name": "kis_index_price",
+      "description": "국내 업종지수 현재값"
+    },
+    {
+      "name": "kis_index_daily_chart",
+      "description": "국내 업종지수 일·주·월·년봉"
+    },
+    {
+      "name": "kis_market_investor_daily",
+      "description": "코스피·코스닥 시장별 투자자 매매동향(일별)"
+    },
+    {
+      "name": "kis_stock_investor_daily",
+      "description": "종목별 투자자 매매동향(일별)"
+    },
+    {
+      "name": "kis_credit_balance_daily",
+      "description": "종목 신용잔고 일별 추이"
+    },
+    {
+      "name": "kis_overseas_price",
+      "description": "해외 종목 현재체결가"
+    },
+    {
+      "name": "kis_overseas_daily_chart",
+      "description": "해외지수·환율·국채·금선물 일·주·월·년봉"
+    }
+  ],
+  "user_config": {
+    "app_key": {
+      "type": "string",
+      "title": "App Key",
+      "description": "KIS Developers에서 발급받은 실전투자용 appkey",
+      "sensitive": true,
+      "required": true
+    },
+    "app_secret": {
+      "type": "string",
+      "title": "App Secret",
+      "description": "KIS Developers에서 발급받은 실전투자용 appsecret",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

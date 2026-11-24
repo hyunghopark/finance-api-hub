@@ -18,6 +18,7 @@
 | [dart](dart/) | 금융감독원 DART | 기업 개황, 공시 목록·원문, 재무제표, 재무지표, 배당, 주요사항보고서 | 8 | 0.2.1 |
 | [ecos](ecos/) | 한국은행 ECOS | 시장금리, 신용 스프레드, 기준금리·물가 등 전체 통계, 100대 지표, 통계용어사전 | 7 | 0.1.1 |
 | [toss](toss/) | 토스증권 Open API | 시장·종목별 투자자 매매동향, 공매도, 프로그램매매, 섹터·주식 랭킹, 시세, 환율 | 13 | 0.2.1 |
+| [kis](kis/) | 한국투자증권 Open API | 국내 종목 시세·분봉(KRX 단독/NXT/통합 선택), 업종지수, 시장·종목별 투자자 매매동향, 신용잔고, 해외 시세·지수·환율 | 10 | 0.1.0 |
 | [fred](fred/) | 미국 세인트루이스 연준 FRED | 금리 곡선, 신용 스프레드, 연준 유동성, 물가·고용 등 시계열, 경제지표 발표 일정 | 6 | 0.1.1 |
 | [edgar](edgar/) | 미국 SEC EDGAR | 공시 목록·원문, XBRL 재무(연간·분기), 전 종목 비교, 공시 전문 검색 | 7 | 0.1.0 |
 | [meritz](meritz/) | 메리츠증권 Trading MCP | 국내·해외 지수, 선물, 환율, 종목 일봉 | — | 증권사 공식 배포 (설치 안내만 제공) |
@@ -45,6 +46,7 @@ git clone https://github.com/hyunghopark/finance-api-hub.git
 | dart | `DART_API_KEY` | [opendart.fss.or.kr](https://opendart.fss.or.kr) | |
 | ecos | `ECOS_API_KEY` | [ecos.bok.or.kr/api](https://ecos.bok.or.kr/api) | |
 | toss | `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET` | [developers.tossinvest.com](https://developers.tossinvest.com/docs) | 등록한 허용 IP에서만 호출 가능 |
+| kis | `KIS_APP_KEY`, `KIS_APP_SECRET` | [apiportal.koreainvestment.com](https://apiportal.koreainvestment.com) | 실전투자용 키. 토큰 발급 시 알림톡 발송 |
 | fred | `FRED_API_KEY` | [fredaccount.stlouisfed.org/apikeys](https://fredaccount.stlouisfed.org/apikeys) | |
 | edgar | `SEC_USER_AGENT` | 발급 없음 | API 키 대신 이름과 이메일을 담은 User-Agent 문자열 |
 
@@ -77,6 +79,11 @@ git clone https://github.com/hyunghopark/finance-api-hub.git
       "args": ["/path/to/finance-api-hub/toss/server/index.js"],
       "env": { "TOSS_CLIENT_ID": "...", "TOSS_CLIENT_SECRET": "..." }
     },
+    "kis": {
+      "command": "node",
+      "args": ["/path/to/finance-api-hub/kis/server/index.js"],
+      "env": { "KIS_APP_KEY": "...", "KIS_APP_SECRET": "..." }
+    },
     "fred": {
       "command": "node",
       "args": ["/path/to/finance-api-hub/fred/server/index.js"],
@@ -102,7 +109,7 @@ git clone https://github.com/hyunghopark/finance-api-hub.git
 
 ## 인증 정보 관리
 
-모든 서버는 환경변수에서 인증 정보를 읽습니다. macOS에서는 환경변수가 없을 때 키체인에서도 읽을 수 있습니다(toss 제외).
+모든 서버는 환경변수에서 인증 정보를 읽습니다. macOS에서는 환경변수가 없을 때 키체인에서도 읽을 수 있습니다(toss, kis 제외).
 
 | 서버 | 키체인 서비스 | 계정 |
 |---|---|---|
@@ -132,6 +139,7 @@ node krx/test/offline.test.js
 node dart/test/offline.test.js
 node ecos/test/offline.test.js
 node toss/test/test.js
+node kis/test/offline.test.js
 node fred/test/offline.test.js
 node edgar/test/offline.test.js
 ```
