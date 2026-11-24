@@ -13,6 +13,7 @@ const ORIGIN = 'https://openapi.koreainvestment.com:9443';
 const calls = [];
 let tokenIssued = 0;
 let expireOnce = false; let rateOnce = false; let rateAlways = false;
+let investorLimitDate = ''; // 종목별 투자자: 이 기준일로 조회하면 KIS 의 시간 제한 오류를 흉내 냄
 const kstStamp = (ms) => new Date(ms + 9 * 3600 * 1000).toISOString().slice(0, 19).replace('T', ' ');
 
 global.fetch = async (url, opt) => {
@@ -37,6 +38,7 @@ global.fetch = async (url, opt) => {
   }
   const days = (n) => Array.from({ length: n }, (_, i) => ({ stck_bsop_date: String(20261124 - i), frgn_ntby_tr_pbmn: String(i) }));
   if (u.pathname.endsWith('/inquire-investor-daily-by-market')) return reply({ rt_cd: '0', output: days(300) });
+  if (u.pathname.endsWith('/investor-trade-by-stock-daily') && investorLimitDate && u.searchParams.get('FID_INPUT_DATE_1') === investorLimitDate) return reply({ rt_cd: '1', msg_cd: 'OPSQ2001', msg1: 'TIME LIMIT 00:00 ~ 15:40' });
   if (u.pathname.endsWith('/investor-trade-by-stock-daily')) return reply({ rt_cd: '0', output1: { stck_prpr: '1' }, output2: days(30) });
   if (u.pathname.endsWith('/daily-credit-balance')) return reply({ rt_cd: '0', output: days(30) });
   return reply({ rt_cd: '0', msg_cd: 'MCA00000', msg1: '정상처리 되었습니다.', output: {} });
@@ -183,6 +185,56 @@ const tokenPath = () => path.join(tokenDir(), fs.readdirSync(tokenDir()).filter(
   const zero = await call(24, 'kis_stock_price', { symbol: '999999' });
   assert(zero.isError && /시세가 없습니다/.test(zero.content[0].text));
   console.log('count 자르기·없는 종목 처리 확인');
+
+  // 9-1c) 종목별 투자자: 당일 자료는 15:40 이후에만 제공되므로 date 를 생략하면 15:40 전에는 전일을 기준일로 씀
+  const kstMs = (y, mo, d, h, mi) => Date.UTC(y, mo - 1, d, h - 9, mi);
+  assert.deepStrictEqual(S.stockInvestorBaseDate(undefined, kstMs(2026, 11, 25, 0, 3)), { date: '20261124', today: '20261125', defaulted: true, shifted: true });
+  assert.deepStrictEqual(S.stockInvestorBaseDate('', kstMs(2026, 11, 25, 15, 39)), { date: '20261124', today: '20261125', defaulted: true, shifted: true });
+  assert.deepStrictEqual(S.stockInvestorBaseDate(undefined, kstMs(2026, 11, 25, 15, 40)), { date: '20261125', today: '20261125', defaulted: true, shifted: false });
+  assert.deepStrictEqual(S.stockInvestorBaseDate(undefined, kstMs(2026, 11, 25, 23, 59)), { date: '20261125', today: '20261125', defaulted: true, shifted: false });
+  assert.strictEqual(S.stockInvestorBaseDate(undefined, kstMs(2026, 3, 1, 9, 0)).date, '20260228', '월초에는 전월 말일');
+  assert.deepStrictEqual(S.stockInvestorBaseDate('2026-11-25', kstMs(2026, 11, 25, 0, 3)), { date: '20261125', today: '20261125', defaulted: false, shifted: false }, '직접 준 날짜는 바꾸지 않음');
+  assert.throws(() => S.stockInvestorBaseDate('11/20', kstMs(2026, 11, 25, 0, 3)));
+  const siCall = async (args, nowMs) => { S._setInvestorClock(() => nowMs); try { return await call(25, 'kis_stock_investor_daily', args); } finally { S._setInvestorClock(); } };
+  const siDate = () => calls[calls.length - 1].query.FID_INPUT_DATE_1;
+  try {
+    investorLimitDate = '20261125';
+    // 15:40 전 + date 생략 → 전일로 한 번만 조회하고 note 로 알림
+    let n4 = calls.length;
+    let si = await siCall({ symbol: '005930' }, kstMs(2026, 11, 25, 9, 0));
+    assert(!si.isError, si.content[0].text); assert.strictEqual(calls.length - n4, 1); assert.strictEqual(siDate(), '20261124');
+    let sj = JSON.parse(si.content[0].text);
+    assert.strictEqual(sj.date, '20261124'); assert(/15:40/.test(sj.note) && /20261124/.test(sj.note), sj.note);
+    // 15:40 전 + 당일을 직접 지정 → 날짜를 바꾸지 않고 안내가 붙은 오류 (KIS 원문과 tr_id 유지)
+    n4 = calls.length;
+    si = await siCall({ symbol: '005930', date: '2026-11-25' }, kstMs(2026, 11, 25, 9, 0));
+    assert(si.isError && /TIME LIMIT/.test(si.content[0].text) && /15:40 이후/.test(si.content[0].text) && /전 영업일/.test(si.content[0].text) && /tr_id=FHPTJ04160001/.test(si.content[0].text), si.content[0].text);
+    assert.strictEqual(calls.length - n4, 1); assert.strictEqual(siDate(), '20261125');
+    console.log('종목별 투자자 시간 제한 안내:', si.content[0].text);
+    // 15:40 전 + 과거 날짜 지정 → 그대로, note 없음
+    si = await siCall({ symbol: '005930', date: '2026-11-20' }, kstMs(2026, 11, 25, 9, 0));
+    sj = JSON.parse(si.content[0].text); assert.strictEqual(sj.date, '20261120'); assert.strictEqual(siDate(), '20261120'); assert(!('note' in sj));
+    // 15:40 이후 + date 생략 → 오늘, note 없음
+    investorLimitDate = '';
+    n4 = calls.length;
+    si = await siCall({ symbol: '005930' }, kstMs(2026, 11, 25, 16, 0));
+    sj = JSON.parse(si.content[0].text); assert.strictEqual(sj.date, '20261125'); assert.strictEqual(siDate(), '20261125'); assert(!('note' in sj)); assert.strictEqual(calls.length - n4, 1);
+    // 15:40 이후인데도 KIS 가 아직 제한을 걸면(경계) date 생략 호출은 전일로 한 번만 다시 조회
+    investorLimitDate = '20261125';
+    n4 = calls.length;
+    si = await siCall({ symbol: '005930' }, kstMs(2026, 11, 25, 15, 40));
+    sj = JSON.parse(si.content[0].text); assert.strictEqual(sj.date, '20261124'); assert(/15:40/.test(sj.note)); assert.strictEqual(calls.length - n4, 2); assert.strictEqual(siDate(), '20261124');
+    // 전일로 조회해도 제한이면 더 거슬러 가지 않고 안내 오류
+    investorLimitDate = '20261124';
+    n4 = calls.length;
+    si = await siCall({ symbol: '005930' }, kstMs(2026, 11, 25, 9, 0));
+    assert(si.isError && /TIME LIMIT/.test(si.content[0].text) && /15:40 이후/.test(si.content[0].text)); assert.strictEqual(calls.length - n4, 1);
+    // 시간 제한이 아닌 오류는 그대로 전달
+    investorLimitDate = '';
+    rateAlways = true; si = await siCall({ symbol: '005930' }, kstMs(2026, 11, 25, 9, 0)); rateAlways = false;
+    assert(si.isError && /EGW00201/.test(si.content[0].text) && !/15:40/.test(si.content[0].text));
+  } finally { investorLimitDate = ''; rateAlways = false; S._setInvestorClock(); }
+  console.log('종목별 투자자 기본 기준일: 15:40 전 전일·이후 당일, 직접 준 날짜 유지 확인');
 
   // 9-2) 날짜·시각·코드 검증
   assert.strictEqual(S.ymd('2026-11-24', 'd'), '20261124'); assert.strictEqual(S.ymd('20261124', 'd'), '20261124'); assert.strictEqual(S.ymd('', 'd', 'x'), 'x');

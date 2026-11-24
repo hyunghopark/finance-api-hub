@@ -1,7 +1,7 @@
 # 한국투자증권 Open API 체크리스트
 
 - 기준: 공식 저장소 [koreainvestment/open-trading-api](https://github.com/koreainvestment/open-trading-api)의 API 목록(`MCP/KIS Code Assistant MCP/data.csv`, 334개)과 `examples_llm` 샘플 코드, 2026-11-24 확인
-- 도구: kis-readonly v0.1.0
+- 도구: kis-readonly v0.1.1
 - 경로와 tr_id는 샘플 코드에서 기계적으로 뽑은 값입니다. tr_id가 둘 이상이면 실전·모의 또는 조회 구분에 따라 갈립니다. 설치한 10개 외에는 이 저장소에서 호출해 보지 않았습니다.
 
 ## 전체 334개 요약
