@@ -13,7 +13,7 @@ const crypto = require('crypto');
 const readline = require('readline');
 
 const BASE_URL = 'https://openapi.koreainvestment.com:9443'; // 실전 도메인 고정. 다른 주소로 키가 나가지 않게 바꾸지 않습니다.
-const SERVER_INFO = { name: 'kis-readonly', version: '0.1.0' };
+const SERVER_INFO = { name: 'kis-readonly', version: '0.1.1' };
 const TOKEN_DIR = path.join(os.homedir(), '.kis-mcp');
 const TIMEOUT_MS = 15_000;
 const MIN_GAP_MS = 110;            // 호출 시작 간격(초당 9건쯤). 60ms 간격으로는 15번째 호출에서 EGW00201 이 났음(2026-11-24)
@@ -79,6 +79,20 @@ function hhmmss(v) {
   if (!m) throw new UserError('time 은 HH:MM 또는 HHMMSS 형식이어야 합니다 (예: 10:30)');
   return m[1] + m[2] + (m[3] || '00');
 }
+// 종목별 투자자(FHPTJ04160001)는 당일 자료를 15:40 이후에만 줍니다. 00:00~15:40 에 당일을 기준일로 넣으면
+// KIS 가 "TIME LIMIT 00:00 ~ 15:40" 오류를 줍니다(2026-11-25 00:03 확인). 기준일이 휴장일이면 직전 영업일부터 옵니다.
+// date 를 비웠을 때의 기준일을 정합니다: 15:40 전이면 전일, 이후면 오늘. 직접 준 날짜는 바꾸지 않습니다.
+const STOCK_INVESTOR_OPEN_HHMM = '1540';
+let investorClock = () => Date.now(); // 테스트에서만 바꿈 (호출 간격·토큰 만료 계산의 시계는 건드리지 않음)
+function stockInvestorBaseDate(dateArg, nowMs = investorClock()) {
+  const kst = new Date(nowMs + 9 * 3600 * 1000).toISOString();
+  const today = kst.slice(0, 10).replace(/-/g, '');
+  const given = ymd(dateArg, 'date', '');
+  if (given) return { date: given, today, defaulted: false, shifted: false };
+  const shifted = kst.slice(11, 16).replace(':', '') < STOCK_INVESTOR_OPEN_HHMM;
+  return { date: shifted ? addDays(today, -1) : today, today, defaulted: true, shifted };
+}
+const stockInvestorShiftNote = (date) => `date 를 생략했고 당일 자료가 아직 제공되지 않아 전일(${date}) 기준으로 조회했습니다. KIS 는 종목별 투자자 당일 자료를 한국 시각 15:40 이후에만 제공합니다.`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ---------- 실행 로그 (키·토큰은 기록하지 않음) ----------
@@ -335,21 +349,28 @@ const TOOLS = [
   },
   {
     name: 'kis_stock_investor_daily',
-    description: '국내 종목의 일별 투자자별 매매동향(최신순). market 으로 거래소별 수급을 나눠 볼 수 있음: J(KRX)와 NX(NXT)의 수량·금액을 더하면 UN(통합)과 정확히 일치(2026-11-24 확인). date 부터 과거 방향으로 count 건(KIS 는 한 번에 30건). 단위: *_qty·*_vol 수량은 주, *_pbmn 금액은 백만원. 주체 약어는 kis_market_investor_daily 와 같음(frgn 외국인, prsn 개인, orgn 기관계 …). 순매수 외에 주체별 매도·매수(seln·shnu)도 포함. output1 은 종목 요약, output2 가 일별 목록.',
+    description: '국내 종목의 일별 투자자별 매매동향(최신순). market 으로 거래소별 수급을 나눠 볼 수 있음: J(KRX)와 NX(NXT)의 수량을 더하면 UN(통합)과 정확히 일치하고, 금액은 백만원 반올림 때문에 ±1 차이가 날 수 있음(2026-11-24 확인). date 부터 과거 방향으로 count 건(KIS 는 한 번에 30건, 휴장일이면 직전 영업일부터). ⚠ 당일 자료는 한국 시각 15:40 이후에만 제공: 00:00~15:40 에 date 를 당일로 주면 오류(TIME LIMIT)이므로 전 영업일을 지정할 것. date 를 생략하면 15:40 전에는 전일, 이후에는 당일을 기준일로 쓰며, 전일로 조회한 경우 응답의 date 와 note 로 알림. 단위: *_qty·*_vol 수량은 주, *_pbmn 금액은 백만원. 주체 약어는 kis_market_investor_daily 와 같음(frgn 외국인, prsn 개인, orgn 기관계 …). 순매수 외에 주체별 매도·매수(seln·shnu)도 포함. output1 은 종목 요약, output2 가 일별 목록.',
     inputSchema: { type: 'object', properties: {
       symbol: { type: 'string', description: 'KRX 6자리 종목코드 (예: 005930)' },
       market: { type: 'string', enum: MARKETS, default: 'J', description: 'J=KRX, NX=NXT, UN=통합' },
-      date: { type: 'string', description: '기준일 YYYY-MM-DD. 생략하면 오늘(한국 시각)' },
+      date: { type: 'string', description: '기준일 YYYY-MM-DD. 생략하면 한국 시각 15:40 이후에는 오늘, 그 전에는 전일(당일 자료는 15:40 이후 제공)' },
       count: { type: 'integer', minimum: 1, maximum: 30, default: 5 },
     }, required: ['symbol'] },
     async run(a) {
       const symbol = krCode(a.symbol);
       const market = oneOf(a.market, MARKETS, 'market', 'J');
-      const date = ymd(a.date, 'date', kstToday());
+      const base = stockInvestorBaseDate(a.date);
       const count = countOf(a.count, 5, 30);
-      const r = await apiGet(READ_ENDPOINTS.stockInvestorDaily, { FID_COND_MRKT_DIV_CODE: market, FID_INPUT_ISCD: symbol,
-        FID_INPUT_DATE_1: date, FID_ORG_ADJ_PRC: '', FID_ETC_CLS_CODE: '' });
-      return { symbol, market, 거래소: MARKET_NAMES[market], date, 단위: { 수량: '주', 금액: '백만원' }, output1: r.body.output1, output2: head(r.body.output2, count) };
+      const query = (d) => apiGet(READ_ENDPOINTS.stockInvestorDaily, { FID_COND_MRKT_DIV_CODE: market, FID_INPUT_ISCD: symbol,
+        FID_INPUT_DATE_1: d, FID_ORG_ADJ_PRC: '', FID_ETC_CLS_CODE: '' });
+      let date = base.date; let shifted = base.shifted; let r;
+      try { r = await query(date); } catch (e) {
+        if (!(e instanceof UserError) || !/TIME LIMIT/.test(e.message)) throw e;
+        // date 를 생략해 오늘로 조회했는데 제한에 걸리면(15:40 경계) 전일로 한 번만 다시 조회. 직접 준 날짜는 바꾸지 않고 안내만 함
+        if (!base.defaulted || shifted) throw new UserError(`${e.message} — 종목별 투자자 당일 자료는 한국 시각 15:40 이후에만 제공됩니다. 15:40 이후에 다시 조회하거나 date 에 전 영업일을 지정하세요 (date 를 생략하면 15:40 전에는 전일 기준으로 조회).`);
+        date = addDays(base.today, -1); shifted = true; r = await query(date);
+      }
+      return { symbol, market, 거래소: MARKET_NAMES[market], date, ...(shifted ? { note: stockInvestorShiftNote(date) } : {}), 단위: { 수량: '주', 금액: '백만원' }, output1: r.body.output1, output2: head(r.body.output2, count) };
     },
   },
   {
@@ -452,4 +473,4 @@ function main() {
 
 // Desktop 이 이 파일을 감싸서 실행해도 서버가 켜지도록 항상 시작합니다(테스트에서만 끔).
 if (process.env.KIS_MCP_NO_MAIN !== '1') main();
-module.exports = { handle, TOOLS, READ_ENDPOINTS, BASE_URL, expiryOf, mask, ymd, addDays, hhmmss, _forgetMemToken() { memToken = null; } };
+module.exports = { handle, TOOLS, READ_ENDPOINTS, BASE_URL, expiryOf, mask, ymd, addDays, hhmmss, stockInvestorBaseDate, _forgetMemToken() { memToken = null; }, _setInvestorClock(fn) { investorClock = fn || (() => Date.now()); } };
