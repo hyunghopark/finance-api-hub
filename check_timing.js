@@ -198,6 +198,60 @@ async function run() {
     results.push({ 제공처: '금융감독원', 지표: '기업 공시', 수신일자: '에러', 갱신시각: '-', 당일여부: '🔴', 비고: e.message });
   }
 
+  // 6. 한국투자증권 KIS - 삼성전자 KRX 일봉 당일 행 vs 15:30 분봉, 코스피 시장 수급
+  // 설정 파일에 kis가 없으면 이 저장소의 서버 파일과 kis/.env(커밋 안 됨) 또는 현재 환경변수를 씀
+  const kisScript = mcpConfig.kis?.args?.[0] || path.join(__dirname, 'kis', 'server', 'index.js');
+  const kisEnv = { ...(mcpConfig.kis?.env || {}) };
+  if (!kisEnv.KIS_APP_KEY) {
+    try {
+      for (const line of require('fs').readFileSync(path.join(__dirname, 'kis', '.env'), 'utf8').split('\n')) {
+        const m = /^\s*(KIS_APP_KEY|KIS_APP_SECRET)\s*=\s*(.*)$/.exec(line);
+        if (m) kisEnv[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+      }
+    } catch (_) { /* 파일 없음 → 환경변수에 있으면 그것을 씀 */ }
+  }
+  const kisCall = async (tool, args) => {
+    const res = await callMcp(kisScript, kisEnv, tool, args);
+    const text = res?.content?.[0]?.text;
+    if (!text) throw new Error('실패/타임아웃');
+    if (res.isError) throw new Error(text.slice(0, 60));
+    return JSON.parse(text);
+  };
+  try {
+    const daily = await kisCall('kis_stock_daily_chart', { symbol: '005930', market: 'J', from: todayDash, to: todayDash });
+    const row = (daily.output2 || [])[0] || {};
+    const minute = await kisCall('kis_stock_minute_chart', { symbol: '005930', market: 'J', time: '15:30' });
+    const bar = (minute.output2 || []).find(r => r.stck_cntg_hour === '153000');
+    const isToday = row.stck_bsop_date === todayYmd;
+    const same = isToday && bar && row.stck_clpr === bar.stck_prpr;
+    results.push({
+      제공처: '한국투자증권 (KIS)',
+      지표: '삼성전자 일봉 (J=KRX)',
+      수신일자: row.stck_bsop_date || 'N/A',
+      갱신시각: !isToday ? '당일 행 없음' : !bar ? '15:30 분봉 없음 (장중·휴장)' : same ? '15:30 분봉과 같음' : '15:30 분봉과 다름',
+      당일여부: !isToday ? '🟡 전일치' : same ? '🟢 당일 (정규장 종가)' : '🟡 당일 (정규장 종가 아님)',
+      비고: `일봉 종가 ${row.stck_clpr || '-'} / 15:30 봉 ${bar?.stck_prpr || '-'}`
+    });
+  } catch (e) {
+    results.push({ 제공처: '한국투자증권', 지표: '삼성전자 일봉', 수신일자: '에러', 갱신시각: '-', 당일여부: '🔴', 비고: e.message });
+  }
+  try {
+    const inv = await kisCall('kis_market_investor_daily', { market: 'KOSPI', count: 1 });
+    const row = (inv.output || [])[0] || {};
+    const eok = (v) => (v === undefined || v === '' ? '-' : Math.round(Number(v) / 100)); // 백만원 → 억원
+    const isToday = row.stck_bsop_date === todayYmd;
+    results.push({
+      제공처: '한국투자증권 (KIS)',
+      지표: '코스피 시장 수급',
+      수신일자: row.stck_bsop_date || 'N/A',
+      갱신시각: '확정 시각 미확인',
+      당일여부: isToday ? '🟢 당일' : '🟡 전일치',
+      비고: `외인 ${eok(row.frgn_ntby_tr_pbmn)}억 / 기관 ${eok(row.orgn_ntby_tr_pbmn)}억`
+    });
+  } catch (e) {
+    results.push({ 제공처: '한국투자증권', 지표: '코스피 시장 수급', 수신일자: '에러', 갱신시각: '-', 당일여부: '🔴', 비고: e.message });
+  }
+
   console.table(results);
   console.log('='.repeat(80));
   console.log('💡 Tip: 위 결과를 토대로 finance-api-hub/DATA_TIMING.md 문서를 업데이트하세요.');

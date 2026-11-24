@@ -316,7 +316,7 @@ const TOOLS = [
   },
   {
     name: 'kis_market_investor_daily',
-    description: '코스피·코스닥 시장(또는 그 안의 업종)의 일별 투자자별 순매수(최신순). 한국투자 HTS [0404] 시장별 일별동향과 같은 자료. date 부터 과거 방향으로 count 건(휴장일이면 직전 영업일부터). 단위: *_ntby_qty 수량은 천주, *_tr_pbmn·*_pbmn 금액은 백만원(÷100 = 억원). 주체: frgn 외국인, prsn 개인, orgn 기관계, scrt 금융투자, ivtr 투신, pe_fund 사모, bank 은행, insu 보험, mrbn 종금, fund 기금, etc 기타(etc_corp 기타법인). 당일 행은 장중 잠정치. sector 를 주면 해당 업종만.',
+    description: '코스피·코스닥 시장(또는 그 안의 업종)의 일별 투자자별 순매수(최신순). 한국투자 HTS [0404] 시장별 일별동향과 같은 자료. 이 API 는 거래소(KRX·NXT) 구분 인자가 없어 한 가지 기준으로만 나오며, 값은 KRX+NXT 통합 기준인 토스보다 작음(KRX 단독으로 추정, 공식 확인 아님). date 부터 과거 방향으로 count 건(휴장일이면 직전 영업일부터). 단위: *_ntby_qty 수량은 천주, *_tr_pbmn·*_pbmn 금액은 백만원(÷100 = 억원). 주체: frgn 외국인, prsn 개인, orgn 기관계, scrt 금융투자, ivtr 투신, pe_fund 사모, bank 은행, insu 보험, mrbn 종금, fund 기금, etc 기타(etc_corp 기타법인). 당일 행은 장중 잠정치. sector 를 주면 해당 업종만.',
     inputSchema: { type: 'object', properties: {
       market: { type: 'string', enum: ['KOSPI', 'KOSDAQ'] },
       date: { type: 'string', description: '기준일 YYYY-MM-DD. 생략하면 오늘(한국 시각)' },
@@ -335,7 +335,7 @@ const TOOLS = [
   },
   {
     name: 'kis_stock_investor_daily',
-    description: '국내 종목의 일별 투자자별 매매동향(최신순). date 부터 과거 방향으로 count 건(KIS 는 한 번에 30건). 단위: *_qty·*_vol 수량은 주, *_pbmn 금액은 백만원. 주체 약어는 kis_market_investor_daily 와 같음(frgn 외국인, prsn 개인, orgn 기관계 …). 순매수 외에 주체별 매도·매수(seln·shnu)도 포함. output1 은 종목 요약, output2 가 일별 목록.',
+    description: '국내 종목의 일별 투자자별 매매동향(최신순). market 으로 거래소별 수급을 나눠 볼 수 있음: J(KRX)와 NX(NXT)의 수량·금액을 더하면 UN(통합)과 정확히 일치(2026-11-24 확인). date 부터 과거 방향으로 count 건(KIS 는 한 번에 30건). 단위: *_qty·*_vol 수량은 주, *_pbmn 금액은 백만원. 주체 약어는 kis_market_investor_daily 와 같음(frgn 외국인, prsn 개인, orgn 기관계 …). 순매수 외에 주체별 매도·매수(seln·shnu)도 포함. output1 은 종목 요약, output2 가 일별 목록.',
     inputSchema: { type: 'object', properties: {
       symbol: { type: 'string', description: 'KRX 6자리 종목코드 (예: 005930)' },
       market: { type: 'string', enum: MARKETS, default: 'J', description: 'J=KRX, NX=NXT, UN=통합' },
