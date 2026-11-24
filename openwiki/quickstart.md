@@ -3,15 +3,15 @@ type: guide
 title: 빠른 시작
 description: finance-api-hub 저장소가 무엇이고 어떤 서버가 있는지 소개하고, 하려는 일에 따라 읽어야 할 위키 페이지를 안내한다.
 tags: [quickstart, overview, navigation, mcp]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
   - id: openwiki-source-5f5b95b3d6a215fa02ceb945
     resource: repo://.env.example
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # 빠른 시작
@@ -83,6 +83,8 @@ node kis/test/offline.test.js
 |---|---|
 | 종가가 다른 출처와 다르다 | [데이터 반영 시각과 거래소 기준](concepts/data-timing.md) |
 | 오늘 자료를 요청했는데 어제 것이 왔다 | [데이터 반영 시각과 거래소 기준](concepts/data-timing.md), [한국거래소 서버](servers/krx.md) |
+| 응답에 `truncated: true`가 붙고 행이 요청보다 적다 | [MCP 서버 공통 구조](architecture/server-anatomy.md)의 "출력 한도" |
+| 종목별 투자자 조회가 시간 제한 오류를 낸다 | [한국투자증권 서버](servers/kis.md)의 "종목별 투자자의 기본 기준일" |
 | 한도 초과 오류가 난다 | [호출 한도와 캐시](architecture/rate-limits-and-caching.md) |
 | 인증 오류가 난다 | [인증 정보와 비밀 값 처리](architecture/credentials-and-secrets.md) |
 | 새로 상장한 회사를 찾지 못한다 | [호출 한도와 캐시](architecture/rate-limits-and-caching.md) (목록 캐시 수명) |

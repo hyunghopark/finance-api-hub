@@ -3,17 +3,25 @@ type: testing
 title: 오프라인 테스트
 description: 네트워크와 인증 정보 없이 각 서버를 검증하는 방식, 외부 호출을 대체하는 세 가지 기법, 테스트 전용 스위치, 조회 전용 원칙을 지키는 단언을 설명한다.
 tags: [testing, offline, mocks, read-only, regression]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
+  - id: openwiki-source-d53fd8d8dad0d480596f2844
+    resource: repo://dart/test/offline.test.js
+  - id: openwiki-source-d43593a5387d830b67df0bc4
+    resource: repo://ecos/test/offline.test.js
+  - id: openwiki-source-9069889284fedba32a8b58da
+    resource: repo://edgar/test/offline.test.js
+  - id: openwiki-source-f59bba96fbc1585fb324a768
+    resource: repo://fred/test/offline.test.js
   - id: openwiki-source-267038760722383f02860234
     resource: repo://kis/test/offline.test.js
   - id: openwiki-source-bd72974579d1e5fe2b72277d
     resource: repo://krx/test/offline.test.js
   - id: openwiki-source-c99cb3ea480a2bc980d46531
     resource: repo://toss/test/test.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # 오프라인 테스트
@@ -100,6 +108,34 @@ kis의 테스트를 예로 들면 다음을 확인한다. 다른 서버도 해�
 
 **실제 표준 입출력.** 서버 파일을 자식 프로세스로 띄워 `initialize`, 알림, 깨진 줄, 도구 호출을 보내고 응답을 확인한다. 인증 정보 자리에 치환되지 않은 자리표시자를 넣어, 그것을 키로 착각하지 않고 설정 안내를 돌려주는지 본다. 응답 순서는 보장되지 않으므로 `id`로 찾는다.
 
+## 출력 한도를 고정하는 단언
+
+krx, dart, ecos, fred, edgar의 테스트는 `fitOutput()`을 직접 불러 6만 자 한도의 약속([MCP 서버 공통 구조](../architecture/server-anatomy.md)의 "출력 한도")을 확인한다. 가짜 응답으로 한도를 넘는 큰 결과를 만든 뒤 다음을 단언한다.
+
+- 결과 문자열이 한도 이하이고 `JSON.parse`가 된다.
+- 행이 줄었지만 0건은 아니고, `shown`이 실제 행 수와 같다.
+- `truncated`가 참이고, `note`에 "M건 중 N건만 표시"와 그 도구에서 좁히는 방법이 들어 있다.
+- 전체 건수(`total`, `count`)는 줄이기 전 값이다.
+- 한 행만 더 넣으면 한도를 넘는다. 필요 이상으로 많이 줄이지 않았다는 뜻이다(dart, ecos, edgar).
+- 한도 이하인 결과는 달라지지 않는다.
+- 줄일 배열이 없는 큰 결과는 `truncated`, `total_chars`, `note`, `preview`를 가진 JSON이 된다.
+
+서버마다 고유한 동작도 함께 본다. krx는 원본 결과 객체가 바뀌지 않는지, dart와 ecos는 도구가 넣은 기존 `note`가 남는지, fred는 관측값에서 최근 쪽이 남는지와 겹겹이 든 응답에서 줄인 위치가 `note`에 적히는지, edgar는 재무 항목마다 같은 수의 행이 남는지를 확인한다. ecos는 도구 7개 모두에 좁히는 방법(`narrow`)과 설명의 안내 문구가 있는지도 검사하므로, 도구를 추가하면서 이를 빠뜨리면 테스트가 실패한다.
+
+## 실제 호출에서 드러난 동작을 고정하는 항목
+
+제공처의 실제 동작에서 문제가 드러난 뒤 추가된 항목들이다. 가짜 응답이 그 상황을 재현한다.
+
+| 서버 | 고정하는 동작 |
+|---|---|
+| krx | 표준코드 항목이 없는 API에서 표준코드로 찾기, 걸러서 0건일 때의 `note`와 시장 요약 유지 |
+| dart | `dart_report`의 쪽 넘김(`next_offset`으로 끝까지 이어 받기), 지분공시의 접수일 최신순과 접수일 필터, 여러 회사를 고유번호로 줬을 때 이름 채움 |
+| kis | 종목별 투자자의 기본 기준일(15:40 전 전일, 이후 당일), 직접 준 날짜 유지, 시간 제한 오류의 안내 |
+| fred | 발표 일정의 릴리스별 조회, 쪽 한도에 걸렸을 때의 `truncated`와 읽은 마지막 날짜 |
+| edgar | `sec_concept`의 양식 필터 순서, 누적값만 공시되는 항목의 2·3분기 계산과 빠진 분기 알림 |
+
+kis의 기준일 테스트는 시각에 따라 결과가 달라지는 동작을 다룬다. 실제 시각에 기대지 않고 `_setInvestorClock()`으로 시계를 15:40 전과 후로 바꿔 가며 호출하고, 가짜 서버가 특정 기준일에 시간 제한 오류를 돌려주게 한다. 나간 요청 수도 함께 세어, 전일로 다시 조회하는 것이 한 번뿐이고 더 거슬러 가지 않는다는 것을 확인한다.
+
 ## 조회 전용 원칙을 지키는 단언
 
 toss와 kis의 테스트는 동작만이 아니라 **소스 코드 자체**를 검사한다.
@@ -125,10 +161,12 @@ krx는 Claude Desktop의 실행 방식도 흉내 낸다. 서버 파일을 다른
 - 실제 호출에서 예상과 다른 응답 형태를 발견하면, 그 형태를 가짜 응답으로 추가하고 기대 동작을 단언한다.
 - 새 도구는 요청 대조 표와 잘못된 입력 목록에 함께 넣는다.
 - 가짜 응답의 값은 실제 응답에서 본 형식(숫자가 문자열인지, 쉼표가 있는지)을 따른다.
-- 시간에 의존하는 동작(토큰 만료, 발급 제한)은 실제로 기다리지 않고 캐시 파일의 시각을 고쳐 재현한다.
+- 시간에 의존하는 동작은 실제로 기다리지 않는다. 토큰 만료와 발급 제한은 캐시 파일의 시각을 고쳐서, 시각에 따라 갈리는 기본값은 테스트 전용 시계를 주입해서 재현한다.
+- 긴 응답을 돌려줄 수 있는 도구는 한도를 넘는 가짜 응답으로 출력 한도 처리를 확인한다.
 
 ## 관련 페이지
 
 - [인증 정보와 비밀 값 처리](../architecture/credentials-and-secrets.md)
 - [한국투자증권 서버](../servers/kis.md)
 - [한국거래소 서버](../servers/krx.md)
+- [MCP 서버 공통 구조](../architecture/server-anatomy.md)

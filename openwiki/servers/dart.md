@@ -3,13 +3,15 @@ type: server
 title: 금융감독원 DART 서버 (dart)
 description: dart-readonly 서버가 회사 지정을 고유번호로 바꾸는 방식, 외부 패키지 없이 zip을 푸는 방식, 공시·재무·주요사항 도구의 구성과 DART 상태 코드 처리를 설명한다.
 tags: [dart, disclosures, financials, corp-code, zip]
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
 sources:
   - id: openwiki-source-1d34fa17b34fe29bbe8f60ee
     resource: repo://dart/server/index.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+  - id: openwiki-source-d53fd8d8dad0d480596f2844
+    resource: repo://dart/test/offline.test.js
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-11-24T16:04:39.925Z
 ---
 
 # 금융감독원 DART 서버 (dart)
@@ -67,6 +69,8 @@ DART는 HTTP 200으로 응답하면서 본문의 `status`로 결과를 알린다
 
 `dart_financials`와 `dart_indicators`는 `corp`에 쉼표로 여러 회사를 넣을 수 있다. 회사 수에 따라 DART의 다른 API를 고른다. 재무제표는 한 회사면 단일회사 API, 여러 회사면 다중회사 주요계정 API를 부르고, 여러 회사는 주요계정(`scope=major`)만 허용한다. 응답에 빠진 회사는 `missing`으로 알려 준다.
 
+8자리 고유번호로 준 회사는 목록을 읽지 않고 통과하므로 이름과 종목코드가 비어 있다. 한 회사일 때는 문제가 없지만, 여러 회사 결과에서는 행마다 어느 회사인지 구분할 이름이 필요하다. 그래서 `resolveCorps()`는 회사가 둘 이상이고 이름 없는 항목이 있으면 고유번호 목록에서 이름과 종목코드를 채운다. 목록을 받지 못하면 이름 없이 그대로 조회한다. 행에 회사명을 붙이는 `nameOf()`도 이름이 있는 항목만 인정해, 끝까지 찾지 못했을 때만 고유번호를 대신 보여 준다.
+
 전체 재무제표(`scope=all`)는 연결(CFS)을 먼저 조회하고, 결과가 없고 사용자가 연결·별도를 지정하지 않았으면 별도(OFS)로 한 번 더 조회한다. 연결 재무제표를 내지 않는 회사가 있기 때문이다.
 
 ### dart_report: 도구 하나로 여러 API
@@ -76,10 +80,18 @@ DART는 HTTP 200으로 응답하면서 본문의 `status`로 결과를 알린다
 | 묶음 | 예 | 필요한 인자 |
 |---|---|---|
 | 정기보고서 주요정보 | 최대주주 현황, 임원 현황, 자기주식 | `year`, `report` |
-| 지분공시 | 대량보유 상황보고, 임원·주요주주 소유보고 | `corp`만 |
+| 지분공시 | 대량보유 상황보고, 임원·주요주주 소유보고 | `corp`만 (`bgn_de`, `end_de`는 선택) |
 | 주요사항보고서 | 유상증자·합병·자기주식 취득 결정, 부도·회생 | `bgn_de`, `end_de` |
 
 `KIND()`가 엔드포인트가 어느 묶음인지 판정해 인자 검증을 나눈다. 목록에 없는 이름은 요청을 보내기 전에 거부한다. 도구 설명에는 전체 엔드포인트 이름과 한국어 제목이 나열되어 에이전트가 고를 수 있다.
+
+#### 나눠 받기
+
+결과는 `pageReport()`를 거쳐 쪽 단위로 나간다. `limit`(기본 100, 최대 500)과 `offset`(기본 0)으로 범위를 정한다. 응답에는 전체 행 수(`count`와 `total`, 같은 값), 이번에 준 행 수(`shown`), `offset`이 들어가고, 뒤에 더 남았으면 `next_offset`이 붙는다. 이 값을 다음 호출의 `offset`에 넣어 이어 받는다.
+
+지분공시 묶음은 따로 처리한다. DART는 지분공시를 기간 인자 없이 전체를 오래된 순으로 준다. 임원·주요주주 소유보고처럼 행이 많은 회사에서는 앞쪽의 오래된 자료만 보이게 되므로, 서버가 접수일(`rcept_dt`) 최신순으로 다시 정렬한다. 접수일이 같으면 접수번호가 큰 것이 앞이다. `bgn_de`·`end_de`를 주면 DART에 보내지 않고 받은 행을 접수일로 거른다. 이 두 인자는 8자리 숫자인지 요청 전에 확인한다.
+
+정기보고서 주요정보와 주요사항보고서는 DART가 준 순서를 그대로 둔다.
 
 ### dart_document: 원문 읽기
 
@@ -91,6 +103,18 @@ DART는 HTTP 200으로 응답하면서 본문의 `status`로 결과를 알린다
 - `find`에 단어를 주면 그 단어가 나오는 곳의 앞뒤 400자만 최대 15곳 돌려준다.
 
 한 공시에 파일이 여러 개면 `files` 목록과 `file_index`로 고른다.
+
+## 출력 한도
+
+도구 응답은 6만 자를 넘지 않으며 항상 유효한 JSON이다. 넘으면 `fitOutput()`이 앞쪽 행을 남기고 행 수를 줄인 뒤 `truncated: true`, 실제 행 수 `shown`, 안내 `note`를 붙인다. 공통 동작은 [MCP 서버 공통 구조](../architecture/server-anatomy.md)의 "출력 한도"에 있다.
+
+dart에서는 도구 객체가 줄이는 방법을 직접 갖고 있다.
+
+- `rowsKey`: 줄일 배열의 이름. 도구마다 `results`, `list`, `rows`로 다르다. 없으면 가장 큰 배열을 줄인다.
+- `narrow`: `note` 끝에 붙는, 그 도구에서 범위를 좁히는 방법. 예를 들어 `dart_financials`는 전체 재무제표를 `statement`로 하나씩 받으라고 안내한다.
+- `afterFit`: 줄인 뒤 결과를 고치는 함수. `dart_report`만 쓴다. 행이 줄어든 만큼 `next_offset`을 앞당겨, 그대로 이어 받아도 빠지는 행이 없게 한다.
+
+도구가 이미 `note`를 넣은 결과라면 그 문구를 지우지 않고 뒤에 ` / `로 이어 붙인다.
 
 ## 공시 목록의 기본값
 

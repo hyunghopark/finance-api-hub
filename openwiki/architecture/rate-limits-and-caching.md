@@ -5,8 +5,10 @@ description: 제공처별 호출 한도에 맞춰 서버가 요청을 줄 세우
 tags: [rate-limit, throttling, retry, cache, http]
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
+    at: 2026-11-24T16:04:39.925Z
 sources:
+  - id: openwiki-source-e5ab5a9d599d7a6282d1c44e
+    resource: repo://check_timing.js
   - id: openwiki-source-1d34fa17b34fe29bbe8f60ee
     resource: repo://dart/server/index.js
   - id: openwiki-source-da64edabd94143649d65fb36
@@ -19,7 +21,7 @@ sources:
     resource: repo://kis/server/index.js
   - id: openwiki-source-110194fb47b75af2466f370f
     resource: repo://krx/server/index.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
 ---
 
 # 호출 한도와 캐시
@@ -80,10 +82,14 @@ krx의 메모리 캐시는 "최근 영업일 찾기"와 맞물려 있다. 날짜
 
 - 요청 시간 제한은 toss와 kis가 15초, krx·dart·fred·edgar가 30초, ecos가 65초다.
 - edgar는 응답이 40MB를 넘으면 중단한다.
-- krx·dart·ecos·fred·edgar는 도구 출력이 60000자를 넘지 않게 자른다. kis는 제공처가 한 번에 30~300일치를 주는 도구에 `count` 인자를 두어 행 수로 줄인다.
+- krx·dart·ecos·fred·edgar는 도구 출력이 60000자를 넘지 않게 한다. 넘으면 글자를 자르지 않고 **행 수를 줄여** 유효한 JSON으로 돌려주고, `truncated: true`와 `note`로 알린다. 공통 틀은 [MCP 서버 공통 구조](server-anatomy.md)의 "출력 한도"에 있다. kis는 제공처가 한 번에 30~300일치를 주는 도구에 `count` 인자를 두어 행 수로 줄인다.
+- fred의 발표 일정 도구는 전체 일정을 1,000건씩 최대 5쪽(5,000건)까지만 읽는다. 끝까지 읽지 못하면 조용히 빠뜨리지 않고 `truncated: true`와 읽은 마지막 날짜를 `note`로 알린다([FRED 서버](../servers/fred.md)).
+
+요청 간격은 여러 번 호출하는 도구의 소요 시간으로 이어진다. fred의 `rates` 묶음은 FRED를 24회 부르므로 550ms 간격만으로 13초쯤 걸린다. 그래서 점검 스크립트 `check_timing.js`는 기본 12초인 응답 대기 시간을 fred 호출에는 30초로 둔다.
 
 ## 관련 페이지
 
 - [MCP 서버 공통 구조](server-anatomy.md)
 - [한국투자증권 서버](../servers/kis.md)
 - [SEC EDGAR 서버](../servers/edgar.md)
+- [FRED 서버](../servers/fred.md)

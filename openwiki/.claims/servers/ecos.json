@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:d217cd423df7f8d04c489b77769b13e67b2e4c9fb8695689ab5bc3ba28aa06eb",
+  "pageVersion": "sha256:15047e6c9ba033d1e521ec6cc817406a75bd9251305556315a5734bedde3f38a",
   "claims": [
     {
       "id": "claim_506acbe13357474ca531bfc26cc9fe8e",
@@ -75,10 +75,58 @@
           "version": "repo-lines-v1:sha256:4f57c61fc6cd0ed091d7a9c047919446cc642144f51c5aca561b3d2f3abcb180:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWI0NDcxYTY2ZTJmYWQwYmFlZmNlZjhhOTcwMzg5Njk0YzY0ZWZjNjUzMmY1NThlY2Y2MGY1Zjc2OWEzYjBhNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzdmYzhjMjVkMWJhMzc4NjJjOGExMDk1OGEwMmZhNWY1N2ZhODZhZWFlNGUzNGRkMzUwNjM4OTdmNWM1NzhkNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2IzNGUxM2ZlZjg1YTE3Y2I5N2M0NGMxODc3YThiMDBhOWIxM2Y2NGVhZDM0OGJmMDZjYjY2ZDg0ZjM0OWJhOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGRmOWM2MTQ0Zjk4ZmZiYjE2YjFlOWM1MTdmZjk5NWVkYzFlOTNjNWE0MDk4YTY0ZDExMTY2ZGViODYyZjBjZiJ9"
         }
       ]
+    },
+    {
+      "id": "claim_a875b951338c455ca9c11029612144e1",
+      "statement": "ecos의 fitOutput()은 6만 자를 넘는 결과에서 rows, results 순으로(없으면 가장 큰 배열) 줄일 배열을 찾아 앞쪽 행만 남기고, shown·truncated·note를 붙이며 기존 note가 있으면 그 뒤에 덧붙인다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L28-L68",
+          "version": "repo-lines-v1:sha256:83e7c55ab0af10832b46abd1cd027326a5dc1630b50b1658c4d057b3bc7bf8ef:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE5OWQwMmI2YjZmODJmOTAxYmViYmZlNDdjMTA4YWFjYmQwZjBiY2IyZDY2MjljNDFiZjdhODAyOWY1ZjU4OTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY4MjMwMjFjNTY5ZjczMGE1MTM2MTlkODRkMGYyM2M3ZWIxYzY5Y2RhZjJhMmUyMDk2MjllM2FkYjQ4NjVjZTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwMDczZGFjNmVhZWQ1NTIyYmJkZWI3ZDY1YTExY2VkMTgzYzRmZTAxNTQ2MDNhNTM1YTBhYTg5ZTBkOTRjMzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b3bcf5b2f385446a87392fb4ad516f10",
+      "statement": "ecos의 도구 7개는 각자 narrow 항목에 범위를 좁히는 방법을 갖고 있고, handle()이 이를 fitOutput()에 넘겨 줄인 응답의 note에 넣는다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/server/index.js#L217-L217",
+          "version": "repo-lines-v1:sha256:d416b045e204f47d9616da5b53af6543a2c232ad0e9769ad32e7d3dc81a3d33c:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDQxNmIwNDVlMjA0ZjQ3ZDk2MTZkYTViNTNhZjY1NDNhMmMyMzJhZDBlOTc2OWFkMzJlN2QzZGM4MWEzZDMzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDQxNmIwNDVlMjA0ZjQ3ZDk2MTZkYTViNTNhZjY1NDNhMmMyMzJhZDBlOTc2OWFkMzJlN2QzZGM4MWEzZDMzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmU4MzJhMTNkMTQ1NjFmODhlMjdmNGNkOWMzZTViYzdiOWQ1NjVkYTU0MTIxNDg0ZjlkMWFjYTdiZWUyOTA0MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2YwODg0MTNhMzJmZmYyMGVjY2RiZjcyZjY3ZDRmMzkyMGRiZGMyY2NiZGQxOTYxODZhZDFhZGQ0OWQ2MDJlNCJ9"
+        },
+        {
+          "resource": "repo://ecos/server/index.js#L364-L368",
+          "version": "repo-lines-v1:sha256:48a9e6beece216d16138b05b1e697bd406c42cb96c251e8891055dcca3eab85b:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTJmZGFhNWM1ZjNiZDhiNDg1YmIyNzMyNWFkZGYwYWY0MTI3MjU0ZmUxNzA4N2RlM2Q1OTM0Y2IwMWQwYjhkYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjExYTJmZWI4ODcwZTY3MzRjY2M0MjQ2YTQ5MDNhZDY0OWM0ZTFhM2I5MDc2YWJiZDI5NWM2OTNlYmUxYzMxOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODc5NmU4YWI2YzgyNTUxMGNhMTNjMWIyNzFhMThhMzcwZDlhNWY4NDJhODY3ZTliMjE2OWQyYmI1OGYyZDY0MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTRlNmMxMDFmOTdlNWNiZjI3M2EwYWRjN2ZhNjQxN2FiNjU3Y2RlODU4OTM5MzA4MGJiNjRlZmU3NjVhNjY1OCJ9"
+        },
+        {
+          "resource": "repo://ecos/test/offline.test.js",
+          "version": "repo-file-v1:sha256:6eff1ac124a8d6faefe3838fe673afda27e8ab75ce01fbad4da2c25f06725d94"
+        }
+      ]
+    },
+    {
+      "id": "claim_e3b7d9c50ae840dab0040cb4ac9f8507",
+      "statement": "ecos_search는 한 행이 약 120자라 500행 안팎에서 출력 한도에 닿으며 max_rows를 늘려도 한 번에 받는 행은 늘지 않는다고 서버 README가 안내한다.",
+      "evidence": [
+        {
+          "resource": "repo://ecos/README.md#L106-L115",
+          "version": "repo-lines-v1:sha256:63c53e345c517062cb84c1187e990ae27b601b95495bb4128b3ca92f1121242a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2ZDA0Y2QzMWRlMTBiYWU4NTE5ZTZlZTRmOTgzMjViODdjOTIwOWU2MWYxMDQxYzMwYWQ2MzM1ZDNhNzVhMmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkY2JlZjAwZWFhM2JlOWQxMGRjYjc5YWM5ZTlmMTM2NGQ3MjllM2ExY2RmYzIxNzEwMWFmMDYyYzBhMzlmODIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUxODA0NGFlMTM0NzA4NDkyN2ViOWM3OGIyZjZlODQ4NDk1NzA5ZDhmNjRhMzcyNDc1MzhlMTc3M2UyYWE3ZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ5MTA3ZWZiZDI1OTEyNWFkYzc5NTM2M2M0ZGNiOWQ1OThiNTBkNmJiMjVjNzZlYTQ2OGQwYTk0NWIxY2JhOGYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ea3d3f81d9ff46e383700dd70b259807",
+      "statement": "2026-11-24 23:14 조회에서 ECOS 시장금리의 콜금리 3종·KOFR·MMF(7일)·CMA는 민평 회사채와 마찬가지로 당일 값이 비어 있었다.",
+      "evidence": [
+        {
+          "resource": "repo://DATA_TIMING.md#L132-L133",
+          "version": "repo-lines-v1:sha256:98c8b3d34fa487d128018a4e5cfd12ffd466ddc775109c9509512ab41c0447a7:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ0NjU0ZGQyZTE1M2Y5M2JmYzNiM2VhM2M5OWM2ODU4M2E4NjNjOWIxODFjNjE0M2Q1MzQ5ZDczY2U4ZjQ0MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVmMWM2NzZiNTkzNzQ2ODFkNjY1ODhjNzgzNWQ3NDkyNjM1YTE3ZTVjNWExZDc3ODVjYzI3ZDc3Yzk4MmRjYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQxY2IzODc2NDA5NWQ3ODZmNTIzZTA0ZWJiYjgwNjMwNTAwNGYzZTNlNDMyMTZlODA5YjllNjZkYzdhYTQwMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWM4ZjlmY2Y4MzBmNTEyMzEzMzc1NWU4NTliY2IzNWQwOGYxMDI3MDg0NjM3Yzc4YThhM2JmMDFmOTkzNDZlNyJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T12:24:57.291Z"
+    "at": "2026-11-24T16:04:39.925Z"
   }
 }

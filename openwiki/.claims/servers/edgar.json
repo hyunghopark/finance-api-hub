@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:0f6edbce389932a07f980d2cf3c0c4e274bb6984f4bcd2ac9e8936098a0909a2",
+  "pageVersion": "sha256:1fedc073a872bc450c0fb280fa111c027ab70b924f0e4bd7bdb01b0a6a6fe34f",
   "claims": [
     {
       "id": "claim_77f2408b51a548cb951daf09218c4b14",
@@ -41,8 +41,8 @@
       "statement": "buildSeries()는 기간 길이로 연간(340~380일)과 분기(80~100일)를 구분하고, 분기 모드에서 4분기는 시작일이 같은 연간 값에서 9개월 누적 값을 뺀 뒤 derived 표시를 붙여 추가한다.",
       "evidence": [
         {
-          "resource": "repo://edgar/server/index.js#L217-L252",
-          "version": "repo-lines-v1:sha256:5977bfa37558260703e29a3fc53950fe6a6543cb488e824d7bc730acadf408bc:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1Njc1YWVkMDhkYTllOWI5YzYxZDljOWYyMTIwNmQwMWMzMzNiMzViNDllNDYzNzNlODQ5MWIwMjc1YzVjODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwMWU5YjdjMmI1YjY1OGYwNDIzYWQ0NTc5ZWQ2Yzg3ZTdkNWU3NGMwMGVhMjVjOGEwZDU1NGY2NDU5ZjZkOTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5YjFlY2FmNDY2ZWM5NDFmYmYzYWIwYmJjMDE5YjA0YzVlNTkzYTM2MzI3NGI3ZmQxZTdmODYxNTRjZDdlYTgifQ"
+          "resource": "repo://edgar/server/index.js#L217-L269",
+          "version": "repo-lines-v1:sha256:e4ecc50f193234c5ffbe604516b0aeedcfe175ea7a5023c222d4775e8c97de09:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1Njc1YWVkMDhkYTllOWI5YzYxZDljOWYyMTIwNmQwMWMzMzNiMzViNDllNDYzNzNlODQ5MWIwMjc1YzVjODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwMWU5YjdjMmI1YjY1OGYwNDIzYWQ0NTc5ZWQ2Yzg3ZTdkNWU3NGMwMGVhMjVjOGEwZDU1NGY2NDU5ZjZkOTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5YjFlY2FmNDY2ZWM5NDFmYmYzYWIwYmJjMDE5YjA0YzVlNTkzYTM2MzI3NGI3ZmQxZTdmODYxNTRjZDdlYTgifQ"
         }
       ]
     },
@@ -93,10 +93,66 @@
           "version": "repo-lines-v1:sha256:06ab6117816a92e85b17a02a76bdef7bb81b0b070c0c5da14c12d22899e1feb5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzZThmY2MwZTZiYWFhYmY5YWVhZGYwZmE0YTdlODI4NjE5MzI5YjY5MWUxYjU5OGMzMTk0NzcyMDE2NGQ1YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2MjA2YjNiYzdiZGFjZmYzNDdmNWE1MjM1Y2Y3MjYzNTEzNDBiZGI3MGM2NDY4YTUxZDY3NzI1Mzg3ZjlkZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY2NDliZWM1ZWFmMDI4M2JlMWMzZWY2MjUzZWQ0M2NkMTQ2NzI3YTcxZDQ1MTkxOWQ0ZjVhNGIxOTE0ZjJmMTkifQ"
         }
       ]
+    },
+    {
+      "id": "claim_b15babcdec974857b2d82bc9e0e81ef1",
+      "statement": "분기 모드에서 buildSeries()는 분기 값이 직접 공시되지 않은 경우 2분기를 6개월 누적(165~200일) − 1분기로, 3분기를 9개월 누적 − 6개월 누적으로 계산해 derived: true로 표시한다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L220-L220",
+          "version": "repo-lines-v1:sha256:f763b729940f2f61f53275008b656aeb511923180025eb79757e4783c6b652f3:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjc2M2I3Mjk5NDBmMmY2MWY1MzI3NTAwOGI2NTZhZWI1MTE5MjMxODAwMjVlYjc5NzU3ZTQ3ODNjNmI2NTJmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjc2M2I3Mjk5NDBmMmY2MWY1MzI3NTAwOGI2NTZhZWI1MTE5MjMxODAwMjVlYjc5NzU3ZTQ3ODNjNmI2NTJmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDk4MDBlZjFkMTIzMmE0YzAyMjYyN2MzNDVmNjZhYjFkZjI0OGE0ZTc5NTQyM2NkYWE2MjBkNjFlYmQ2NzgzMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmM0MmUwZjRlYWQzMzJlMWFmNjc4ZDdiYzZiNjAzOTNhYTNiM2E2ODNjZWI0ZGQ5MDQ4OGFlZGY4Njg0YjM4MSJ9"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L242-L257",
+          "version": "repo-lines-v1:sha256:9fd58269dfebb468f1599d1a5017b7f62ec3fa0b85750886709a54a857d599f6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0NGFlMmRmNjlhMWJjMzA2NTJhYjZlNDlkOGZmNjI5MTk2Y2Y2MDVjM2U5ZWYwNzFiNDJjMzVmZDQ4MDQzMDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhYWNiMDVjNjc1Y2ViNzM5NDllYWVhOTJmMTU4NmRlMWQzNmE4OWJiYmM4NjkyNmVkNDhkMjYwYmI4N2I4ZmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNlNjg0YjUxMDM0YTNkYWVkODgyMmM0YTc0MTc0MDIxOGU4ZDI1Yzg1NTVkNTA5MmMxMThkNjcwZmIzZWM5MWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkwMDFmMDAyZDVmNTFlZTA5NmE4NDNhMTY1NWJkNGNlM2YxMTExYjdkYzQ4MjY2MDM2MmZiMTM2ZDYyMWU5NWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_10464afa33cc42d5b49713c5fc8f22f6",
+      "statement": "계산에 필요한 값이 없어 만들지 못한 분기는 buildSeries()가 따로 모아 돌려주고, sec_financials는 표시 범위 안에서 다른 태그로도 채워지지 않은 분기만 항목의 note에 '빠진 분기'로 알린다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L264-L269",
+          "version": "repo-lines-v1:sha256:af2639275370d5545dd3639ead7282002b882477d9f0e494298c85f5f3b5534d:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTAzMjZjNWZlY2E1NTgxMGY5MGQwOGEwY2Q4NDMxYTNkYmZkN2VkNTZlNDgyZjViZjY4NjgxMDI3M2I0NDRkYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDliMWVjYWY0NjZlYzk0MWZiZjNhYjBiYmMwMTliMDRjNWU1OTNhMzYzMjc0YjdmZDFlN2Y4NjE1NGNkN2VhOCJ9"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L439-L447",
+          "version": "repo-lines-v1:sha256:f120ddcb2da02a4a194b8c51620efe43b24fd03aef37d041198c84306f6a3c34:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWNjNWVmZjRhMzU2YTE0NjRiNTdiNWE1YmM3OGJiODZmMTgyMjQ4NTExNjJjNzc2ODg1YzkyMzg0NGY4ODQ4MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzZlZWRhNWUxOGYxYWVkZmJkYTAwZDlmZDI1ZTI0YWM5NjYyNjkwZWQ4NzRiZWI3OTMyNDI3MDVlNGY0NzJiNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZlNDMxNzA1ODc3YzVhNDEyN2YwOTljNjEwNzIyMGRiMTVlODQ0ODZjOTg4YjgxOTJlZDQ2NDNlNmY2ODZjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjE0NDllMDI4YjUxZWJiYmIyYzUxNTkyZTk0MGQzN2NiNTUxMGMwMzFjN2Y1NTNkYjQxZDRkYWVhZjFlZjUyNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_817c3e76070e474698bcc799ebdc21c6",
+      "statement": "sec_concept는 forms와 from으로 먼저 거른 뒤 기간별 최신 공시를 고르므로, 같은 값이 나중에 다른 양식에 다시 실린 기간도 지정한 양식의 행으로 나온다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/README.md#L58-L58",
+          "version": "repo-lines-v1:sha256:a620d004219bdb16c3a4668ec9b62ecafa1a90b31a70e0503a1374960d522a39:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTYyMGQwMDQyMTliZGIxNmMzYTQ2NjhlYzliNjJlY2FmYTFhOTBiMzFhNzBlMDUwM2ExMzc0OTYwZDUyMmEzOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTYyMGQwMDQyMTliZGIxNmMzYTQ2NjhlYzliNjJlY2FmYTFhOTBiMzFhNzBlMDUwM2ExMzc0OTYwZDUyMmEzOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWFhOTQ1YjU3ZGFkNmQyMzBlMzk0MmI5NDFlZGYyMTYwYzAyN2QyN2UwNjg4ZWQ5Yjc1ZWUwMzc4MzZhMzQ4NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDFjYjBkYzdkMTUyN2E4ZTg4ZjlmNjRkYmFjOGNkZjc1ZGMzOTZhMGEzYjY2MmVmMmJhMTJlZGNkMjNkZjJhMyJ9"
+        },
+        {
+          "resource": "repo://edgar/server/index.js#L478-L483",
+          "version": "repo-lines-v1:sha256:19d15c9f945a967dfa290affda1787ed985e630fd6ffd5de594ea9de339f0f8c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQxMmFhNWM4YTllMjI5NDdjMjE5YWNhNWFkYTZjNGFkMDRiYzc1ZTg1OTI4NTJiYjYzMmI5MzBkMGMyOGQ3NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzQ0ZWQ3NGQyODNmZTNmOTY5YzVlYjRlNWEzYzJiOTg3OTk1YTg5MGEyYmMzYWZiNTEwM2JiNDkyMWRkYTM0NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzEzZDAwNjA4YTljNGJhNmE0MTg1MTk2ZGI5OWFjOTFhZTE4ZGE3MmQ0ZTc2ZGFkMzQyMTc2NTg5MmQ0YWZkNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzNkMWMxY2VjNDU2NjdiNGRmNDJmYzg5MmRiOTUwMDkwM2JlYzhmMjJlOGY1NmU5NGY2ODY2OGQ2NWY5OTI2OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_14688daa84564db2aff76a539614a849",
+      "statement": "edgar의 fitOutput()은 최상위 rows가 있으면 그것을 줄이며 shown과 next_offset을 다시 맞추고, 없으면 안쪽 배열을 모두 같은 수로 줄여 sec_financials의 항목마다 같은 수의 최신 기간을 남긴다.",
+      "evidence": [
+        {
+          "resource": "repo://edgar/server/index.js#L616-L681",
+          "version": "repo-lines-v1:sha256:47e1bb1af3d0da3ce61cc0d93290111c4f0ea8c81d3b285ee3f7e4100188586d:eyJzZWxlY3RlZExpbmVDb3VudCI6NjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE5OWQwMmI2YjZmODJmOTAxYmViYmZlNDdjMTA4YWFjYmQwZjBiY2IyZDY2MjljNDFiZjdhODAyOWY1ZjU4OTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE4YTkxNzU5NzJmZTE1ZTJhOTY0MWFiMTMxZjU3MWU2YzdjYWJjYTA2ODM3NjJlYmE1ZjIzNTNlNDgzYzNkNTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlNmVjZjU0NDY5MmQ3MWY3NjMxMjc0ZDdlZWRmZGM0YTU5NDNlZmRmYmUzMjEwNTQ2MWE1MzcxZjY2OTE4M2QifQ"
+        },
+        {
+          "resource": "repo://edgar/test/offline.test.js",
+          "version": "repo-file-v1:sha256:6ffb0052919c4acf2091893994a0b3383d642c56f1d9c48bbb3ce12f1593117f"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T12:24:57.291Z"
+    "at": "2026-11-24T16:04:39.925Z"
   }
 }

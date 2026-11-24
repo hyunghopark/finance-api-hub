@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:3918123821f6a649c7b528a1709be9e7118963c77189531702bae6ffb6d9fbf8",
+  "pageVersion": "sha256:4ab1891171e809883670aad9179c251986478b63c7b4aedff0a9216c675b25ce",
   "claims": [
     {
       "id": "claim_0bd7f91f3dc44d4681867db5ec8e5b1d",
@@ -71,8 +71,8 @@
           "version": "repo-lines-v1:sha256:ad0a53fb5fe682b49a45f344822157e303abc46e46b4a01008eb672a6ac2f61f:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiNTQzMWRlYzM4OTQzNTExNzQ3ODgyMmYwM2U1YmNmMzkyNDlmYzc1MWM0MzE5OTA1ZDAyZTZiOGQ0ZGZlMmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYyYTk4ZmUzZGNjYzZlYjU5YmU3MjA3ZmUxNTQwMjJlZjk1NDkwNzZjM2VkOWMyZjAzMzY4ZWFkM2ViODgxNmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1Mzg5Zjk3ZDk3ZGQ2Y2YxMWE3NjM1MTNmNzllODg4ZWRhMDZkYTM3YmFhNzFmZTFjMDNmNmViOTc4ZjI4ZDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiN2RhMWM4ZDY1MWFhMjkyZGFhMzVlOTZlNTViZWYyNWY4MWQxNjZjMmFlMDUzYjI2ZTBmMGU4MDFlNWU2YjcifQ"
         },
         {
-          "resource": "repo://dart/server/index.js#L422-L437",
-          "version": "repo-lines-v1:sha256:076a8d63d03137b09c5f8c2a33ff72a47e42733a970e491dae1bf02e2e6e9cf6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1YTEwNjhlNmE1MmQ0ZTZkNjJiNTQ0Njk0MDQ4NzA3YWNlMjdmMzA3MTBkODQwMGJhNzM3NGIwMTc5M2NiNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmYWQzZTBhMDZjNWNiOWFhNmUwN2Y1ZGY0ZDY0MzhlMDg2MzM4YmRiZjUwMmU5YjM2NjkwNzY2NGVmM2I5M2UifQ"
+          "resource": "repo://dart/server/index.js#L514-L531",
+          "version": "repo-lines-v1:sha256:efb0b51551c682232175898c5890a4f94e2521a420ba00eff91eebae8715cc9f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFmNDA4ODAwNjgzNDkyYmQ2ZWMwYTE2NTgzYzBkZTQxYzBkMDdiODdjMDkzNmEwYmE0YTBiNzMyMTE0M2I0Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmYWQzZTBhMDZjNWNiOWFhNmUwN2Y1ZGY0ZDY0MzhlMDg2MzM4YmRiZjUwMmU5YjM2NjkwNzY2NGVmM2I5M2UifQ"
         }
       ]
     },
@@ -95,10 +95,58 @@
           "version": "repo-lines-v1:sha256:0f3f096bb7b162ddd4c1e2f8cc974feee2155b87248f6faecd4bfbd5078d7b8a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhYjEwMmM3ZmZlZGZiMjNlYTk3NzdlYmNiMDQwOWY5OWFjMzk2N2ZlMjI1NTcxMGQ4NTdiY2NlZmFjYTdjZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmYjMwZDJiMzI3MWRiYTYzZWYyZGM1YzBkMDJkMTZkZjAwODhhMDlkOWVkZTIyMjhmMGU1YTYxZDhhYzllZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVlN2UzYWE3MmM3ZTAyZDRlMTU3ZmI0OWJkM2IzNjMzNDdlNjM1NDNjMGQzZTExMDY2ZGE5Zjc4Mzg0YmYzYmYifQ"
         }
       ]
+    },
+    {
+      "id": "claim_86ab8bb2237f4bfb892c26152f5b6928",
+      "statement": "dart_report의 결과는 pageReport()가 limit(기본 100, 최대 500)과 offset으로 나눠 돌려주며, 전체 행 수(count·total), shown, offset을 담고 더 남았을 때만 next_offset을 붙인다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L264-L283",
+          "version": "repo-lines-v1:sha256:bd389ca4e7ad0a6b5f327a7dbecd92b5075d4c125dd2f7162c092763c3cf89d0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZDY5M2VjZjhhOWEwYzdjZmRiNzU2ODA2MmI3NDMyMTEyNTk1MTA5ODhiMjU0NTcwYTc5OTI3NTVkN2RiMzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFjZTNlNGUwNGIzN2ZiNDRhYjUzZDM3NzVlNDVjNWNkYzc3NzNjOGM1NjA0OTE4YmQwZTYzM2FmY2U2ZGQzZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJhOTA3YzU0NWI5NjljYzM4YTBlNGJjZmFjYjliMTQxZjU3NTIxODA0MWE3NDU3ZWJhNjIwNzU1MmJhNTMxYzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e0b4c76adc494cea878fc57886147bb5",
+      "statement": "지분공시(majorstock·elestock)는 서버가 접수일 최신순으로 다시 정렬하고 bgn_de·end_de가 있으면 접수일로 거르며, 그 밖의 묶음은 DART가 준 순서를 유지한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L271-L276",
+          "version": "repo-lines-v1:sha256:436f181ef20f141fb21893fc73dbf322ac47d72324e889ba4d8102763af995b5:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWEwNjNlZDgxODhiNmMyMGU4Yjc5YTI1YWM4ZDY5MzFkMDA4ZDFlNTU2N2UyOGZhMmQyM2Q3ZTcxNGQzZTRmZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTEzMGY5N2MwMGVhM2Q1MmM4ZjIxOTI3OGUyYjFhZGQyODI0MzAzMTlkMGQ4MTIzYTY1OGZkNGJjMDg3YzRiMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDFkN2JkNjcwOTMyYzExOThiNWNkODRhZGNkMTM4YjJiYmQ4M2E4NWIwYjJmNmY3YTk1ZmNhN2Y1NjY3Y2EwYiJ9"
+        },
+        {
+          "resource": "repo://dart/test/offline.test.js",
+          "version": "repo-file-v1:sha256:b61b03fc060146aab031ae2afca679415019eff63979739e4eb377fe88f9d824"
+        }
+      ]
+    },
+    {
+      "id": "claim_597779fe0a0f4cf2ae271f1bac28e323",
+      "statement": "resolveCorps()는 회사가 둘 이상이고 고유번호로 지정돼 이름이 빈 항목이 있으면 고유번호 목록에서 이름과 종목코드를 채우고, 목록을 받지 못해도 조회를 계속한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L240-L263",
+          "version": "repo-lines-v1:sha256:36f1be4c249d92f32144f96039d3c9a21d41d94f06c446f397dff49905247c01:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVlZTZlOWRmNjUyNzMzYmZhNjIyMWYyYWZjNjY4NGNjNGUxNjMwZmMyNTI3MjI4OGNhZGVhNjMxZWRjODBhYTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJhYTZjMDBhMzc5MzQ1MDY0ZGQ1Zjc3NWM2M2RhYjIyOTAzYzliYmQ5ODYyOTI0NmJlM2I5YjhlYTA0MjdkODYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlYTYwNmYyMDNmNmIzMThkN2I3Y2ViNDA1MWYyMmZjZjZlOWIzMGJiYTkyY2U3ZDNjY2YzZTcyNTVkMDEwNWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3aded9b3c75e4a8bbf62032634d9a054",
+      "statement": "dart의 fitOutput()은 도구 객체의 rowsKey로 줄일 배열을, narrow로 안내 문구를 정하고, dart_report는 afterFit으로 줄어든 행 수에 맞춰 next_offset을 다시 계산한다.",
+      "evidence": [
+        {
+          "resource": "repo://dart/server/index.js#L285-L318",
+          "version": "repo-lines-v1:sha256:81021876d175dc7b4253bf35777c11752c7823dc5e4baf0c2ed6c56dd47b8d3c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNmOTNhZTc5OTFmNmM0NDI5MDQwNDk0NmJhN2JiYzYxMWMzYTUyNDEzNTAxZGZlNjZjNDdjYmNmNDZiMzJjMTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyNzliNjgwNTIwZWQ1MjZkY2M0YzhhYTM3MzUyNzU5MGUyODE5NWU0MGZiZTYxMDdlMWU1YjQ5NWE0NTc3MzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzYjQ5ZjBhNThkODMwZWExNDM0NDk4NTlhOWUzMWUxMjk2NGFlNjM0NGE1ZDM1OWRkOGI2ZWExMjZmNmVhNTQifQ"
+        },
+        {
+          "resource": "repo://dart/server/index.js#L497-L499",
+          "version": "repo-lines-v1:sha256:41b3d226a7a2dbdd16f21600aa078faac1efd4a29537c5a6db702778ca4a9445:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzJhMWQ0ZjA3NDRjOTNiM2RkMDA4MDU3NWI5MWRhZjJiMjMyOGM1OTRhZDMxZjEwYzZlNjJiNDJlM2YzOWI4YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2IxZGVkYzIzNmFlY2I5M2JlOWE2YjBhYjY2MDg3NTMyMWFiYTcyM2ZlZWZhNDYyNDIxMzU5MjFmMzE4MzI0ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2Y4ZTFiYjc3YjNhMjgwNTExZGRhZWNmY2VmMGM4OTdlYjg4ZTFjZGQ5OGE1MzE0YTY0YWVkMzgyOGNkZjA1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjdmZDgyMzRhZDE4ZjQ2ODJlNGZmNjc3NTEwZTEzMDY4MjVmOWMyZTZkMDg3ZDk2NmVmMWI0Zjc3YzI4MDhmZiJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.2",
-    "at": "2026-11-24T12:24:57.291Z"
+    "at": "2026-11-24T16:04:39.925Z"
   }
 }

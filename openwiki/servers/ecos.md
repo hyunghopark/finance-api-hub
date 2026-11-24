@@ -5,11 +5,17 @@ description: ecos-readonly 서버가 ECOS의 경로형 주소를 만드는 방�
 tags: [ecos, bank-of-korea, interest-rates, statistics, macro]
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T12:24:57.291Z
+    at: 2026-11-24T16:04:39.925Z
 sources:
+  - id: openwiki-source-bbf6022b68f978d6891eb8ff
+    resource: repo://DATA_TIMING.md
+  - id: openwiki-source-ad400bcbe422e8c098a7ad98
+    resource: repo://ecos/README.md
   - id: openwiki-source-da64edabd94143649d65fb36
     resource: repo://ecos/server/index.js
-generated: { by: "claude-code", at: "2026-11-24T12:24:57.291Z" }
+  - id: openwiki-source-d43593a5387d830b67df0bc4
+    resource: repo://ecos/test/offline.test.js
+generated: { by: "claude-code", at: "2026-11-24T16:04:39.925Z" }
 ---
 
 # 한국은행 ECOS 서버 (ecos)
@@ -57,7 +63,7 @@ ECOS는 정상일 때 서비스 이름을 키로 하는 블록을, 문제가 있
 
 `bp()`는 한쪽이 없으면 `null`을 돌려주고, 있으면 소수 첫째 자리까지 반올림한다.
 
-기간을 비우면 한국 시각 오늘부터 14일 전까지다. 휴일은 행이 없고, 그날 값이 아직 없는 항목은 `null`이다. 민간채권평가사 평균 회사채(`corpAAmp`)는 하루 늦게 들어오는 것이 확인돼 있어 당일 밤에는 `null`로 나온다.
+기간을 비우면 한국 시각 오늘부터 14일 전까지다. 휴일은 행이 없고, 그날 값이 아직 없는 항목은 `null`이다. 민간채권평가사 평균 회사채(`corpAAmp`)는 하루 늦게 들어오는 것이 확인돼 있어 당일 밤에는 `null`로 나온다. 2026-11-24 23:14 조회에서는 콜금리 3종, KOFR, MMF(7일), CMA도 당일 값이 비어 있었다.
 
 ## 통계표 코드를 찾는 흐름
 
@@ -94,9 +100,20 @@ ECOS는 주기에 따라 날짜 표기가 다르다. `checkDate()`가 요청을 
 
 `ecos_meta`는 어떤 통계가 언제 공표되는지 확인하는 데 쓸 수 있다.
 
+## 출력 한도
+
+도구 응답은 6만 자를 넘지 않으며 항상 유효한 JSON이다. 넘으면 `fitOutput()`이 글자를 자르지 않고 행 수를 줄인다. 공통 동작은 [MCP 서버 공통 구조](../architecture/server-anatomy.md)의 "출력 한도"에 있고, ecos에서의 세부는 다음과 같다.
+
+- 줄일 배열은 `rows`, `results` 순으로 찾고, 둘 다 없으면 결과에서 가장 큰 배열이다.
+- 앞쪽 행을 남긴다. `max_rows`와 `limit`가 남기는 쪽과 같다.
+- 결과에 `truncated: true`와 실제 행 수 `shown`이 붙는다. 원래 `shown`이 없던 도구의 결과에도 추가된다. `total`이나 `count` 같은 전체 건수는 그대로다.
+- `note`에는 몇 건 중 몇 건을 표시했는지와 좁히는 방법이 들어간다. 좁히는 방법은 도구 7개가 각자 `narrow` 항목으로 갖고 있다. 시계열 조회는 기간이나 항목 코드를, 통계표 찾기는 `query`나 `parent_code`를 안내한다. 도구가 이미 넣은 `note`가 있으면 그 뒤에 덧붙인다.
+
+이 한도는 행 수 인자보다 먼저 닿을 수 있다. 서버 README에 따르면 `ecos_search`는 한 행이 약 120자라 500행 안팎에서 한도에 닿는다. `max_rows`를 늘려도 한 번에 받는 행은 늘지 않으므로, 긴 시계열은 기간이나 항목 코드로 나눠 조회해야 한다.
+
 ## 반영 시각
 
-시장금리 당일 값은 당일 18:09에 이미 있었던 것이 확인돼 있다. 국고채와 회사채 값이 같은 날 저녁 기사 값과 5거래일 연속 일치했다는 기록도 있다. 자세한 내용은 [데이터 반영 시각과 거래소 기준](../concepts/data-timing.md)에 있다.
+시장금리 당일 값은 당일 18:09에 이미 있었던 것이 확인돼 있다. 다만 위에 적은 것처럼 밤에도 당일 값이 비는 항목이 있다. 국고채와 회사채 값이 같은 날 저녁 기사 값과 5거래일 연속 일치했다는 기록도 있다. 자세한 내용은 [데이터 반영 시각과 거래소 기준](../concepts/data-timing.md)에 있다.
 
 ## 테스트 전용 설정
 
