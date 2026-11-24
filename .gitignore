@@ -7,6 +7,7 @@ node_modules/
 .env.*
 !.env.example
 .toss-mcp/
+.kis-mcp/
 .dart-mcp/
 .ecos-mcp/
 .edgar-mcp/
