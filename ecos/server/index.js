@@ -12,7 +12,7 @@ const path = require('path');
 const os = require('os');
 const { execFileSync } = require('child_process');
 
-const VERSION = '0.1.1';
+const VERSION = '0.1.2';
 const HOST = 'ecos.bok.or.kr';
 let testHost = null; // 시험 전용: 로컬 가짜 서버 (ECOS_MCP_NO_STDIO=1일 때만 설정 가능)
 // 시험(ECOS_MCP_NO_STDIO=1)에서만 캐시 위치를 바꿀 수 있음 — 실제 캐시를 덮지 않도록
@@ -24,6 +24,48 @@ const KEYCHAIN_ACCOUNT = 'ecos';
 const MAX_OUTPUT_CHARS = 60000;
 
 const log = (...a) => process.stderr.write('[ecos-mcp] ' + a.join(' ') + '\n');
+
+// ───────────────────────── 출력 한도 ─────────────────────────
+// 응답 문자열이 한도를 넘으면 글자를 자르지 않고 행 수를 줄여, 항상 유효한 JSON으로 돌려줌.
+// 남기는 쪽은 앞쪽(각 도구의 max_rows·limit가 남기는 쪽과 같음). 한도 이하면 원래 문자열 그대로.
+function fitOutput(out, narrow, max = MAX_OUTPUT_CHARS) {
+  const str = (o) => JSON.stringify(o, null, 1);
+  const text = str(out);
+  if (text.length <= max) return text;
+  const isObj = out && typeof out === 'object' && !Array.isArray(out);
+  // 줄일 배열: rows, results 순으로 찾고, 없으면 가장 큰 배열
+  let key = null;
+  if (isObj) {
+    key = ['rows', 'results'].find((k) => Array.isArray(out[k]) && out[k].length) || null;
+    if (!key) {
+      let best = 0;
+      for (const [k, v] of Object.entries(out)) { if (Array.isArray(v)) { const n = str(v).length; if (n > best) { best = n; key = k; } } }
+    }
+  }
+  if (key) {
+    const arr = out[key];
+    const build = (n) => {
+      const msg = `출력 한도 ${max}자 때문에 ${arr.length}건 중 ${n}건만 표시.` + (narrow ? ' ' + narrow : '');
+      const o = {};
+      for (const [k, v] of Object.entries(out)) {
+        if (k === 'shown' || k === 'truncated' || k === 'note') continue;
+        if (k === key) { o.shown = n; o.truncated = true; o.note = out.note ? out.note + ' ' + msg : msg; o[k] = arr.slice(0, n); } else o[k] = v;
+      }
+      return str(o);
+    };
+    let lo = 0; let hi = arr.length - 1; let fit = null;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1; const t = build(mid);
+      if (t.length <= max) { fit = t; lo = mid + 1; } else hi = mid - 1;
+    }
+    if (fit) return fit;
+  }
+  // 줄일 배열이 없거나 배열을 비워도 넘는 경우: 앞부분만 미리보기로
+  const note = `출력 한도 ${max}자를 넘어 앞부분만 표시(전체 ${text.length}자).` + (narrow ? ' ' + narrow : '');
+  let n = Math.max(0, max - 500); let t;
+  do { t = str({ truncated: true, total_chars: text.length, note, preview: text.slice(0, n) }); n = Math.floor(n * 0.8); } while (t.length > max && n > 0);
+  return t.length <= max ? t : str({ truncated: true, total_chars: text.length, note: note.slice(0, 200), preview: '' });
+}
 
 // ───────────────────────── 키 ─────────────────────────
 let cachedKey = null;
@@ -171,7 +213,8 @@ const bp = (a, b) => (a == null || b == null ? null : Math.round((a - b) * 1000)
 const TOOLS = [
   {
     name: 'ecos_market_rates',
-    description: '한국 시장금리(일별, 통계표 817Y002, 27개 항목 전부 선택 가능)를 날짜별 표로: 국고채 1~50년, 회사채 3년 AA-·BBB-, CD·CP 91일, 콜·KOFR, KORIBOR, 통안증권 등과 계산값(회사채 AA-−국고채 3년 신용 스프레드, 국고채 10년−3년 금리차, bp). 기본은 최근 14일. 한국은행 집계 값이며 금융투자협회 최종호가와 같은 기준인지는 별도 확인 필요.',
+    description: '한국 시장금리(일별, 통계표 817Y002, 27개 항목 전부 선택 가능)를 날짜별 표로: 국고채 1~50년, 회사채 3년 AA-·BBB-, CD·CP 91일, 콜·KOFR, KORIBOR, 통안증권 등과 계산값(회사채 AA-−국고채 3년 신용 스프레드, 국고채 10년−3년 금리차, bp). 기본은 최근 14일. 한국은행 집계 값이며 금융투자협회 최종호가와 같은 기준인지는 별도 확인 필요. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: '기간(start, end)을 좁히거나 items로 항목을 줄이세요.',
     inputSchema: { type: 'object', properties: {
       start: { type: 'string', description: '시작일 YYYYMMDD (기본: 14일 전)' },
       end: { type: 'string', description: '종료일 YYYYMMDD (기본: 오늘, KST)' },
@@ -204,7 +247,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_search',
-    description: 'ECOS 통계 조회(StatisticSearch). 통계표코드와 주기, 기간, 항목코드로 시계열을 받습니다. 코드는 ecos_find_table → ecos_items 순서로 찾습니다. 주기: A 연, S 반년, Q 분기, M 월, SM 반월, D 일. 날짜 형식 예: A 2026, S 2026S1, Q 2026Q3, M 202610, SM 202610S1, D 20261109. 항목코드를 비우면 그 단계 전체.',
+    description: 'ECOS 통계 조회(StatisticSearch). 통계표코드와 주기, 기간, 항목코드로 시계열을 받습니다. 코드는 ecos_find_table → ecos_items 순서로 찾습니다. 주기: A 연, S 반년, Q 분기, M 월, SM 반월, D 일. 날짜 형식 예: A 2026, S 2026S1, Q 2026Q3, M 202610, SM 202610S1, D 20261109. 항목코드를 비우면 그 단계 전체. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: '기간(start, end)을 좁히거나 item1~item4로 항목을 지정하세요. max_rows를 늘려도 한도는 같습니다.',
     inputSchema: { type: 'object', properties: {
       stat_code: { type: 'string', description: '통계표코드 (예: 817Y002 시장금리 일별, 722Y001 한국은행 기준금리)' },
       cycle: { type: 'string', enum: Object.keys(CYCLES) },
@@ -224,7 +268,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_items',
-    description: '통계표의 세부 항목 목록(StatisticItemList): 항목코드·이름·주기·자료 시작/끝·단위. ecos_search에 넣을 항목코드를 찾을 때 씁니다.',
+    description: '통계표의 세부 항목 목록(StatisticItemList): 항목코드·이름·주기·자료 시작/끝·단위. ecos_search에 넣을 항목코드를 찾을 때 씁니다. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: 'name_contains로 항목 이름을 좁히세요.',
     inputSchema: { type: 'object', properties: {
       stat_code: { type: 'string' },
       name_contains: { type: 'string', description: '항목 이름에 이 글자가 들어간 것만' },
@@ -241,7 +286,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_find_table',
-    description: '통계표 이름으로 통계표코드 찾기(StatisticTableList). 전체 844개(조회 가능 617개) 목록은 7일마다 받아 ~/.ecos-mcp 에 캐시. 예: "기준금리", "소비자물가", "경제심리", "증시주변자금". parent_code로 분류 트리를 따라 내려갈 수 있음(query 없이 parent_code만 주면 그 분류의 하위 전체).',
+    description: '통계표 이름으로 통계표코드 찾기(StatisticTableList). 전체 844개(조회 가능 617개) 목록은 7일마다 받아 ~/.ecos-mcp 에 캐시. 예: "기준금리", "소비자물가", "경제심리", "증시주변자금". parent_code로 분류 트리를 따라 내려갈 수 있음(query 없이 parent_code만 주면 그 분류의 하위 전체). 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: 'query나 parent_code로 좁히거나 limit를 줄이세요.',
     inputSchema: { type: 'object', properties: {
       query: { type: 'string', description: '통계표 이름 일부 또는 통계표코드' },
       parent_code: { type: 'string', description: '이 상위 통계표코드 바로 아래 것만 (분류 트리 따라가기, 예: 0000000001 통화/금융)' },
@@ -260,7 +306,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_key_stats',
-    description: '한국은행 100대 통계지표(KeyStatisticList)의 최신값: 금리·환율·물가·통화·성장·고용·국제수지 등. 분류나 이름으로 거를 수 있음.',
+    description: '한국은행 100대 통계지표(KeyStatisticList)의 최신값: 금리·환율·물가·통화·성장·고용·국제수지 등. 분류나 이름으로 거를 수 있음. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: 'contains로 분류나 지표 이름을 좁히세요.',
     inputSchema: { type: 'object', properties: {
       contains: { type: 'string', description: '분류명 또는 지표명에 이 글자가 들어간 것만 (예: 금리, 물가, 환율)' },
     } },
@@ -273,7 +320,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_word',
-    description: '한국은행 통계용어사전(StatisticWord)에서 용어 뜻 찾기. 예: 소비자동향지수, 경상수지, 본원통화.',
+    description: '한국은행 통계용어사전(StatisticWord)에서 용어 뜻 찾기. 예: 소비자동향지수, 경상수지, 본원통화. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: 'word를 더 구체적으로 지정하세요.',
     inputSchema: { type: 'object', properties: { word: { type: 'string' } }, required: ['word'] },
     run: async (a) => {
       const r = await ecosGet('StatisticWord', 1, 20, [a.word]);
@@ -282,7 +330,8 @@ const TOOLS = [
   },
   {
     name: 'ecos_meta',
-    description: '통계메타DB(StatisticMeta): 통계의 작성 방법·주기·공표 시기 등 설명. 데이터명(통계 이름)으로 조회.',
+    description: '통계메타DB(StatisticMeta): 통계의 작성 방법·주기·공표 시기 등 설명. 데이터명(통계 이름)으로 조회. 응답이 출력 한도(6만 자)를 넘으면 앞쪽 행만 남기고 truncated: true, shown(실제 행 수), note로 알림.',
+    narrow: 'name을 더 구체적으로 지정하세요.',
     inputSchema: { type: 'object', properties: { name: { type: 'string', description: '데이터명 (예: 경제심리지수)' } }, required: ['name'] },
     run: async (a) => {
       const r = await ecosGetAll('StatisticMeta', [a.name], 300);
@@ -315,8 +364,7 @@ async function handle(msg) {
       if (!tool) return send({ jsonrpc: '2.0', id, error: { code: -32602, message: '알 수 없는 도구: ' + params.name } });
       try {
         const out = await tool.run(params.arguments || {});
-        let text = JSON.stringify(out, null, 1);
-        if (text.length > MAX_OUTPUT_CHARS) text = text.slice(0, MAX_OUTPUT_CHARS) + `\n…(잘림: 전체 ${text.length}자. 기간이나 항목을 좁히세요)`;
+        const text = fitOutput(out, tool.narrow);
         return send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } });
       } catch (e) {
         return send({ jsonrpc: '2.0', id, result: { isError: true, content: [{ type: 'text', text: mask(e.message || String(e)) }] } });
@@ -346,4 +394,4 @@ if (process.env.ECOS_MCP_NO_STDIO !== '1') {
   log(`시작 v${VERSION}`);
 }
 
-module.exports = { TOOLS, RATE_ITEMS, SERVICES, checkDate, bp, mask, ecosGet, _setKey: (k) => { cachedKey = k; }, _setHost: (h) => { if (process.env.ECOS_MCP_NO_STDIO === '1') testHost = h; } };
+module.exports = { TOOLS, RATE_ITEMS, SERVICES, checkDate, bp, mask, ecosGet, fitOutput, MAX_OUTPUT_CHARS, _setKey: (k) => { cachedKey = k; }, _setHost: (h) => { if (process.env.ECOS_MCP_NO_STDIO === '1') testHost = h; } };
