@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "fred-readonly",
   "display_name": "FRED 미국 경제 데이터 (조회 전용)",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "세인트루이스 연준 FRED API 조회 전용 MCP. 브리핑 묶음(미국 금리 곡선·기대인플레·실질금리, 신용 스프레드·금융스트레스, 연준 유동성, 경기·물가), 시리즈 검색·관측값, 발표 일정, v1 경로 31개.",
   "author": {
     "name": "hyunghopark"
