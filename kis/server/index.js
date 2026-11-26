@@ -13,7 +13,7 @@ const crypto = require('crypto');
 const readline = require('readline');
 
 const BASE_URL = 'https://openapi.koreainvestment.com:9443'; // 실전 도메인 고정. 다른 주소로 키가 나가지 않게 바꾸지 않습니다.
-const SERVER_INFO = { name: 'kis-readonly', version: '0.1.1' };
+const SERVER_INFO = { name: 'kis-readonly', version: '0.1.2' };
 const TOKEN_DIR = path.join(os.homedir(), '.kis-mcp');
 const TIMEOUT_MS = 15_000;
 const MIN_GAP_MS = 110;            // 호출 시작 간격(초당 9건쯤). 60ms 간격으로는 15번째 호출에서 EGW00201 이 났음(2026-11-24)
@@ -282,12 +282,12 @@ const TOOLS = [
   },
   {
     name: 'kis_stock_minute_chart',
-    description: '국내 종목 당일 분봉(최신순). time 시각부터 과거 방향으로 한 번에 최대 30건이며, 더 과거는 time 을 옮겨 다시 조회. J 의 15:30 봉 stck_prpr 이 정규장 종가 동시호가 체결가. J 도 15:30 이후 봉이 계속 나옴. 당일 자료만 제공(전일 분봉 없음). time 에 미래 시각을 넣으면 현재가 기준으로 조회됨. output2 첫 행의 체결량(cntg_vol)은 그 분의 첫 체결 전까지 직전 분 값이 표시됨.',
+    description: '국내 종목 당일 분봉(최신순). time 시각부터 과거 방향으로 한 번에 최대 30건이며, 더 과거는 time 을 옮겨 다시 조회. J 의 15:30 봉 stck_prpr 이 정규장 종가 동시호가 체결가. J 도 15:30 이후 봉이 계속 나옴. 당일 분봉을 조회하는 API 지만, 당일 봉이 30건에 못 미치는 시각(예: 09:10)을 주면 남은 자리에 전일 마지막 봉(전일 19~20시대)이 이어서 오므로 행의 stck_bsop_date 를 확인할 것. include_past=false 면 당일 봉만 옴. 임의의 과거 날짜 분봉은 조회할 수 없음. time 을 생략하거나 장이 끝난 뒤의 시각을 주면 그 시각까지 가격이 그대로이고 체결량이 0 인 봉이 채워져 오므로, 마지막 체결 봉이 필요하면 time 을 지정(J 정규장 15:30, NXT 20:00). time 에 미래 시각을 넣으면 현재가 기준으로 조회됨. output2 첫 행의 체결량(cntg_vol)은 그 분의 첫 체결 전까지 직전 분 값이 표시됨.',
     inputSchema: { type: 'object', properties: {
       symbol: { type: 'string', description: 'KRX 6자리 종목코드 (예: 005930)' },
       market: { type: 'string', enum: MARKETS, default: 'J', description: 'J=KRX, NX=NXT, UN=통합' },
       time: { type: 'string', description: '기준 시각 HH:MM 또는 HHMMSS (한국 시각). 생략하면 현재' },
-      include_past: { type: 'boolean', default: true, description: 'KIS 의 "과거 데이터 포함 여부" 값. 장 마감 후 조회에서는 true·false 결과가 같았음' },
+      include_past: { type: 'boolean', default: true, description: 'KIS 의 "과거 데이터 포함 여부" 값. true 면 당일 봉이 30건에 못 미칠 때 전일 봉이 이어서 오고, false 면 당일 봉만 옴. 당일 봉만으로 30건이 차는 시각에서는 결과가 같음' },
     }, required: ['symbol'] },
     async run(a) {
       const symbol = krCode(a.symbol);
@@ -300,7 +300,7 @@ const TOOLS = [
   },
   {
     name: 'kis_index_price',
-    description: '국내 업종지수 현재값(조회 시점 값). 거래량 acml_vol 은 천주, 거래대금 acml_tr_pbmn 은 백만원 단위. 상승·하락 종목 수(ascn_issu_cnt·down_issu_cnt) 포함. index 는 업종코드 4자리: 0001 코스피, 1001 코스닥, 2001 코스피200. 그 밖의 업종코드는 KIS 포털의 종목정보 파일(업종코드) 참조.',
+    description: '국내 업종지수 현재값(조회 시점 값). 거래량 acml_vol 은 천주, 거래대금 acml_tr_pbmn 은 백만원 단위. 상승·하락 종목 수(ascn_issu_cnt·down_issu_cnt) 포함. index 는 업종코드 4자리: 0001 코스피, 1001 코스닥, 2001 코스피200. 그 밖의 업종코드는 KIS 포털의 종목정보 파일(업종코드) 참조. 없는 업종코드는 오류 없이 모든 값이 0 으로 옴.',
     inputSchema: { type: 'object', properties: {
       index: { type: 'string', default: '0001', description: '업종코드 4자리 (0001 코스피, 1001 코스닥, 2001 코스피200)' },
     } },
@@ -312,7 +312,7 @@ const TOOLS = [
   },
   {
     name: 'kis_index_daily_chart',
-    description: '국내 업종지수 기간별 시세(일·주·월·년봉, 최신순). 한 번에 최대 50건이며 기간이 더 길면 to 쪽 최근 50건만 옴. index 는 업종코드 4자리(0001 코스피, 1001 코스닥, 2001 코스피200). output1 은 지수 현재 요약, output2 가 봉 목록.',
+    description: '국내 업종지수 기간별 시세(일·주·월·년봉, 최신순). 한 번에 최대 50건이며 기간이 더 길면 to 쪽 최근 50건만 옴. index 는 업종코드 4자리(0001 코스피, 1001 코스닥, 2001 코스피200). output1 은 지수 현재 요약, output2 가 봉 목록. 없는 업종코드는 오류 없이 값이 0 인 행으로 옴.',
     inputSchema: { type: 'object', properties: {
       index: { type: 'string', default: '0001', description: '업종코드 4자리' },
       period: { type: 'string', enum: PERIODS, default: 'D', description: 'D=일봉, W=주봉, M=월봉, Y=년봉' },
@@ -335,7 +335,7 @@ const TOOLS = [
       market: { type: 'string', enum: ['KOSPI', 'KOSDAQ'] },
       date: { type: 'string', description: '기준일 YYYY-MM-DD. 생략하면 오늘(한국 시각)' },
       sector: { type: 'string', description: '업종코드 4자리. 생략하면 시장 전체(코스피 0001, 코스닥 1001)' },
-      count: { type: 'integer', minimum: 1, maximum: 300, default: 5, description: '돌려줄 일수 (KIS 는 한 번에 300일치를 줌)' },
+      count: { type: 'integer', minimum: 1, maximum: 300, default: 5, description: '돌려줄 일수 (KIS 는 한 번에 300일치를 줌). 하루가 약 1,400자라 300 이면 응답이 40만 자를 넘으므로 필요한 만큼만 지정' },
     }, required: ['market'] },
     async run(a) {
       const market = oneOf(a.market, ['KOSPI', 'KOSDAQ'], 'market');
@@ -375,7 +375,7 @@ const TOOLS = [
   },
   {
     name: 'kis_credit_balance_daily',
-    description: '국내 종목 신용잔고 일별 추이(최신순). date(결제일자)부터 과거 방향으로 count 건(KIS 는 한 번에 30건)이며, 더 과거는 date 를 옮겨 다시 조회. 결제 기준이라 최신 행은 2영업일 전 매매분(deal_date 매매일, stlm_date 결제일). whol_loan_* 융자, whol_stln_* 대주, rmnd 잔고, new 신규, rdmp 상환(매도상환+현금상환).',
+    description: '국내 종목 신용잔고 일별 추이(최신순). date(결제일자)부터 과거 방향으로 count 건(KIS 는 한 번에 30건)이며, 더 과거는 date 를 옮겨 다시 조회. 결제 기준이라 각 행의 매매일(deal_date)은 결제일(stlm_date)의 2영업일 전. 당일 결제분은 밤에도 없어서 최신 행은 전 영업일 결제분, 곧 조회일에서 3영업일 전 매매분(11/24 밤 조회 → 결제일 11/23, 매매일 11/19). 없는 종목코드는 오류 없이 빈 목록. whol_loan_* 융자, whol_stln_* 대주, rmnd 잔고, new 신규, rdmp 상환(매도상환+현금상환).',
     inputSchema: { type: 'object', properties: {
       symbol: { type: 'string', description: 'KRX 6자리 종목코드 (예: 005930)' },
       date: { type: 'string', description: '결제일자 YYYY-MM-DD. 생략하면 오늘(한국 시각)' },
@@ -407,7 +407,7 @@ const TOOLS = [
   },
   {
     name: 'kis_overseas_daily_chart',
-    description: '해외지수·환율·국채·금선물 기간별 시세(일·주·월·년봉). kind N=해외지수, X=환율, I=국채, S=금선물. code 는 KIS 해외 마스터 코드(확인된 예: 다우 N + .DJI, 원/달러 X + FX@KRW)이며 그 밖의 코드는 KIS 포털의 종목정보 파일(해외지수)에서 확인. 최신순이며 output1 현재 요약은 0 으로 올 때가 있음. 미국 개별 주식은 다우30·나스닥100·S&P500 종목만 조회됨. output1 은 현재 요약, output2 가 봉 목록.',
+    description: '해외지수·환율·국채·금선물 기간별 시세(일·주·월·년봉). kind N=해외지수, X=환율, I=국채, S=금선물. code 는 KIS 해외 마스터 코드. 확인된 예(2026-11-24): N 은 .DJI 다우·SPX S&P500·COMP 나스닥 종합, X 는 FX@KRW 원/달러, I 는 Y0202 미국 10년 국채 수익률·Y0101 국고채 3년. 그 밖의 코드는 KIS 포털의 종목정보 파일(해외지수, frgn_code.mst)에서 확인하며, 파일의 첫 글자는 구분코드이므로 떼고 넣음. ⚠ S(금선물)는 봉이 조회되는 코드를 확인하지 못함(M0101 은 output1 만 오고 output2 가 비어 있었음). 없는 코드는 오류 없이 output2 가 빈 목록으로 오므로 행 수를 확인할 것. 최신순이며 월봉의 날짜는 그 달 1일로 표기됨. output1 현재 요약은 0 으로 올 때가 있음(.DJI). 일부 영업일 행이 빠져 있을 수 있음(Y0101 에 2026-11-17 없음). 미국 개별 주식은 다우30·나스닥100·S&P500 종목만 조회됨. output1 은 현재 요약, output2 가 봉 목록.',
     inputSchema: { type: 'object', properties: {
       kind: { type: 'string', enum: OVERSEAS_KINDS, description: 'N=해외지수, X=환율, I=국채, S=금선물' },
       code: { type: 'string', description: 'KIS 해외 마스터 코드 (예: .DJI, FX@KRW)' },
