@@ -11,7 +11,7 @@ sources:
 generated: { by: "claude-code", at: "2026-11-24T17:09:12.439Z" }
 verified:
   - by: openwiki/0.5.2
-    at: 2026-11-24T17:09:12.439Z
+    at: 2026-11-26T16:00:52.063Z
 ---
 
 # 빠른 시작
